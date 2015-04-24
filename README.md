@@ -57,21 +57,31 @@ of each atom.  As a technical matter, it turns out the using 4D homogeneous coor
 (we can represent normal 3x3 operations AND translation), so T is actually a 4Nx4N matrix.
 
 A structure with 5 atoms has an HLST of form
-T1 0  0  0  0
-0  T2 0  0  0
-0  0  T3 0  0
-0  0  0  T4 0
-0  0  0  0  T5
+
+::
+
+ T1 0  0  0  0
+ 0  T2 0  0  0
+ 0  0  T3 0  0
+ 0  0  0  T4 0
+ 0  0  0  0  T5
+
+::
 
 where each T is a 4x4 "rotation and scaling plus translation" matrix.
 
 The HLST finds a minimal set of these operations, ie which atoms can share the same T. So an HLST for
 for a 5 atoms case might be
-T1 0  0  0  0
-0  T2 0  0  0
-0  0  T1 0  0
-0  0  0  T2 0
-0  0  0  0  T1
+
+::
+
+ T1 0  0  0  0
+ 0  T2 0  0  0
+ 0  0  T1 0  0
+ 0  0  0  T2 0
+ 0  0  0  0  T1
+
+::
 
 We posit that the complexity of the HLST, in particular how many degrees of freedom it consists of,
 will help us assess the rate of a polymorph transition.
