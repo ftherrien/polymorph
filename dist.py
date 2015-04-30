@@ -3,13 +3,14 @@ import os,sys,copy
 import numpy as np
 import numpy.linalg as npl
 from numpy.linalg import  norm
+from scipy.optimize import minimize
 
 from pylada.crystal import supercell
 import pylada.crystal.read as pcread
 import pylada.crystal.write as pcwrite
 
 
-from util import volume, write_tcl
+from util import volume, write_tcl, rot_euler
 
 
 def closestDistanceBetweenLines(a0,a1,b0,b1,clampAll=False,clampA0=False,clampA1=False,clampB0=False,clampB1=False):
@@ -371,7 +372,7 @@ def plausible_pairs(src,dst, distmap, atom_dist_eps):
         for row, column in indexes:
             value = matrix[row][column]
             total += value
-            print '(%d, %d) -> %.2f' % (row, column, value/100.)
+#            print '(%d, %d) -> %.2f' % (row, column, value/100.)
             pairs.append([column, row])
         print 'total cost: %e' % (total/100.)
         ppairs.append(pairs)
@@ -409,20 +410,24 @@ def test_one_shifted_pair(src, dst, options):
     pairings, alldist = plausible_pairs(src,dst,distmap, options.atom_dist_eps)
     print "plausible pairs done, found %d pairs" % len(pairings)
     allhlst = []
-    for amap in pairings:
+    dmin = 1e10
+    partitionmin = None
+    bigAmin = None
+    dofmin = 1000
+    for i in range(len(pairings)):
+        dist = alldist[i]
+        amap = pairings[i]
         pp=[]
         i = 0
         for pair in amap:
             p = distmap[pair[0]][pair[1]]
-            print p.ia, p.ib, p.d, p.apos, p.bpos
+#            print p.ia, p.ib, p.d, p.apos, p.bpos
             pp.append([p.ia, p.ia, p.d, p.apos, p.bpos])   # not a bug, we _want_ src and dst indices to match now
             src[p.ia].pos = p.apos
             dst[p.ia].pos = p.bpos  # not a bug, we _want_ src and dst indices to match now
             src[p.ia].type = p.atype
             dst[p.ia].type = p.btype
             i+=1
-        write_tcl(options, src, dst, pp, "dist")
-
         srcpos = np.transpose(np.array([a.pos for a in src]))
         dstpos = np.transpose(np.array([a.pos for a in dst]))
 
@@ -430,9 +435,18 @@ def test_one_shifted_pair(src, dst, options):
         ### this should be first ICP step of HLST fitting? yes, it is. but sometimes it's nice to turn it off for "clean" input. 
 
         hlst = test_hlst_fit(ctx, srcpos, dstpos, options)
-        allhlst.append(hlst)
-        
-    return alldist, allhlst
+        # returns list: [dof, partitioning, bigA(3N-dim transform)]
+
+        dof = hlst[0]
+        # don't torture caller, just return best as judged first by lowest dof, then by lowest distance
+        if (dof < dofmin or (dof == dofmin and dist < dmin)):
+            write_tcl(options, src, dst, pp, "dist")
+            dmin = dist
+            dofmin = dof
+            partitionmin = hlst[1]
+            bigAmin = hlst[2]
+
+    return dmin, [dofmin, partitionmin,  bigAmin] 
                 
 def my_space_group(s):
     from pylada.crystal import space_group, primitive
@@ -487,7 +501,148 @@ def my_equivalence_iterator(structure, operations=None, tolerance=1e-6, splitocc
       while (icur<len(atoms) and tags[icur]):
           icur += 1
 
+def test_cell_intersection():
+    a = np.array([[1,0,0],[0,1,0],[0,0,1]])
+    b = np.array([[1,0,0],[0,1,0],[0,0,1]])
+    v = cell_intersection(a, b)
+    print "************"
+    print a
+    print b
+    print v
+    
+    from util import rot_euler
+    for thx in [0, 10,20,30,40,50,60,70,80,90]:
+        for thy in [0, 10,20,30,40,50,60,70,80,90]:
+            for thz in [0, 10,20,30,40,50,60,70,80,90]:
+                T = rot_euler(thx,thy,thz)
+                bt = np.dot(T, b)
+                v = cell_intersection(a, bt)
+                print "ZZZ", thx,thy,thz, v
 
+    sys.exit()
+
+def cell_intersection_obj_fn(th, acell, bcell):
+#    acell = args[0]
+#    bcell = args[1]
+    T = rot_euler(th[0], th[1], th[2])
+    bt = np.dot(T, bcell)
+    v = cell_intersection(acell, bt)
+#    v = -npl.norm(np.dot(acell, npl.inv(bt)) - np.identity(3))
+#    print th, v
+    return -v
+
+def optimize_cell_intersection(acell, bcell):
+
+    vmax = -1e10
+    print "optimizing cell intersection"
+    for x0 in [  [30,12,43], [60,76,2], [3,10,3]]:
+        try:
+            res = minimize(cell_intersection_obj_fn, x0, args = (acell, bcell), options={'eps':1e-6}, tol=1e-4)
+            vol = -res.fun
+            th = res.x 
+            T = rot_euler(th[0], th[1], th[2])
+#            print res
+            print "opt_done:", vol, th
+    
+        except:
+            print "OPTIMIZATION FAILED"
+            T = None
+            vol=0
+            th = []
+        if (vol > vmax):
+            vmax = vol
+            Tmax = T
+            thmax = th
+
+    return Tmax, vmax, thmax
+
+
+def cell_intersection(acell, bcell):
+    try: 
+        v = cell_intersection_core(acell, bcell)
+    except:
+        print "CELL_INTERSECTION FAILED"
+        import sys
+        sys.exit()
+        v = None
+    return v
+
+def cell_intersection_core(acell, bcell):
+    """ intersection of cells """
+    # cross products of unit cell vectors give normals to the plane they define.
+    # makes this a half space intersection problem
+    # qhull!
+
+    dim = 3
+    npts = 12
+    fout = file("rtest.pts", "w")
+    fout.write("%d 1\n" % dim)
+    for i in range(dim):
+        fout.write("0 ")
+    fout.write("\n");
+    fout.write("%d\n%d\n" % (dim+1, npts) )
+    vec = []
+    dist = []
+    idx_sets = [[0,1,2], [1,2,0], [2,0,1]]
+    for i in range(3):
+        i0 = idx_sets[i][0]
+        i1 = idx_sets[i][1]
+        i2 = idx_sets[i][2]
+        n = np.cross(acell[:,i0],acell[:,i1])
+        n = n/npl.norm(n)
+        vec.append(n)
+        vec.append(-n)
+        d = abs(np.dot(acell[:,i2],n)/2.0)
+        dist.append(d)
+        dist.append(d)
+
+        n = np.cross(bcell[:,i0],bcell[:,i1])
+        n = n/npl.norm(n)
+        vec.append(n)
+        vec.append(-n)
+        d = abs(np.dot(bcell[:,i2],n)/2.0)
+        dist.append(d)
+        dist.append(d)
+
+#        print vec
+#        p = pts[i][0]
+#        g = pts[i][1]
+        # p = normal ai x aj, and for b
+        # g = projection of ak onto normals
+    for i in range(len(vec)):
+        p = vec[i]
+        g = dist[i]
+        for j in range(dim):
+            fout.write("%.16e " % (p[j]))
+        fout.write("%.16e " % (-g))
+        fout.write("\n")
+    fout.close()
+
+    # qhull is magic; does whole job, output is normals AND facet areas
+    # in both modes we do two qhull calls, first to solve the half-space intersection,
+    # then to get the actual info we need.
+    # H -> halfspace
+    # Fp -> output intersections, i.e. vertices
+    # (This shoule not be needed,...) We send those back to qhull to compute convex hull and output
+    # n -> normals
+    # Fa -> facet areas
+    # FS -> total facet area and total volume
+    # Qs -> search for non-coplanar initial points
+    # Fv -> output facet vertices. these index into the half-space intersection points (which are the vertices) generated in the first call.
+
+#    os.system("qhull H FS Qs < rtest.pts > midstation.pts")
+    os.system("qhull H Fp < rtest.pts | qhull FS  > midstation.pts")
+## e.g.,
+#stc-24038s:snsmc pgraf$ qhull H Qs FS < rtest.pts
+#0
+#2 27438.03229483984 315759.7244091273
+    lns = file("midstation.pts").readlines()
+    v = float(lns[1].split()[2])
+#    print "acell, bcell"
+#    print acell
+#    print bcell
+
+    return v
 
 def test_inequiv():
     src = pcread.poscar(options.A)
@@ -502,6 +657,7 @@ def analyze_commensurized(src, dst, options):
     src0 = deepcopy(src)
     src_sg = my_space_group(src)
 
+    dofmin = 1000
     dmin = 1e10
     groups = [u for u in my_equivalence_iterator(src, src_sg)]
     print "groups of equiv atom indices in src:" , groups
@@ -510,24 +666,28 @@ def analyze_commensurized(src, dst, options):
     from paths import center_cell
     src0 = center_cell(src0)
     dst0 = center_cell(dst)
+    write_tcl(options, src0, dst0, [], "center")
 
     for igroup in range(len(groups)):
-        src = deepcopy(src0)
+        src1 = deepcopy(src0)
 
         iorg = groups[igroup][0]
-        shift = deepcopy(src[iorg].pos)
+        shift = deepcopy(src[iorg].pos)  # note, uncentered sourc here
         print "shifting to origin:", iorg, shift
         for ia in range(len(src)):
-            src[ia].pos = src0[ia].pos - shift 
+            src1[ia].pos = src0[ia].pos - shift 
         
         print "computing dist map and hlst for shift ", shift
-        dist, hlst = test_one_shifted_pair(src,dst0, options)
-        print "dist (of pairing), dof (of hlst):"
-        for i in range(len(dist)):
-            print dist[i], hlst[i].dof
-            if (dist[i] < dmin):
-                dmin = dist[i]
-    return dmin, []
+        dist, hlst = test_one_shifted_pair(src1,dst0, options)
+        dof = hlst[0]
+        print "came back, dof = ", dof
+        if (dof < dofmin or (dof <= dofmin and dist < dmin)):
+            dmin = dist
+            hlstmin = hlst
+            shiftmin = shift
+            dofmin = dof
+            print "new winner", dmin, hlstmin[0]
+    return dmin, hlstmin, shiftmin
 
 if __name__=="__main__":
     import random

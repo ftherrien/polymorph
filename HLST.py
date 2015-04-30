@@ -541,7 +541,6 @@ class HLST(object):
         We'll return a list. each element of the list is a list corresponding to the tform for this atom
         for this partitioning.
         """
-        print "assembled tlists:"
         rawtlist = self.assemble()
         natoms = len(self.idx)  
         fulltlist = []
@@ -613,7 +612,7 @@ class HLSTCtx(object):
         newfullsrc = newfullsrc[0:3,:]
         r =  newsrc - dst
         d = np.linalg.norm(r)
-        print "residual norm", d
+#        print "residual norm", d
         # returns all atoms new pos, local transform to do it, the residual r, and it's norm d
         return newfullsrc, Tcur, r, d
 
@@ -696,7 +695,7 @@ class HLSTCtx(object):
             src = parent.src
             parent_tform = parent.fullA
         
-        H.src, H.A, H.r, H.d = self.fit_local(src, idx, level, do_level0=True)
+        H.src, H.A, H.r, H.d = self.fit_local(src, idx, level, do_level0=False)
 
 #        from util import write_xyz_pos
 #        write_xyz_pos(H.src[:,idx], "somewhere%s.%d" % ("{}".format(idx), level))
@@ -712,7 +711,7 @@ class HLSTCtx(object):
             if (idx_sets == [] or idx_sets == None):
                 H.children == None
             else:
-                print "recursion, ",  idx, idx_sets
+#                print "recursion, ",  idx, idx_sets
                 H.children = [] 
                 for iset in idx_sets:
                     potential_children = [self.fit(H,subidx,eps,level+1) for subidx in iset]
@@ -774,16 +773,24 @@ def test_hlst_fit(ctx, src, dst, options):
         H.dump(level=0, verbose=options.verbose==1)
     # get 4n-dim rep of everything:
     bigAlist, bigInfolist, bigs, bigd = ctx.assemble(H)
-    print "Testing final transform in '3N+6' space: "
+    print "Testing final transform in '3N' config space: "
     # z is residual in 4n-dim space
     for i in range(len(bigAlist)):
         bigA = bigAlist[i]
         I = bigInfolist[i]
         z = np.dot(bigA, bigs) - bigd
         print "|T src - dst| =", npl.norm(z), ",  |src - dst| =", npl.norm(bigs - bigd), " ntransforms = ", I[0], I[1]
-    print "done"
     H.dof = [I[0] for I in bigInfolist]
-    return H
+    dofmin = 1e10
+    divmin = None
+    bigAmin = None
+    for i in range(len(H.dof)):
+        if (H.dof[i]<dofmin):
+            dofmin = H.dof[i]
+            divmin = bigInfolist[i][1]
+            bigAmin = bigAlist[i]
+
+    return [dofmin, divmin, bigAmin]
   
 if __name__=="__main__":
     test_hlst()

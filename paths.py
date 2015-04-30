@@ -20,6 +20,8 @@ import numpy as np
 import numpy.linalg as npl
 from math import cos, sin, acos
 
+from util import write_tcl
+
 def get_options():
     import os, os.path
     from optparse import OptionParser
@@ -239,94 +241,6 @@ def get_mindist_commensurized_pairing(A,B,m1,m2):
     d, pairs = get_mindist_pairing(bigA, bigB)
     return d, pairs, bigA, bigB
 
-tcl_str = """
-mol new %s type xyz
-mol delrep 0 top
-mol rep CPK 0.2 0 10 0
-mol addrep top 
-mol rep DynamicBonds 0 0.1 16
-mol addrep top 
-graphics top color %d
-
-graphics top line {0 0 0} {%f %f %f} width 3 style solid
-graphics top line {0 0 0} {%f %f %f} width 3 style solid
-graphics top line {0 0 0} {%f %f %f} width 3 style solid
-graphics top line {%f %f %f} {%f %f %f} width 3 style solid
-graphics top line {%f %f %f} {%f %f %f} width 3 style solid
-graphics top line {%f %f %f} {%f %f %f} width 3 style solid
-graphics top line {%f %f %f} {%f %f %f} width 3 style solid
-graphics top line {%f %f %f} {%f %f %f} width 3 style solid
-graphics top line {%f %f %f} {%f %f %f} width 3 style solid
-graphics top line {%f %f %f} {%f %f %f} width 3 style solid
-graphics top line {%f %f %f} {%f %f %f} width 3 style solid
-graphics top line {%f %f %f} {%f %f %f} width 3 style solid
-
-
-"""
-
-def write_struct(fout, A, Aname, col):
-    """ write tcl for viz in VMD for one structure """
-    a = A.scale * A.cell
-    a1 = a[:,0]
-    a2 = a[:,1]
-    a3 = a[:,2]
-
-    a12 = a1 + a2
-    a13 = a1 + a3
-    a23 = a2 + a3
-    a123 = a12 + a3
-    fout.write(tcl_str % 
-               (Aname, col,
-                a1[0], a1[1], a1[2],
-                a2[0], a2[1], a2[2],
-                a3[0], a3[1], a3[2],
-
-                a1[0], a1[1], a1[2], a12[0], a12[1], a12[2],
-                a2[0], a2[1], a2[2], a12[0], a12[1], a12[2],
-
-                a2[0], a2[1], a2[2], a23[0], a23[1], a23[2],
-                a3[0], a3[1], a3[2], a23[0], a23[1], a23[2],
-
-                a1[0], a1[1], a1[2], a13[0], a13[1], a13[2],
-                a3[0], a3[1], a3[2], a13[0], a13[1], a13[2],
-
-                a12[0], a12[1], a12[2], a123[0], a123[1], a123[2],
-                a23[0], a23[1], a23[2], a123[0], a123[1], a123[2],
-                a13[0], a13[1], a13[2], a123[0], a123[1], a123[2]
-                ))
-
-def write_xyz(options, A, tag, repeat=1):
-    with open("%s.xyz" %tag, "w") as f: 
-        f.write("%d\nA\n" % (len(A)*(repeat**3)))
-        for ix in range(repeat):
-            for iy in range(repeat):
-                for iz in range(repeat):
-                    off = np.dot(A.cell, np.array([ix,iy,iz]))
-                    for a in A:
-                        p = a.pos + off
-                        f.write("%s %f %f %f\n" % (a.type, p[0], p[1], p[2]))
-        
-
-def write_tcl(options, A, B, pairs, tag=""):
-    """ write tcl file for viz in VMD """
-    with open("POSCAR_A.%s" % tag, "w") as f: pcwrite.poscar(A, f, vasp5=True)
-    with open("POSCAR_B.%s" % tag, "w") as f: pcwrite.poscar(B, f, vasp5=True)
-    write_xyz(options, A, "A.%s" % tag,options.output_tiles)
-    write_xyz(options, B, "B.%s" % tag,options.output_tiles)
-
-    fout = file("plotpairs.%s.tcl" % tag, "w")
-    write_struct(fout, A, "A.%s.xyz" % tag, 0)
-    write_struct(fout, B, "B.%s.xyz" %tag, 1)
-
-    linestr = "graphics top line {%f %f %f} {%f %f %f} width 3 style dashed\n"
-    for p in pairs:
-        ia = p[0]
-        ib = p[1]
-        p1 = A.scale * A[ia].pos
-        p2 = B.scale * B[ib].pos
-        fout.write(linestr % (p1[0], p1[1], p1[2], p2[0], p2[1], p2[2]))
-
-    fout.close()
 
 def get_symmetries(A, mode=0):
     import scipy.linalg as spl
@@ -1266,16 +1180,22 @@ def explore_via_optimization(A,B,options):
             
 
 def mynorm(pos):
+    # note include geometric centering
     amean = np.mean(pos)
     pos = pos - amean
     n = np.sqrt(sum([x**2 for x in pos]))
     return n
 
 def calc_cell_bignorms(A, Acells):
+    # note uses "supercell", which results in atoms all _in_ supercell
     n1 = []
     for i in range(len(Acells)):
         x = supercell(A,np.dot(A.cell,Acells[i]))
         pos  = [a.pos for a in x]
+        # a check that the atoms are _in_ the supercell:
+#        inv = npl.inv(x.cell)
+#        coord = [np.dot(inv,y) for y in pos]
+#        print np.max(coord), np.min(coord)
         bigx = np.reshape(pos, (3*len(x)))
         n1.append(mynorm(bigx))
     return n1
@@ -1289,27 +1209,103 @@ def pca_struct(A):
     return U,s
 
 def match_cells (A,B,options):
-    # do pca on the atom positions
-    Aaxes, As = pca_struct(A)
-    Baxes, Bs  = pca_struct(B)
-    Aaxes = np.transpose(Aaxes)
-    Baxes = np.transpose(Baxes)
-    print "principal axes of src and dst (rows are axes):"
-    print Aaxes, As
-    print Baxes, Bs
-    # transform principle axes of B onto those of A
-    T = np.dot(Aaxes, npl.inv(Baxes))
-    print "should be 0", npl.norm(Aaxes - np.dot(T,Baxes))
-    # delete scaling from T; it should be a pure rotation...
-    #U,s,V = npl.svd(T)
-    #T = np.dot(U,V)
-    #   ...duh; this is not necessary b/c T is a transform between orthonormal axis, so it's already a rotation
-    B = transform_cell(T,B)
+    algo = 1
+    
+    I = np.identity(3)
+    if (algo == 1):
+        # just match axes; the unit cells are already as optimally oriented for overlap
+        # complication: need to permute unit cell vectors to minimize T
+        ps = [[0,1,2],[0,2,1],[1,2,0],[1,0,2],[2,0,1],[2,1,0]]
+        dmin = 1e100
+        for p in ps:
+#            tmpB = np.array([B.cell[:,p[0]], B.cell[:,p[1]], B.cell[:,p[2]]]) 
+            Tperm = np.array([I[:,p[0]], I[:,p[1]], I[:,p[2]]])
+            tmpB = np.dot(Tperm, B.cell)
 
-## doing this here messes up the computation of which atoms are equivalent
+            #        H = np.dot(Aq,np.transpose(Bq))
+            #        U,s,V = npl.svd(H)
+            #        R = np.dot(V, np.transpose(U))
+            
+            T = np.dot(A.cell, npl.inv(tmpB))
+            d = npl.norm(T-I)
+            print p, d
+            print T
+            if d < dmin:
+                dmin = d
+                pmin = p
+                Tmatch = T
+            
+        Tperm = np.array([I[:,pmin[0]], I[:,pmin[1]], I[:,pmin[2]]])
+        
+    if (algo == 2):
+# use svd to rotate principle axis onto eachother
+#### This is not right for periodic systems; we cannot escape mapping unit cells to each other
+        # do pca on the atom positions
+        Aaxes, As = pca_struct(A)
+        Baxes, Bs  = pca_struct(B)
+        Aaxes = np.transpose(Aaxes)
+        Baxes = np.transpose(Baxes)
+        print "principal axes of src and dst (rows are axes):"
+        print Aaxes, As
+        print Baxes, Bs
+        # transform principle axes of B onto those of A
+        T = np.dot(Aaxes, npl.inv(Baxes))
+        print "should be 0", npl.norm(Aaxes - np.dot(T,Baxes))
+        # delete scaling from T; it should be a pure rotation...
+        #U,s,V = npl.svd(T)
+        #T = np.dot(U,V)
+        #   ...duh; this is not necessary b/c T is a transform between orthonormal axis, so it's already a rotation
+        
+    B = transform_cell(np.dot(Tmatch, Tperm),B)
+
+## doing this here messes up the computation of which atoms are equivalent. we do it later (test_one_shifted_pair())
 #    A = center_cell(A)
 #    B = center_cell(B)
-    return A,B
+    return A,B,Tmatch
+
+def rotate_closest(A,B):
+    # Trot, Tskew, A, B = ...
+    # ICP-inspired: treating unit cell vectors as points.
+    # need to permute them, this defines a pairing, which we get the transform for
+    # the closest rotation is the U*V part of it.
+    # take "best" closest rotation over all permutations.
+    # what's left over (the non-rotaional part) is the final transform (after rotation) of B to A.
+    ps = [[0,1,2],[0,2,1],[1,2,0],[1,0,2],[2,0,1],[2,1,0]]
+    I = np.identity(3)
+    dmin = 1e100
+    for p in ps:
+        Tperm = np.array([I[:,p[0]], I[:,p[1]], I[:,p[2]]])
+        tmpB = np.dot(Tperm, B.cell)
+
+#        H = np.dot(Aq,np.transpose(Bq))
+#        U,s,V = npl.svd(H)
+#        R = np.dot(V, np.transpose(U))
+
+        T = np.dot(A.cell, npl.inv(tmpB))
+        U,s,V = npl.svd(T)
+        T = np.dot(U,V)
+        tmpB = np.dot(T, tmpB)
+        res2 = tmpB - A.cell
+        res1 = [npl.norm(x) for x in res2]
+        d = sum(res1)
+        print p, d
+        print res2
+        print res1
+        if d < dmin:
+            dmin = d
+            pmin = p
+
+    print "dmin, pmin", dmin, pmin
+    Tperm = np.array([I[:,pmin[0]], I[:,pmin[1]], I[:,pmin[2]]])
+#    tmpB = np.array([B.cell[:,pmin[0]], B.cell[:,pmin[1]], B.cell[:,pmin[2]]]) 
+    tmpB = np.dot(Tperm, B.cell) 
+    T = np.dot(A.cell, npl.inv(tmpB))
+    U,s,V = npl.svd(T)
+    Trot = np.dot(U,V)
+    tmpB = np.dot(Trot, tmpB)
+    Tskew = np.dot(A.cell, npl.inv(tmpB))
+    
+    return Tperm, Trot, Tskew
 
 def test_enum(A,B, options):
     from pylada import enum
@@ -1350,7 +1346,7 @@ def test_enum(A,B, options):
     print "closest cells are %d and %d, %e apart: " % (imin, jmin, dmin)
     print Acells[imin]
     print Bcells[jmin]
-    
+
     # make desired "closest" supercells
     print A.cell, Acells[imin]
     A = supercell(A,np.dot(A.cell,Acells[imin]))
@@ -1359,13 +1355,49 @@ def test_enum(A,B, options):
     print A.cell
     write_tcl(options, A, B, [], "enum")
 
-    # use svd to rotate principle axis onto eachother
-    A,B = match_cells(A,B, options)
-    write_tcl(options, A, B, [], "enum2")
+    # find rotation that makes best overlap
+    from pylada.crystal import space_group
+    from dist import cell_intersection, test_cell_intersection, optimize_cell_intersection
+#################
+ # some debate in my mind; do we need this, or does a search over rotations cover it
+#    bsym = space_group(B)
+#    print "B has %d symmetries" % len(bsym)
+#    for isym in range(len(bsym)): 
+#    for isym in range(0):
+#        sym = bsym[isym]
+#        newB = transform_cell(sym[0:3,:], B)
+#        v0 = cell_intersection(A.cell, newB.cell)
+#        if (v0 == None):
+#            ## something wrong with the cells
+#            continue # skip to next sym... TODO: sort out whether this is a bug
+#################
+    # maybe just use SVD to nail it quickly:
+    matchalgo = 2
+    if (matchalgo == 1):
+        Tperm, Trot, Tskew = rotate_closest(A,B)
+        newB = transform_cell(Tperm, B)
+        write_tcl(options, A, newB, [], "perm", center=False)
+        newB = transform_cell(Trot, newB)
+        write_tcl(options, A, newB, [], "rot", center=False)
+        newB = transform_cell(Tskew, newB)
+        write_tcl(options, A, newB, [], "skew", center=False)
+    
+        sys.exit() # for testing! 
+    else:
+        #    test_cell_intersection()
+        T,vol,th = optimize_cell_intersection(A.cell, B.cell)
+        print "volume of cell intersection: ", vol, th, T
+        newB = transform_cell(T, B)
+        write_tcl(options, A, newB, [], "opt", center=True)
+        
+        # this just maps unit cell of B onto A, now that we've found the best rotation
+        A,newB,Tmatch = match_cells(A,newB, options)
+        write_tcl(options, A, newB, [], "match", center=False)
 
     # do pairing and calculate its HLST
     from dist import analyze_commensurized
-    d, pairs = analyze_commensurized(A, B, options)
+    dmin, hlstmin, shiftmin = analyze_commensurized(A, newB, options)
+    print "DONE: found dmin, hlstmin, shiftmin=", dmin, hlstmin[0], hlstmin[1], shiftmin, npl.norm(Tmatch-np.identity(3)), Tmatch
 
 if __name__=="__main__":
     options, arg = get_options()
