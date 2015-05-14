@@ -28,6 +28,14 @@ in the kmeans clustering from scikit-learn, and I haven't quite figure out how t
 maps we don't care yet anyway, is to use "-c 1", which will let clusters of size 1 (single atom) be found, so HLST will always succeed, so -s 1 
 should always work.
 
+The code relies on some libraries:
+
+   munkres  
+   scikit_learn-0.15.2  
+   pyspglib (as modified by Vladan)  
+
+I think the first two can be install with "pip"
+
 Some details, thoughts, and notes about the analysis after we've aligned the unit cells, and other matters:
 
 Now we have two structures, same number of atoms, principal axes aligned.  And our "sphere"-test
