@@ -10,12 +10,25 @@ Given two structures A and B, enum will enumerate all the ways they could
 be supercells with the same number of atoms.  For each, we calculate the 3N dimensional
 norm of the 0-centered structure.  For each cell this is invariant to actual permutations
 of atoms and to global rotation.  We use this to find the supercell expressions of A and B
-that are closest in this sense (the "sphere"-test).  But we still don't know how to orient the cell, and 
-how the atoms are then paired.
+that are closest in this sense (the "sphere"-test). 
 
-To approximately align the "mass" of the structure,
-we take the cells and rotate them so their principal axes (as determined by PCA)
-are aligned.
+Next we optimize the "overlap" of the cell, and permute the unit cell vectors so the 
+coordinate system in the rotated frame that gives best overlap are as closely aligned as possible.  This is the starting point for
+determining the best atom pairing, and subsequent analysis.
+
+To run the code today (5/14/15), try, for example
+
+   python paths.py -m "enum" -v 0 -t 1 -A myaragonite.poscar -B mycalcite.poscar -z traj_c2a/  -c 2 -s -b 1.6
+   python anim.py -n 51 -z traj_c2a/
+
+Both these scripts have a "--help" option to guess at what the flags mean.
+WARNING: there is a bug such that the "shift" (see -s) means the space group analysis of the trajectory is not right.  For accurate
+space group analysis, use "-s".  Unfortunately, that sometimes causes no HLST to be found. ("sometimes" b/c there is some randomness
+in the kmeans clustering from scikit-learn, and I haven't quite figure out how to control its random seed).  Best bet, since for just distance
+maps we don't care yet anyway, is to use "-c 1", which will let clusters of size 1 (single atom) be found, so HLST will always succeed, so -s 1 
+should always work.
+
+Some details of the analysis after we've aligned the unit cells:
 
 Now we have two structures, same number of atoms, principal axes aligned.  And our "sphere"-test
 suggests that the unit cells have roughly the same shape.  But they are not exactly the same.
