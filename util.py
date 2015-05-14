@@ -50,12 +50,19 @@ def rot_euler(thx, thy, thz):
 #mol rep DynamicBonds 0 0.1 16
 #mol addrep top 
 
-tcl_str = """
+tcl_str1 = """
 mol new %s type xyz
 mol delrep 0 top
-mol rep CPK 0.5 0 10 0
+mol rep CPK 0.9 0 10 0
 mol addrep top 
+"""
 
+tcl_str2 = """
+mol rep DynamicBonds %f 0.1 12
+mol addrep top 
+"""
+
+tcl_str3 = """
 graphics top color 1
 graphics top line {%f %f %f} {%f %f %f} width 3 style solid 
 graphics top color 2
@@ -76,7 +83,7 @@ graphics top line {%f %f %f} {%f %f %f} width 3 style dashed
 
 """
 
-def write_struct(fout, A, Aname, col,center=False):
+def write_struct(fout, A, Aname, col,center=False,bonds=False, bond_len=0):
     """ write tcl for viz in VMD for one structure """
     a = A.scale * A.cell
     a1 = a[:,0]
@@ -84,7 +91,7 @@ def write_struct(fout, A, Aname, col,center=False):
     a3 = a[:,2]
     if (center):
         a0 = -(a1+a2+a3)/2.0
-        print "a0", a0
+#        print "a0", a0
     else:
         a0 = np.zeros(3)
 
@@ -104,9 +111,11 @@ def write_struct(fout, A, Aname, col,center=False):
         a23 = a23 + a0
         a123 = a123 + a0
 
-    fout.write(tcl_str % 
-               (Aname, 
-                a0[0], a0[1], a0[2], a1[0], a1[1], a1[2],
+    fout.write(tcl_str1 % Aname)
+    if (bonds):
+        fout.write(tcl_str2 % bond_len)
+    fout.write(tcl_str3 % 
+               (a0[0], a0[1], a0[2], a1[0], a1[1], a1[2],
                 a0[0], a0[1], a0[2], a2[0], a2[1], a2[2],
                 a0[0], a0[1], a0[2], a3[0], a3[1], a3[2],
 
@@ -192,18 +201,23 @@ def plot_lattice(p, pcell, size=5, cntr = [0,0,0]):
                 print p, offset, "    ",  q
 
 
-def transform_cell(M,A):
+def transform_cell(M,A,Tp=None,Tf=None):
     from copy import deepcopy
-    cell = A.cell
+    from pylada.crystal import into_cell
     newA = deepcopy(A)
-    newA.cell = np.dot(M,A.cell)
-    #    newA.scale = 10
-#    print M
+    if (Tp != None):
+        newA.cell = np.dot(A.cell, np.dot(Tp,Tf))  # can see this as (R A^t)^t
+    newA.cell = np.dot(M,newA.cell)
+    ainv = npl.inv(A.cell)
     for a in newA:
-        p = deepcopy(a.pos)
-        a.pos = np.dot(M, a.pos)
-#        print p, a.pos
-        # here we could also make sure point is in cell (i.e. coords in [0,1])
+        p = np.dot(ainv,a.pos) # fractional coords w.r.t. old cell
+        if (Tf != None):
+            p = np.dot(Tf, np.dot(np.transpose(Tp), p))  # permute and invert coords
+        a.pos = np.dot(newA.cell, p)  # express w.r.t new cell
+#        p = a.pos
+#        if (Tf != None):
+#            p = np.dot(Tf,p)
+#        a.pos = np.dot(M,p)
     return newA
 
 def volume(cell):

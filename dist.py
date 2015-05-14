@@ -414,6 +414,8 @@ def test_one_shifted_pair(src, dst, options):
     partitionmin = None
     bigAmin = None
     dofmin = 1000
+    pairmin = None
+    ppmin = None
     for i in range(len(pairings)):
         dist = alldist[i]
         amap = pairings[i]
@@ -443,10 +445,12 @@ def test_one_shifted_pair(src, dst, options):
             write_tcl(options, src, dst, pp, "dist")
             dmin = dist
             dofmin = dof
+            ppmin = pp  # these include the possibly-periodically-shifted src and dst atom positions
             partitionmin = hlst[1]
             bigAmin = hlst[2]
+            pairmin = amap  # these are pairs of indices in original order
 
-    return dmin, [dofmin, partitionmin,  bigAmin] 
+    return dmin, [pairmin, ppmin], [dofmin, partitionmin,  bigAmin] 
                 
 def my_space_group(s):
     from pylada.crystal import space_group, primitive
@@ -536,6 +540,7 @@ def optimize_cell_intersection(acell, bcell):
     vmax = -1e10
     print "optimizing cell intersection"
     for x0 in [  [30,12,43], [60,76,2], [3,10,3]]:
+#    for x0 in [  [91,1,1]]:  ### this tricks us into getting back sol'ns upstream b/c origins don't align.
         try:
             res = minimize(cell_intersection_obj_fn, x0, args = (acell, bcell), options={'eps':1e-6}, tol=1e-4)
             vol = -res.fun
@@ -659,8 +664,14 @@ def analyze_commensurized(src, dst, options):
 
     dofmin = 1000
     dmin = 1e10
-    groups = [u for u in my_equivalence_iterator(src, src_sg)]
-    print "groups of equiv atom indices in src:" , groups
+
+    if options.no_shift:
+        nshift = 1
+        groups = [[0]]
+    else:
+        groups = [u for u in my_equivalence_iterator(src, src_sg)]
+        print "groups of equiv atom indices in src:" , groups
+        nshift = len(groups)
 
 ## doing this here after equivalence check b/c it messes up the computation of which atoms are equivalent
     from paths import center_cell
@@ -668,17 +679,22 @@ def analyze_commensurized(src, dst, options):
     dst0 = center_cell(dst)
     write_tcl(options, src0, dst0, [], "center")
 
-    for igroup in range(len(groups)):
+    for igroup in range(nshift): 
         src1 = deepcopy(src0)
 
         iorg = groups[igroup][0]
-        shift = deepcopy(src[iorg].pos)  # note, uncentered sourc here
-        print "shifting to origin:", iorg, shift
+        if (options.no_shift):
+            shift = np.array([0,0,0])   ### for debugging, turn off shifting
+        else:
+            shift = deepcopy(src[iorg].pos)  # note, uncentered sourc here
+            print "shifting to origin:", iorg, shift
         for ia in range(len(src)):
             src1[ia].pos = src0[ia].pos - shift 
         
         print "computing dist map and hlst for shift ", shift
-        dist, hlst = test_one_shifted_pair(src1,dst0, options)
+        dist, pairs, hlst = test_one_shifted_pair(src1,dst0, options)
+        # pairs = list of which atoms where paired for minimal distance
+        # hlst = [dof, partitioning, bigA] for best pairing and partitoning
         dof = hlst[0]
         print "came back, dof = ", dof
         if (dof < dofmin or (dof <= dofmin and dist < dmin)):
@@ -686,8 +702,9 @@ def analyze_commensurized(src, dst, options):
             hlstmin = hlst
             shiftmin = shift
             dofmin = dof
-            print "new winner", dmin, hlstmin[0]
-    return dmin, hlstmin, shiftmin
+            pairsmin = pairs
+            print "new winner", dmin,   hlstmin[0], hlstmin[1]
+    return dmin, pairsmin, hlstmin, shiftmin
 
 if __name__=="__main__":
     import random

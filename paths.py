@@ -20,13 +20,12 @@ import numpy as np
 import numpy.linalg as npl
 from math import cos, sin, acos
 
-from util import write_tcl
+from util import write_tcl, transform_cell
 
 def get_options():
     import os, os.path
     from optparse import OptionParser
-    usage = "usage: %prog <structure defining string (e.g. \'D1 (R2 R2) A2 (R1)\')> [options] "
-    parser = OptionParser(usage=usage)    
+    parser = OptionParser()    
     parser.add_option("-A", "--A", dest="A",  type="string", default="A", help="poscar 1")
     parser.add_option("-B", "--B", dest="B",  type="string", default="B", help="poscar 2")
 #    parser.add_option("-e", "--equal_blocks_ok", dest="equal_blocks_ok", help="generate DiADi cases, etc", action="store_true", default=False)
@@ -35,6 +34,10 @@ def get_options():
     parser.add_option("-r", "--rotate_test", dest="rotate_test_angle",  type="int", default=None, help="if specified, ignores B and triggers a test: can we find a simple rotation?")
     parser.add_option("-e", "--atom_dist_eps", dest="atom_dist_eps",  type="float", default=0.9, help="threshold for atom closeness")
     parser.add_option("-v", "--verbose", dest="verbose",  type="int", default=0, help="verbosity")
+    parser.add_option("-z", "--trajdir", dest="trajdir",  type="string", default="trajdir", help="where to dump trajectory files")
+    parser.add_option("-c", "--min_cluster_size", dest="min_cluster_size",  type="int", default=2, help="minimum size of atom clusters")
+    parser.add_option("-s", "--no_shift", dest="no_shift", help="prevent shift of inequiv atoms to origin", action="store_true", default=False)
+    parser.add_option("-b", "--bond_len", dest="bond_len",  type="float", default=2, help="bond length")
 
     (options, args) = parser.parse_args()
     return options, args
@@ -778,20 +781,6 @@ def make_dist_map(A,B):
     return dist_map2
 
 
-def transform_cell(M,A):
-    from copy import deepcopy
-    cell = A.cell
-    newA = deepcopy(A)
-    newA.cell = np.dot(M,A.cell)
-    #    newA.scale = 10
-#    print M
-    for a in newA:
-        p = deepcopy(a.pos)
-        a.pos = np.dot(M, a.pos)
-#        print p, a.pos
-        # here we could also make sure point is in cell (i.e. coords in [0,1])
-    return newA
-
 def center_cell(A):
     from copy import deepcopy
     newA = deepcopy(A)
@@ -1209,37 +1198,75 @@ def pca_struct(A):
     return U,s
 
 def match_cells (A,B,options):
+    from copy import deepcopy
     algo = 1
     
+    Btmp = deepcopy(B)
     I = np.identity(3)
     if (algo == 1):
         # just match axes; the unit cells are already as optimally oriented for overlap
         # complication: need to permute unit cell vectors to minimize T
-        ps = [[0,1,2],[0,2,1],[1,2,0],[1,0,2],[2,0,1],[2,1,0]]
+        ps = [[0,1,2],[0,2,1],[1,2,0],[1,0,2],[2,0,1],[2,1,0]]  #reorder unit cell vectors
+        qs = [[i,j,k] for i in range(-1,2,2) for j in range(-1,2,2) for k in range(-1,2,2)]  #swap sign of unit cell vectors
+        print "qs", qs
         dmin = 1e100
         for p in ps:
 #            tmpB = np.array([B.cell[:,p[0]], B.cell[:,p[1]], B.cell[:,p[2]]]) 
-            Tperm = np.array([I[:,p[0]], I[:,p[1]], I[:,p[2]]])
-            tmpB = np.dot(Tperm, B.cell)
+            Tperm = np.array([I[:,p[0]], I[:,p[1]], I[:,p[2]]])  # build a permutation
+            tmpB1 = np.dot(B.cell, Tperm)  # apply it (just column swapping)
+            for q in qs:
+                Tflip = np.diag([q[0], q[1], q[2]])
+                tmpB2 = np.dot(tmpB1, Tflip)  # flip the axes
+                T = np.dot(A.cell, npl.inv(tmpB2))  # get exact map from permuted B to A
+                d = npl.norm(T-I)  # we want this to be close to identity, i.e. minimize d
+                print d, p, q
+#                print T
+                if d < dmin:
+                    dmin = d
+                    pmin = p
+                    qmin = q
+                    Tmatch = T
+ #                   print Tperm
+ #                   print Tflip
+                    Btmp.cell = tmpB2
+                    write_tcl(options, A, Btmp, [], "newflip", center=True)
+ #                   print "####"
+ #                   print B.cell
+ #                   print tmpB1
+ #                   print tmpB2
 
-            #        H = np.dot(Aq,np.transpose(Bq))
-            #        U,s,V = npl.svd(H)
-            #        R = np.dot(V, np.transpose(U))
-            
-            T = np.dot(A.cell, npl.inv(tmpB))
-            d = npl.norm(T-I)
-            print p, d
-            print T
-            if d < dmin:
-                dmin = d
-                pmin = p
-                Tmatch = T
-            
+        ## Note, the "structures" here that we write out are not really correct b/c we don't shift the
+        ## atoms.  This code is just messing around to find the right unit cell.  move atoms later when we've found it.
         Tperm = np.array([I[:,pmin[0]], I[:,pmin[1]], I[:,pmin[2]]])
-        
+        Tflip = np.diag(qmin)
+        print "best perm and flip are: ", pmin, qmin, dmin
+        print Tmatch
+        print Tperm
+        print Tflip
+
+        # check and write for VMD
+        tmpB = np.dot(B.cell, Tperm)  # apply it (just column swapping)
+        Btmp.cell = tmpB
+#        print "@@@@"
+#        print B.cell
+#        print tmpB
+        write_tcl(options, A, Btmp, [], "perm", center=True)
+
+        tmpB = np.dot(tmpB, Tflip)  # flip the axes
+#        print tmpB
+        Btmp.cell = tmpB
+        write_tcl(options, A, Btmp, [], "flip", center=True)
+
+        tmpB = np.dot(Tmatch, tmpB)
+        Btmp.cell = tmpB
+        write_tcl(options, A, Btmp, [], "match1", center=True)
+        check = npl.norm(A.cell - tmpB)
+        dcheck = npl.norm(Tmatch-I)
+        print "should be zero:", check, "  should be equal dmin", dcheck, dmin
+       
     if (algo == 2):
+#### This is not right for our periodic systems; we cannot escape mapping unit cells to each other
 # use svd to rotate principle axis onto eachother
-#### This is not right for periodic systems; we cannot escape mapping unit cells to each other
         # do pca on the atom positions
         Aaxes, As = pca_struct(A)
         Baxes, Bs  = pca_struct(B)
@@ -1255,13 +1282,15 @@ def match_cells (A,B,options):
         #U,s,V = npl.svd(T)
         #T = np.dot(U,V)
         #   ...duh; this is not necessary b/c T is a transform between orthonormal axis, so it's already a rotation
-        
-    B = transform_cell(np.dot(Tmatch, Tperm),B)
+    
+    
+    # final transform is T = Tmatch Tf Tp... not exactly...
+    B = transform_cell(Tmatch, B, Tperm, Tflip)
 
 ## doing this here messes up the computation of which atoms are equivalent. we do it later (test_one_shifted_pair())
 #    A = center_cell(A)
 #    B = center_cell(B)
-    return A,B,Tmatch
+    return A,B,Tmatch, Tperm, Tflip, dmin
 
 def rotate_closest(A,B):
     # Trot, Tskew, A, B = ...
@@ -1310,10 +1339,14 @@ def rotate_closest(A,B):
 def test_enum(A,B, options):
     from pylada import enum
     from pylada.crystal import supercell, primitive
+    from util import write_xyz
+
+    write_xyz(options, B, "Bstart", 4)
 
     # get primitive cells
     A = primitive(A)
     B = primitive(B)
+
 
     # figure out multipliers needed to make supercells with the same number of atoms
     n1 = len(A)
@@ -1352,8 +1385,9 @@ def test_enum(A,B, options):
     A = supercell(A,np.dot(A.cell,Acells[imin]))
     B = supercell(B,np.dot(B.cell,Bcells[jmin]))
     # A and B are now commensurate structures with closest norm in 3N-space
-    print A.cell
     write_tcl(options, A, B, [], "enum")
+    write_xyz(options, B, "enum", 4)
+
 
     # find rotation that makes best overlap
     from pylada.crystal import space_group
@@ -1385,19 +1419,35 @@ def test_enum(A,B, options):
         sys.exit() # for testing! 
     else:
         #    test_cell_intersection()
-        T,vol,th = optimize_cell_intersection(A.cell, B.cell)
-        print "volume of cell intersection: ", vol, th, T
-        newB = transform_cell(T, B)
-        write_tcl(options, A, newB, [], "opt", center=True)
+        Trot,vol,th = optimize_cell_intersection(A.cell, B.cell)
+        print "volume of cell intersection: ", vol, th, Trot
+        Brot = transform_cell(Trot, B)
+        write_tcl(options, A, Brot, [], "opt", center=True)
         
         # this just maps unit cell of B onto A, now that we've found the best rotation
-        A,newB,Tmatch = match_cells(A,newB, options)
-        write_tcl(options, A, newB, [], "match", center=False)
+        A,Bmatch,Tmatch, Tperm, Tflip, dmin_match = match_cells(A,Brot, options)
+        write_tcl(options, A, Bmatch, [], "match", center=False)
+        Bflip = transform_cell(np.identity(3), Brot, Tperm, Tflip) # everything except unit cell tform and final atom mapping
+        write_tcl(options, A, Bflip, [], "flip2", center=True)
 
     # do pairing and calculate its HLST
     from dist import analyze_commensurized
-    dmin, hlstmin, shiftmin = analyze_commensurized(A, newB, options)
-    print "DONE: found dmin, hlstmin, shiftmin=", dmin, hlstmin[0], hlstmin[1], shiftmin, npl.norm(Tmatch-np.identity(3)), Tmatch
+    dmin, pairsmin, hlstmin, shiftmin = analyze_commensurized(A, Bmatch, options)
+    print "DONE: found dmin, hlstmin, shiftmin=", dmin, hlstmin[0], hlstmin[1], shiftmin
+    print "      |Tmatch-I|, Tperm, Tmatch", dmin_match 
+    print Tperm
+    print Tmatch
+
+    # some interesting mid way files. rot and flip have original unit cell, just rotated, permuted, flipped.
+    # but match has been transformed to target cell, so don't expect to see original structure
+    write_xyz(options, Brot, "rot", 4)
+    write_xyz(options, Bflip, "flip", 4)
+    write_xyz(options, Bmatch, "match", 4)
+
+    # save trajectory
+    from anim import make_anim
+    bigA = hlstmin[2]
+    make_anim(A, Bflip, Tmatch, shiftmin, pairsmin, bigA,options) 
 
 if __name__=="__main__":
     options, arg = get_options()

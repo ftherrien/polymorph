@@ -587,6 +587,7 @@ class HLSTCtx(object):
         self.src = None
         self.dst = None
         self.map = None
+        self.min_cluster_size = 2
 
     def fit_local(self, fullsrc, idx, level=0, do_level0=True):
         """ fit the ICP-like linear + translation, i.e.
@@ -641,7 +642,8 @@ class HLSTCtx(object):
 #        c3 = [[dmapdict[x] for x in y] for y in c3]
         allc = []
 #        for nc in range(2,min(6,len(dmap)+1)):
-        for nc in range(2,min(6,len(dmap)/2+1)):
+        min_cluster_size = self.min_cluster_size
+        for nc in range(2,min(6,len(dmap)/min_cluster_size+1)):
 #        for nc in range(4,5):
             cl = KMeans(n_clusters=nc)
             c = cl.fit(dmap)
@@ -652,7 +654,6 @@ class HLSTCtx(object):
             ## lab is like: (1,1,0,0,0,1,2,2,0,1...), assignments to clusters
             ci = []
             failed = False
-            min_cluster_size = 2
             for i in range(nc):
                 cidx = [idx[j] for j in range(len(lab)) if lab[j]==i] 
                 ## cidx is like [1,2,4,5], atoms in cluster i; ci is all of them: [[],[],...]
@@ -765,6 +766,8 @@ def test_hlst_fit(ctx, src, dst, options):
     also, they are assumed paired already!"""
     ctx.src = src
     ctx.dst = dst
+    if (hasattr(options, "min_cluster_size")):
+        ctx.min_cluster_size = options.min_cluster_size
     natoms = np.shape(ctx.src)[1]
     ctx.map = range(natoms)
     all_atoms=range(natoms)
