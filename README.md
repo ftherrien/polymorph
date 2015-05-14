@@ -17,10 +17,10 @@ coordinate system in the rotated frame that gives best overlap are as closely al
 determining the best atom pairing, and subsequent analysis.
 
 To run the code today (5/14/15), try, for example
-
+```
    python paths.py -m "enum" -v 0 -t 1 -A myaragonite.poscar -B mycalcite.poscar -z traj_c2a/  -c 2 -s -b 1.6
    python anim.py -n 51 -z traj_c2a/
-
+```
 Both these scripts have a "--help" option to guess at what the flags mean.
 WARNING: there is a bug such that the "shift" (see -s) means the space group analysis of the trajectory is not right.  For accurate
 space group analysis, use "-s".  Unfortunately, that sometimes causes no HLST to be found. ("sometimes" b/c there is some randomness
@@ -28,7 +28,7 @@ in the kmeans clustering from scikit-learn, and I haven't quite figure out how t
 maps we don't care yet anyway, is to use "-c 1", which will let clusters of size 1 (single atom) be found, so HLST will always succeed, so -s 1 
 should always work.
 
-Some details of the analysis after we've aligned the unit cells:
+Some details, thoughts, and notes about the analysis after we've aligned the unit cells, and other matters:
 
 Now we have two structures, same number of atoms, principal axes aligned.  And our "sphere"-test
 suggests that the unit cells have roughly the same shape.  But they are not exactly the same.
