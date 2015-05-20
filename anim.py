@@ -136,6 +136,33 @@ def get_options():
     return options, args
 
 
+def test_shift(src):
+    from pylada.crystal.iterator import equivalence as equivalence_iterator
+    from dist import my_space_group, my_equivalence_iterator
+    from copy import deepcopy
+
+    src0 = deepcopy(src)
+    src_sg = my_space_group(src)
+
+    dofmin = 1000
+    dmin = 1e10
+
+    groups = [u for u in my_equivalence_iterator(src, src_sg)]
+    print "groups of equiv atom indices in src:" , groups
+    nshift = len(groups)
+
+    for igroup in range(nshift): 
+        src1 = deepcopy(src0)
+
+        iorg = groups[igroup][0]
+        shift = deepcopy(src[iorg].pos)  # note, uncentered sourc here
+        for ia in range(len(src)):
+            src1[ia].pos = src0[ia].pos - shift 
+        sg = spglib.get_spacegroup(src1, symprec=1e-5, angle_tolerance=-1.0)
+        print "shift, sg", shift, sg
+        
+
+
 def main():
     options, args = get_options()
 
@@ -187,6 +214,9 @@ def main():
             nb = neighbors(structure, 1, structure[i].pos, 0.1)
             s += "%d   " % len(nb)
         print s
+
+        test_shift(structure)
+
     if (options.B != None):
         structure = pcread.poscar(options.B)
         sg = spglib.get_spacegroup(structure, symprec=1e-5, angle_tolerance=-1.0)

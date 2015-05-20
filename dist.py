@@ -400,10 +400,12 @@ def test_distmap():
     ## TODO: insert iters over shifts of all possible inequiv. atoms to origin here. (done: see test_inequiv)
     test_one_shifted_pair(fracsrc, fracdst, options)
 
-def test_one_shifted_pair(src, dst, options):
+def test_one_shifted_pair(A,B, options):
     from HLST import HLSTCtx, test_hlst_fit
     from copy import deepcopy
 
+    src = deepcopy(A)
+    dst = deepcopy(B)
     ctx = HLSTCtx()
     distmap = make_dist_map(src,dst)
     print "distmap done"
@@ -424,7 +426,7 @@ def test_one_shifted_pair(src, dst, options):
         for pair in amap:
             p = distmap[pair[0]][pair[1]]
 #            print p.ia, p.ib, p.d, p.apos, p.bpos
-            pp.append([p.ia, p.ia, p.d, p.apos, p.bpos])   # not a bug, we _want_ src and dst indices to match now
+            pp.append([p.ia, p.ia, p.d, p.apos, p.bpos])   # not a bug, we _want_ src and dst indices to match now--this is applying the permutation
             src[p.ia].pos = p.apos
             dst[p.ia].pos = p.bpos  # not a bug, we _want_ src and dst indices to match now
             src[p.ia].type = p.atype
@@ -436,10 +438,14 @@ def test_one_shifted_pair(src, dst, options):
         ## TODO: insert local ICT solution here, ie. best rotation and shift _for this pairing_.
         ### this should be first ICP step of HLST fitting? yes, it is. but sometimes it's nice to turn it off for "clean" input. 
 
-        hlst = test_hlst_fit(ctx, srcpos, dstpos, options)
-        # returns list: [dof, partitioning, bigA(3N-dim transform)]
+        if (options.do_hlst):
+            hlst = test_hlst_fit(ctx, srcpos, dstpos, options)
+            # returns list: [dof, partitioning, bigA(3N-dim transform)]
+            dof = hlst[0]
+        else:
+            hlst = [[0],[0],[0]]
+            dof = dofmin ## ignored
 
-        dof = hlst[0]
         # don't torture caller, just return best as judged first by lowest dof, then by lowest distance
         if (dof < dofmin or (dof == dofmin and dist < dmin)):
             write_tcl(options, src, dst, pp, "dist")
@@ -539,8 +545,9 @@ def optimize_cell_intersection(acell, bcell):
 
     vmax = -1e10
     print "optimizing cell intersection"
-    for x0 in [  [30,12,43], [60,76,2], [3,10,3]]:
+#    for x0 in [  [30,12,43], [60,76,2], [3,10,3]]:
 #    for x0 in [  [91,1,1]]:  ### this tricks us into getting back sol'ns upstream b/c origins don't align.
+    for x0 in [ [250,120,30]]:
         try:
             res = minimize(cell_intersection_obj_fn, x0, args = (acell, bcell), options={'eps':1e-6}, tol=1e-4)
             vol = -res.fun
@@ -668,6 +675,7 @@ def analyze_commensurized(src, dst, options):
     if options.no_shift:
         nshift = 1
         groups = [[0]]
+        test_shifts = [[0,0,0]]
     else:
         groups = [u for u in my_equivalence_iterator(src, src_sg)]
         print "groups of equiv atom indices in src:" , groups
@@ -684,7 +692,7 @@ def analyze_commensurized(src, dst, options):
 
         iorg = groups[igroup][0]
         if (options.no_shift):
-            shift = np.array([0,0,0])   ### for debugging, turn off shifting
+            shift = np.array(test_shifts[igroup])   ### for debugging, turn off shifting
         else:
             shift = deepcopy(src[iorg].pos)  # note, uncentered sourc here
             print "shifting to origin:", iorg, shift

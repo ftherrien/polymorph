@@ -32,6 +32,7 @@ def get_options():
     parser.add_option("-m", "--mode", dest="mode",  type="string", default="path", help="mode:one of 'path','sym','opt'")
     parser.add_option("-t", "--tiles", dest="output_tiles",  type="int", default=4, help="how many cells to tile in output")
     parser.add_option("-r", "--rotate_test", dest="rotate_test_angle",  type="int", default=None, help="if specified, ignores B and triggers a test: can we find a simple rotation?")
+    parser.add_option("-H", "--hlst", dest="do_hlst",  action="store_true", default=False, help="perform HLST fitting")
     parser.add_option("-e", "--atom_dist_eps", dest="atom_dist_eps",  type="float", default=0.9, help="threshold for atom closeness")
     parser.add_option("-v", "--verbose", dest="verbose",  type="int", default=0, help="verbosity")
     parser.add_option("-z", "--trajdir", dest="trajdir",  type="string", default="trajdir", help="where to dump trajectory files")
@@ -1219,7 +1220,7 @@ def match_cells (A,B,options):
                 tmpB2 = np.dot(tmpB1, Tflip)  # flip the axes
                 T = np.dot(A.cell, npl.inv(tmpB2))  # get exact map from permuted B to A
                 d = npl.norm(T-I)  # we want this to be close to identity, i.e. minimize d
-                print d, p, q
+#                print d, p, q
 #                print T
                 if d < dmin:
                     dmin = d
