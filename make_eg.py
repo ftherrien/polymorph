@@ -157,6 +157,7 @@ write_xyz_noopt(A, "B.X" ,1)
 write_struct(fout, A, "B.X.xyz", 0, False)
 fout.close()
 
+
 Ap = primitive(A)
 print Ap
 print "now make that primitive. should be back to where we started:", ucell_surface(Ap.cell), ucell_volume(Ap.cell)
