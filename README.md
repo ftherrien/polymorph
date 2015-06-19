@@ -16,17 +16,42 @@ Next we optimize the "overlap" of the cell, and permute the unit cell vectors so
 coordinate system in the rotated frame that gives best overlap are as closely aligned as possible.  This is the starting point for
 determining the best atom pairing, and subsequent analysis.
 
-To run the code today (5/14/15), try, for example
+To run the code today (5/21/15), try, for example
 ```
-   python paths.py -m "enum" -v 0 -t 1 -A myaragonite.poscar -B mycalcite.poscar -z traj_c2a/  -c 2 -s -b 1.6
+   python paths.py -m "enum" -v 0 -t 1 -A myaragonite.poscar -B mycalcite.poscar -z traj_c2a/   -b 1.6
    python anim.py -n 51 -z traj_c2a/
 ```
-Both these scripts have a "--help" option to guess at what the flags mean.
-WARNING: there is a bug such that the "shift" (see -s) means the space group analysis of the trajectory is not right.  For accurate
-space group analysis, use "-s".  Unfortunately, that sometimes causes no HLST to be found. ("sometimes" b/c there is some randomness
-in the kmeans clustering from scikit-learn, and I haven't quite figure out how to control its random seed).  Best bet, since for just distance
-maps we don't care yet anyway, is to use "-c 1", which will let clusters of size 1 (single atom) be found, so HLST will always succeed, so -s 1 
-should always work.
+
+Some help is built in:
+```
+   (lada)stc-24038s:polymorph pgraf$ python paths.py --help
+Usage: paths.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -A A, --A=A           poscar 1
+  -B B, --B=B           poscar 2
+  -m MODE, --mode=MODE  mode:one of 'path','sym','opt'
+  -t OUTPUT_TILES, --tiles=OUTPUT_TILES
+                        how many cells to tile in output
+  -r ROTATE_TEST_ANGLE, --rotate_test=ROTATE_TEST_ANGLE
+                        if specified, ignores B and triggers a test: can we
+                        find a simple rotation?
+  -H, --hlst            perform HLST fitting
+  -e ATOM_DIST_EPS, --atom_dist_eps=ATOM_DIST_EPS
+                        threshold for atom closeness
+  -v VERBOSE, --verbose=VERBOSE
+                        verbosity
+  -z TRAJDIR, --trajdir=TRAJDIR
+                        where to dump trajectory files
+  -c MIN_CLUSTER_SIZE, --min_cluster_size=MIN_CLUSTER_SIZE
+                        minimum size of atom clusters
+  -s, --no_shift        prevent shift of inequiv atoms to origin
+  -b BOND_LEN, --bond_len=BOND_LEN
+                        bond length
+```
+The "-r" and  "-e" are outdated/for testing.
+The "-c" option is only relevant together with "-h". 
 
 The code relies on some libraries:
 
