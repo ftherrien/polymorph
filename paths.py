@@ -18,9 +18,9 @@ import pylada.crystal.write as pcwrite
 from pylada.crystal import supercell, space_group
 import numpy as np
 import numpy.linalg as npl
-from math import cos, sin, acos
+from math import cos, sin, acos, pi
 
-from util import write_tcl, transform_cell
+from util import write_tcl, transform_cell, lcm
 
 def get_options():
     import os, os.path
@@ -68,23 +68,6 @@ class Symmetry(object):
         if abs(np.prod(self.evals) - 1) < eps:
             self.axis = find_axis(self.evals, self.evects, eps)
 
-# define gcd function
-def gcd(x, y):
-   """This function implements the Euclidian algorithm
-   to find G.C.D. of two numbers"""
-
-   while(y):
-       x, y = y, x % y
-
-   return x
-
-# define lcm function
-def lcm(x, y):
-   """This function takes two
-   integers and returns the L.C.M."""
-
-   lcm = (x*y)//gcd(x,y)
-   return lcm
 
 def all_3factors(m):
     """ get all integer triples i,j,k s.t. i*j*k = m.
@@ -1176,18 +1159,43 @@ def mynorm(pos):
     n = np.sqrt(sum([x**2 for x in pos]))
     return n
 
+
+def ucell_surface(A):
+    ## must be a better way, but here I am
+    # constructing a series of 3 cells whose VOLUMES are the SURFACE AREAS of
+    # each of the 3 unique faces of the unit cell
+    s = 0
+    for i in range(3):
+        i1 = i
+        i2 = (i+1)%3
+        a = A[:,i1]
+        b = A[:,i2]
+        n = np.cross(a,b)
+        n = n/npl.norm(n)
+        B = np.array([a,b,n])
+#        print "a", a
+#        print "B",B
+        s0 = abs(npl.det(B))
+        s += s0
+    return 2*s
+
+
 def calc_cell_bignorms(A, Acells):
     # note uses "supercell", which results in atoms all _in_ supercell
     n1 = []
     for i in range(len(Acells)):
+        print "Acell", Acells[i]
         x = supercell(A,np.dot(A.cell,Acells[i]))
+        # make canonical versions:
+        x = canonicalize(x)
         pos  = [a.pos for a in x]
         # a check that the atoms are _in_ the supercell:
 #        inv = npl.inv(x.cell)
 #        coord = [np.dot(inv,y) for y in pos]
 #        print np.max(coord), np.min(coord)
         bigx = np.reshape(pos, (3*len(x)))
-        n1.append(mynorm(bigx))
+#        n1.append(mynorm(bigx))
+        n1.append(ucell_surface(x.cell))
     return n1
 
 def pca_struct(A):
@@ -1337,6 +1345,52 @@ def rotate_closest(A,B):
     
     return Tperm, Trot, Tskew
 
+def abs_cap(x):
+    return max(-1,min(x,1))
+
+def radians(theta):
+    return theta * np.pi / 180.0
+
+def ang2vec(a,b,c,alpha, beta, gamma):
+    alpha_r = radians(alpha)
+    beta_r = radians(beta)
+    gamma_r = radians(gamma)
+    val = (np.cos(alpha_r) * np.cos(beta_r) - np.cos(gamma_r))\
+        / (np.sin(alpha_r) * np.sin(beta_r))
+        #Sometimes rounding errors result in values slightly > 1.
+    val = min(1,max(-1,val))
+    gamma_star = np.arccos(val)
+    vector_a = [a * np.sin(beta_r), 0.0, a * np.cos(beta_r)]
+    vector_b = [-b * np.sin(alpha_r) * np.cos(gamma_star),
+                 b * np.sin(alpha_r) * np.sin(gamma_star),
+                 b * np.cos(alpha_r)]
+    vector_c = [0.0, 0.0, float(c)]
+    return np.transpose(np.array([vector_a, vector_b, vector_c]))
+
+def vec2alpha(A):
+    m = np.transpose(A)
+    lengths = np.sqrt(np.sum(m ** 2, axis=1))
+    angles = np.zeros(3)
+    for i in range(3):
+        j = (i + 1) % 3
+        k = (i + 2) % 3
+        angles[i] = abs_cap(np.dot(m[j], m[k]) / (lengths[j] * lengths[k]))
+        
+    angles = np.arccos(angles) * 180. / pi
+    return lengths, angles
+
+
+
+def canonicalize(A):
+    from pylada.math import gruber
+    g = gruber(A.cell)
+    # going from cell to a,b,c..., then back again makes
+    # equal cells actually equal.
+    a,v = vec2alpha(g)
+    A2 = ang2vec(a[0],a[1],a[2],v[0],v[1],v[2])
+    A = supercell(A,A2)
+    return A
+
 def test_enum(A,B, options):
     from pylada import enum
     from pylada.crystal import supercell, primitive
@@ -1344,10 +1398,18 @@ def test_enum(A,B, options):
 
     write_xyz(options, B, "Bstart", 4)
 
+    print "incoming ucell surface areas:", ucell_surface(A.cell), ucell_surface(B.cell)
+
     # get primitive cells
     A = primitive(A)
     B = primitive(B)
-
+    
+    #### special test
+#    import sys
+#    Tskew = np.dot(A.cell, npl.inv(B.cell))
+#    print Tskew
+#    sys.exit()
+    ####
 
     # figure out multipliers needed to make supercells with the same number of atoms
     n1 = len(A)
@@ -1385,10 +1447,14 @@ def test_enum(A,B, options):
     print A.cell, Acells[imin]
     A = supercell(A,np.dot(A.cell,Acells[imin]))
     B = supercell(B,np.dot(B.cell,Bcells[jmin]))
+
+    # make canonical versions:
+    A = canonicalize(A)
+    B = canonicalize(B)
+
     # A and B are now commensurate structures with closest norm in 3N-space
     write_tcl(options, A, B, [], "enum")
     write_xyz(options, B, "enum", 4)
-
 
     # find rotation that makes best overlap
     from pylada.crystal import space_group

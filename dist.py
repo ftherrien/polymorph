@@ -362,7 +362,7 @@ def plausible_pairs(src,dst, distmap, atom_dist_eps):
         from munkres import Munkres, print_matrix
         m = Munkres()
         natoms = len(distmap[0])
-        matrix = list([[100*distmap[i][j].d   for i in range(natoms)] for j in range(natoms)])
+        matrix = list([[100*distmap[i][j].d   for i in range(natoms)] for j in range(natoms)])  # Munkres works only on integer-values!
         ppairs = []
         
         pairs = []
@@ -374,14 +374,15 @@ def plausible_pairs(src,dst, distmap, atom_dist_eps):
             total += value
 #            print '(%d, %d) -> %.2f' % (row, column, value/100.)
             pairs.append([column, row])
-        print 'total cost: %e' % (total/100.)
+#        print 'total cost: %e' % (total/100.)
         ppairs.append(pairs)
 
     alldist = []
     for pair in ppairs:
         d = one_pairing_dist(pair, distmap)
         alldist.append(d)
-        
+        print "euclidean dist:", d
+
     return ppairs, alldist
     
 def test_distmap():
@@ -408,9 +409,9 @@ def test_one_shifted_pair(A,B, options):
     dst = deepcopy(B)
     ctx = HLSTCtx()
     distmap = make_dist_map(src,dst)
-    print "distmap done"
+#    print "distmap done"
     pairings, alldist = plausible_pairs(src,dst,distmap, options.atom_dist_eps)
-    print "plausible pairs done, found %d pairs" % len(pairings)
+#    print "plausible pairs done, found %d pairs" % len(pairings)
     allhlst = []
     dmin = 1e10
     partitionmin = None
@@ -545,9 +546,9 @@ def optimize_cell_intersection(acell, bcell):
 
     vmax = -1e10
     print "optimizing cell intersection"
-#    for x0 in [  [30,12,43], [60,76,2], [3,10,3]]:
+    for x0 in [  [30,12,43], [60,76,2], [3,10,3]]:
 #    for x0 in [  [91,1,1]]:  ### this tricks us into getting back sol'ns upstream b/c origins don't align.
-    for x0 in [ [250,120,30]]:
+#    for x0 in [ [250,120,30]]:
         try:
             res = minimize(cell_intersection_obj_fn, x0, args = (acell, bcell), options={'eps':1e-6}, tol=1e-4)
             vol = -res.fun
@@ -699,12 +700,12 @@ def analyze_commensurized(src, dst, options):
         for ia in range(len(src)):
             src1[ia].pos = src0[ia].pos - shift 
         
-        print "computing dist map and hlst for shift ", shift
+#        print "computing dist map and hlst for shift ", shift
         dist, pairs, hlst = test_one_shifted_pair(src1,dst0, options)
         # pairs = list of which atoms where paired for minimal distance
         # hlst = [dof, partitioning, bigA] for best pairing and partitoning
         dof = hlst[0]
-        print "came back, dof = ", dof
+#        print "came back, dof = ", dof
         if (dof < dofmin or (dof <= dofmin and dist < dmin)):
             dmin = dist
             hlstmin = hlst

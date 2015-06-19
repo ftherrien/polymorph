@@ -79,7 +79,8 @@ def make_anim(A,B,Tm,shift,pairs,bigA,options):
         Bpath = deepcopy(B)
         Bpath.cell = t*A.cell + (1-t)*B.cell
         for i in range(len(apos)):
-            p  = t*apos[i] + (1-t)*bpos[i]  # this is an abs position, but in A's frame of reference
+            p  = t*apos[i] + (1-t)*bpos[i]  # this is an abs position, but in A's frame of reference (both apos and bpos are created with 
+                                            # B.cell transformed to A.cell.  Here we are mapping to cells in between original B.cell and A.cell)
             c = np.dot(ainv, p)  # so get the coords 
             pos = np.dot(Bpath.cell, c) # and express it w.r.t. evolving Bpath frame
             if (iter == 0):

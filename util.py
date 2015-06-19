@@ -143,8 +143,13 @@ def write_xyz_pos(A, tag):
             p = A[:,i]
             f.write("%s %f %f %f\n" % ("Ne", p[0], p[1], p[2]))
 
-def write_xyz_noopt(A, tag, repeat=1):
+def write_xyz_noopt(A, tag, repeat=1, no_atoms = False):
     with open("%s.xyz" %tag, "w") as f: 
+        if (no_atoms):
+            f.write("1\nA\n")
+            f.write("O 0 0 0\n")
+            return
+
         f.write("%d\nA\n" % (len(A)*(repeat**3)))
         for ix in range(repeat):
             for iy in range(repeat):
