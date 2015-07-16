@@ -1,7 +1,7 @@
 polymorph
 =========
 
-Tools for geometric polymorph transition theory
+Tools for geometric polymorph transition theory.
 
 We are in the experimental stage trying different ways to do it.
 Some stuff that works so far:
