@@ -11,6 +11,7 @@ import pylada.crystal.write as pcwrite
 
 
 from util import volume, write_tcl, rot_euler
+from util import write_tcl, transform_cell, lcm
 
 
 def closestDistanceBetweenLines(a0,a1,b0,b1,clampAll=False,clampA0=False,clampA1=False,clampB0=False,clampB1=False):
@@ -408,7 +409,7 @@ def test_one_shifted_pair(A,B, options):
     src = deepcopy(A)
     dst = deepcopy(B)
     ctx = HLSTCtx()
-    distmap = make_dist_map(src,dst)
+    distmap = make_dist_map(src,dst)  ## important: takes into account periodicity
 #    print "distmap done"
     pairings, alldist = plausible_pairs(src,dst,distmap, options.atom_dist_eps)
 #    print "plausible pairs done, found %d pairs" % len(pairings)
@@ -662,8 +663,33 @@ def test_inequiv():
     dst = pcread.poscar(options.B)
     analyze_commensurized(src,dst, options)
 
+
 def analyze_commensurized(src, dst, options):
-    """ read, do all possible shifts of sym-ineq cells, compute distmap, etc for each"""
+    """ loop over symmetry of lattic and call analyzed_commensurized for each config"""
+    from pylada.crystal import space_group, primitive
+    # find syms of the lattice (not nec. the struct).
+    BB = primitive(dst)
+    BB.clear()
+    BB.add_atom(0,0,0,"Au")
+    bsym = space_group(BB)
+    dmm = 1e10
+    print "B lattice has %d symmetries" % len(bsym)
+    for isym in range(len(bsym)): 
+#    for isym in range(0):
+        sym = bsym[isym]
+        print "testing symmetry ", sym
+        newdst = transform_cell(sym[0:3,:], dst)
+        dmin, pairsmin, hlstmin, shiftmin  =   analyze_commensurized_sym(src, newdst, options)
+        if (dmin < dmm):
+            dmm = dmin
+            pmm = pairsmin
+            hmm = hlstmin
+            smm = shiftmin
+    return dmm, pmm, hmm, smm
+
+def analyze_commensurized_sym(src, dst, options):
+    """ read, do all possible shifts of sym-ineq cells, compute distmap, etc for each
+    Assuming symmetry already applied"""
     from pylada.crystal.iterator import equivalence as equivalence_iterator
     from copy import deepcopy
 
@@ -684,9 +710,7 @@ def analyze_commensurized(src, dst, options):
 
 ## doing this here after equivalence check b/c it messes up the computation of which atoms are equivalent
     from paths import center_cell
-    src0 = center_cell(src0)
-    dst0 = center_cell(dst)
-    write_tcl(options, src0, dst0, [], "center")
+    from pylada.crystal import into_cell
 
     for igroup in range(nshift): 
         src1 = deepcopy(src0)
@@ -698,10 +722,14 @@ def analyze_commensurized(src, dst, options):
             shift = deepcopy(src[iorg].pos)  # note, uncentered sourc here
             print "shifting to origin:", iorg, shift
         for ia in range(len(src)):
-            src1[ia].pos = src0[ia].pos - shift 
+            src1[ia].pos = src0[ia].pos - shift
         
+        src2 = center_cell(src1)
+        dst2 = center_cell(dst)
+        write_tcl(options, src2, dst2, [], "center")
+
 #        print "computing dist map and hlst for shift ", shift
-        dist, pairs, hlst = test_one_shifted_pair(src1,dst0, options)
+        dist, pairs, hlst = test_one_shifted_pair(src2,dst2, options)
         # pairs = list of which atoms where paired for minimal distance
         # hlst = [dof, partitioning, bigA] for best pairing and partitoning
         dof = hlst[0]

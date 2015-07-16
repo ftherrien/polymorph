@@ -39,6 +39,7 @@ def get_options():
     parser.add_option("-c", "--min_cluster_size", dest="min_cluster_size",  type="int", default=2, help="minimum size of atom clusters")
     parser.add_option("-s", "--no_shift", dest="no_shift", help="prevent shift of inequiv atoms to origin", action="store_true", default=False)
     parser.add_option("-b", "--bond_len", dest="bond_len",  type="float", default=2, help="bond length")
+    parser.add_option("-n", "--frames", dest="frames",  type="int", default=1, help="how many frames in trajectory")
 
     (options, args) = parser.parse_args()
     return options, args
@@ -1188,12 +1189,13 @@ def calc_cell_bignorms(A, Acells):
         x = supercell(A,np.dot(A.cell,Acells[i]))
         # make canonical versions:
         x = canonicalize(x)
+        print x.cell
         pos  = [a.pos for a in x]
         # a check that the atoms are _in_ the supercell:
 #        inv = npl.inv(x.cell)
 #        coord = [np.dot(inv,y) for y in pos]
 #        print np.max(coord), np.min(coord)
-        bigx = np.reshape(pos, (3*len(x)))
+#        bigx = np.reshape(pos, (3*len(x)))
 #        n1.append(mynorm(bigx))
         n1.append(ucell_surface(x.cell))
     return n1
@@ -1380,15 +1382,39 @@ def vec2alpha(A):
     return lengths, angles
 
 
+def basic_tform_cell(M, A):
+    # transform cell by a left multiplication
+    from pylada.crystal import into_cell
+    from copy import deepcopy
+    B = deepcopy(A)
+    B.cell = np.dot(M, A.cell)
+    for b in B:
+        b.pos = into_cell(np.dot(M, b.pos), B.cell)
+    return B
 
-def canonicalize(A):
+def super_canon(A):
     from pylada.math import gruber
     g = gruber(A.cell)
+    # gruber gets us almost there (makes the cell "boxy"). 
+    # but the boxy rep returned by gruber is not unique.
     # going from cell to a,b,c..., then back again makes
     # equal cells actually equal.
     a,v = vec2alpha(g)
     A2 = ang2vec(a[0],a[1],a[2],v[0],v[1],v[2])
-    A = supercell(A,A2)
+    ## A2 is actually not a supercell of A, it is a rotated version.  
+    A = supercell(A,g)
+    A = basic_tform_cell(np.dot(A2, npl.inv(g)), A)
+    return A
+
+def canonicalize(A):
+    # gruber gets us almost there (makes the cell "boxy"). 
+    # but the boxy rep returned by gruber is not unique.
+    if False:
+        A = super_canon(A)
+    else:
+        from pylada.math import gruber
+        g = gruber(A.cell)
+        A = supercell(A,g)
     return A
 
 def test_enum(A,B, options):
@@ -1396,20 +1422,36 @@ def test_enum(A,B, options):
     from pylada.crystal import supercell, primitive
     from util import write_xyz
 
-    write_xyz(options, B, "Bstart", 4)
+    write_tcl(options, A, B, [], "start")
 
     print "incoming ucell surface areas:", ucell_surface(A.cell), ucell_surface(B.cell)
+#    A = canonicalize(A)
+#    B = canonicalize(B)
+#    print "incoming ucell surface areas:", ucell_surface(A.cell), ucell_surface(B.cell)
+#    write_tcl(options, A, B, [], "c0")
+#    write_xyz(options, B, "c0", 4)
 
     # get primitive cells
     A = primitive(A)
     B = primitive(B)
     
-    #### special test
+    #### special tests
 #    import sys
 #    Tskew = np.dot(A.cell, npl.inv(B.cell))
 #    print Tskew
+### The point: idea was to simply truncate to integer the natural cell to cell transform.
+### result of test is that the tform is very non-integer (in general) and this won't be a good approach
 #    sys.exit()
     ####
+#    from pylada.crystal import space_group, primitive
+#    bsym = space_group(B)
+#    print "B lend %d has %d symmetries" % (len(B), len(bsym))
+#    B.clear()
+#    B.add_atom(0,0,0, 'Au') 
+#    bsym = space_group(B)
+#    print "B len %d has %d symmetries" % (len(B), len(bsym))
+### The point: testing whether space_group() function cares about decoration. It appears not too.
+#    sys.exit()
 
     # figure out multipliers needed to make supercells with the same number of atoms
     n1 = len(A)
@@ -1446,21 +1488,35 @@ def test_enum(A,B, options):
     # make desired "closest" supercells
     print A.cell, Acells[imin]
     A = supercell(A,np.dot(A.cell,Acells[imin]))
+    print B.cell, Bcells[jmin]
     B = supercell(B,np.dot(B.cell,Bcells[jmin]))
 
-    # make canonical versions:
-    A = canonicalize(A)
-    B = canonicalize(B)
-
-    # A and B are now commensurate structures with closest norm in 3N-space
     write_tcl(options, A, B, [], "enum")
     write_xyz(options, B, "enum", 4)
+
+    # make canonical versions:
+    A = super_canon(A)
+    print "A after cannon"
+    print A
+    B = super_canon(B)
+    print "B after cannon"
+    print B
+
+    # A and B are now commensurate structures with closest norm in 3N-space
+    write_tcl(options, A, B, [], "canon")
+    write_xyz(options, B, "canon", 4)
 
     # find rotation that makes best overlap
     from pylada.crystal import space_group
     from dist import cell_intersection, test_cell_intersection, optimize_cell_intersection
 #################
  # some debate in my mind; do we need this, or does a search over rotations cover it
+### We absolutely need this: the given structures may be given to us in any of the symmetry-equivalent
+# forms allowed by the lattice; e.g. in a cubic lattice, we may get the exact same structure, just mirrored across x axis.
+# The atom positions might be quite different, but it's clearly the same structure
+# BUT, we don't need this HERE. The cell is determined by gruber, niggli et al.
+# Once we've chosen it, we have to mess with the decoration at a lower level in the hierarchy.
+###
 #    bsym = space_group(B)
 #    print "B has %d symmetries" % len(bsym)
 #    for isym in range(len(bsym)): 
@@ -1472,8 +1528,8 @@ def test_enum(A,B, options):
 #            ## something wrong with the cells
 #            continue # skip to next sym... TODO: sort out whether this is a bug
 #################
-    # maybe just use SVD to nail it quickly:
-    matchalgo = 2
+    # maybe just use SVD to nail it quickly?:
+    matchalgo = 3
     if (matchalgo == 1):
         Tperm, Trot, Tskew = rotate_closest(A,B)
         newB = transform_cell(Tperm, B)
@@ -1484,7 +1540,7 @@ def test_enum(A,B, options):
         write_tcl(options, A, newB, [], "skew", center=False)
     
         sys.exit() # for testing! 
-    else:
+    elif matchalgo == 2:
         #    test_cell_intersection()
         Trot,vol,th = optimize_cell_intersection(A.cell, B.cell)
         print "volume of cell intersection: ", vol, th, Trot
@@ -1496,18 +1552,25 @@ def test_enum(A,B, options):
         write_tcl(options, A, Bmatch, [], "match", center=False)
         Bflip = transform_cell(np.identity(3), Brot, Tperm, Tflip) # everything except unit cell tform and final atom mapping
         write_tcl(options, A, Bflip, [], "flip2", center=True)
+    else:
+        # Now that we use gruber, we're already done, except for final warp of B to A cell
+        Bflip = B
+        Tmatch = np.dot(A.cell, npl.inv(B.cell))  # get exact map from permuted B to A
+        Bmatch = transform_cell(Tmatch, B)
+        dmin_match = npl.norm(Tmatch-np.identity(3))  # we want this to be close to identity, i.e. minimize d
 
     # do pairing and calculate its HLST
     from dist import analyze_commensurized
     dmin, pairsmin, hlstmin, shiftmin = analyze_commensurized(A, Bmatch, options)
     print "DONE: found dmin, hlstmin, shiftmin=", dmin, hlstmin[0], hlstmin[1], shiftmin
-    print "      |Tmatch-I|, Tperm, Tmatch", dmin_match 
-    print Tperm
+    print "      |Tmatch-I| = ", dmin_match 
+    #print "Tperm", Tperm
+    print "Tmatch", 
     print Tmatch
 
     # some interesting mid way files. rot and flip have original unit cell, just rotated, permuted, flipped.
     # but match has been transformed to target cell, so don't expect to see original structure
-    write_xyz(options, Brot, "rot", 4)
+#    write_xyz(options, Brot, "rot", 4)
     write_xyz(options, Bflip, "flip", 4)
     write_xyz(options, Bmatch, "match", 4)
 

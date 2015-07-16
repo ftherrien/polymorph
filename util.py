@@ -170,6 +170,15 @@ def write_xyz(options, A, tag, repeat=1):
                         p = a.pos + off
                         f.write("%s %f %f %f\n" % (a.type, p[0], p[1], p[2]))
         
+def write_tcl_one(options, A, tag):
+    """ write tcl file for viz in VMD """
+    with open("POSCAR_A.%s" % tag, "w") as f: pcwrite.poscar(A, f, vasp5=True)
+    write_xyz(options, A, "A.%s" % tag,options.output_tiles)
+
+    fout = file("struct.%s.tcl" % tag, "w")
+    center = False
+    write_struct(fout, A, "A.%s.xyz" % tag, 0, center)
+    fout.close()
 
 def write_tcl(options, A, B, pairs, tag="", center=False):
     """ write tcl file for viz in VMD """

@@ -69,7 +69,7 @@ def make_anim(A,B,Tm,shift,pairs,bigA,options):
     # now write frames
     ainv = npl.inv(A.cell)
     eye2 = 2.0 * np.identity(3)  # for writing a big cell if we want
-    dt = 0.02
+    dt = 1.0/(options.frames-1)
     t = 0
     iter = 0
     eps = 1e-6
