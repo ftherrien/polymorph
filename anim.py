@@ -77,7 +77,7 @@ def make_anim(A,B,Tm,shift,pairs,bigA,options):
     while t <= 1+eps:
         
         Bpath = deepcopy(B)
-        Bpath.cell = t*A.cell + (1-t)*B.cell
+        Bpath.cell = t*A.cell + (1.0-t)*B.cell
         for i in range(len(apos)):
             p  = t*apos[i] + (1-t)*bpos[i]  # this is an abs position, but in A's frame of reference (both apos and bpos are created with 
                                             # B.cell transformed to A.cell.  Here we are mapping to cells in between original B.cell and A.cell)

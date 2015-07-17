@@ -158,7 +158,7 @@ def make_dist_map(A,B):
 
 def one_pairing_dist(p, dmap):
     dvec = [dmap[p[i][0]][p[i][1]].d for i in range(len(dmap))]
-    d = norm(dvec)
+    d = npl.norm(dvec)
     return d
 
 
@@ -299,7 +299,7 @@ def my_equivalence_iterator(structure, operations=None, tolerance=1e-6, splitocc
           pos = into_cell(atest.pos, sprim.cell)      
           for op in operations:
               newpos = dot(op[:3], pos) + op[3]
-              if norm(newpos-atom.pos) < tolerance:
+              if npl.norm(newpos-atom.pos) < tolerance:
                   equivs.append(itest)
                   tags[itest] = True
                   break;  # need not test rest of syms.
@@ -335,6 +335,16 @@ def analyze_commensurized(src, dst, options):
             smm = shiftmin
     return dmm, pmm, hmm, smm
 
+def center_cell(A):
+    from copy import deepcopy
+    newA = deepcopy(A)
+    pos = [a.pos for a in A]
+    amean = np.mean(pos, axis=0)
+    for a in newA:
+        p = deepcopy(a.pos)
+        a.pos = p - amean
+    return newA
+
 def analyze_commensurized_sym(src, dst, options):
     """ read, do all possible shifts of sym-ineq cells, compute distmap, etc for each
     Assuming symmetry already applied"""
@@ -357,7 +367,7 @@ def analyze_commensurized_sym(src, dst, options):
         nshift = len(groups)
 
 ## doing this here after equivalence check b/c it messes up the computation of which atoms are equivalent
-    from paths import center_cell
+#    from paths import center_cell
     from pylada.crystal import into_cell
 
     for igroup in range(nshift): 
@@ -605,7 +615,7 @@ def test_enum(A,B, options):
 
     # find rotation that makes best overlap
     from pylada.crystal import space_group
-    from dist import cell_intersection, test_cell_intersection, optimize_cell_intersection
+#    from dist import cell_intersection, test_cell_intersection, optimize_cell_intersection
 #################
  # some debate in my mind; do we need this, or does a search over rotations cover it
 ### We absolutely need this: the given structures may be given to us in any of the symmetry-equivalent
@@ -657,7 +667,7 @@ def test_enum(A,B, options):
         dmin_match = npl.norm(Tmatch-np.identity(3))  # we want this to be close to identity, i.e. minimize d
 
     # do pairing and calculate its HLST
-    from dist import analyze_commensurized
+#    from dist import analyze_commensurized
     dmin, pairsmin, hlstmin, shiftmin = analyze_commensurized(A, Bmatch, options)
     print "DONE: found dmin, hlstmin, shiftmin=", dmin, hlstmin[0], hlstmin[1], shiftmin
     print "      |Tmatch-I| = ", dmin_match 
