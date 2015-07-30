@@ -29,19 +29,21 @@ def closest_to(pos, cell, trg):
     return pmin
 
 
-def make_anim(A,B,Tm,shift,pairs,bigA,options):
+def make_anim(A,B,Tm,shift,pairs,options):
     # combined view of the unit call and atom transforms
     # A is target, B is src, after src has been rotated and its unit cell axes permuted so that they
     # "most align" with those of A.  Then transform is just two parts: first is unit cell Tform "Tm"
-    # next is mapping in pairs, which is expressed in 3N-dim space as bigA.
+    # next is mapping in pairs
+### no longer true: which is expressed in 3N-dim space as bigA.
 
     from copy import deepcopy
-    from util import write_struct, write_xyz, transform_cell
+    from util import write_struct, write_xyz, transform_cell, write_tcl
 
     print "Exploring minimal path we have discovered..."
     # the results come out a little convoluated b/c of all the steps, so here we gather the
     # actual start and finish positions.
 
+    details = False
 
     print B.cell
     print "maps to"
@@ -51,23 +53,41 @@ def make_anim(A,B,Tm,shift,pairs,bigA,options):
     print "and atom idx pairing"
     ppidx = pairs[0]
     ppos = pairs[1]
+    ainv = npl.inv(A.cell)
     apos = []
     bpos = []
     for i in range(len(ppidx)):
         p = ppidx[i]
         q = ppos[i]
-        print p, q
+        print p, q  ##, into_cell(np.dot(B.cell, np.dot(ainv, q[4])), B.cell)
         apos.append(q[3])  # target atom position
         bpos.append(q[4])  # src atom position
 
+    if (details):
+        print "and A is just"
+        print A.cell
+        for a in A:
+            print a.pos, into_cell(a.pos, A.cell)
+        print "and B is just"
+        print B.cell
+        for b in B:
+            print b.pos, into_cell(b.pos, B.cell)
+        
     if (not os.path.exists(options.trajdir)):
         os.mkdir(options.trajdir)
 
     savedir = os.getcwd()
     os.chdir(options.trajdir)
 
+    print "saving starting anim"
+    Bpath = deepcopy(B)
+    tag = "Bpath0" 
+    write_xyz(options, Bpath, tag, options.output_tiles)
+    fout = file("%s.tcl" % tag, "w")
+    write_struct(fout, Bpath, "%s.xyz" % tag, 0, center=False, bonds=True, bond_len = options.bond_len)
+    fout.close()
+
     # now write frames
-    ainv = npl.inv(A.cell)
     eye2 = 2.0 * np.identity(3)  # for writing a big cell if we want
     dt = 1.0/(options.frames-1)
     t = 0
@@ -79,8 +99,9 @@ def make_anim(A,B,Tm,shift,pairs,bigA,options):
         Bpath = deepcopy(B)
         Bpath.cell = t*A.cell + (1.0-t)*B.cell
         for i in range(len(apos)):
-            p  = t*apos[i] + (1-t)*bpos[i]  # this is an abs position, but in A's frame of reference (both apos and bpos are created with 
+            p  = t*apos[i] + (1.0-t)*bpos[i]  # this is an abs position, but in A's frame of reference (both apos and bpos are created with 
                                             # B.cell transformed to A.cell.  Here we are mapping to cells in between original B.cell and A.cell)
+                                            # Note apos and bpos are not taken directly from A, B input cells but are part of the "pairing" data 
             c = np.dot(ainv, p)  # so get the coords 
             pos = np.dot(Bpath.cell, c) # and express it w.r.t. evolving Bpath frame
             if (iter == 0):
@@ -89,6 +110,39 @@ def make_anim(A,B,Tm,shift,pairs,bigA,options):
             else:
                 Bpath[i].pos = closest_to(pos, Bpath.cell, curpos[i])
                 curpos[i] = Bpath[i].pos
+
+        if (iter == 0): ## testing/bug fixing
+            from pylada.crystal import space_group, primitive
+            from pylada.math import gruber
+            Btest = primitive(Bpath)
+            g = gruber(Btest.cell)
+            print "src has cell:"
+            print Btest.cell
+#            print g
+            Btest = supercell(Btest, g)
+            spacegroup = space_group(Btest)
+            sg = spglib.get_spacegroup(Btest, symprec=1e-4, angle_tolerance=2.0)
+            print "src has %d syms and sg %s" % (len(spacegroup), str(sg))
+            Bstart = deepcopy(Bpath)
+
+        sg = spglib.get_spacegroup(Bpath, symprec=1e-4, angle_tolerance=2.0)
+#        sg = spglib.get_spacegroup(Bpath, symprec=1e-1, angle_tolerance=10.0) ### debugging
+        print t, sg, tag
+
+        if (iter == options.frames-1): ## testing/bug fixing
+            from pylada.crystal import space_group, primitive
+            from pylada.math import gruber
+            Btest = primitive(Bpath)
+            g = gruber(Btest.cell)
+            print "target has cell:"
+            print Btest.cell
+#            print g
+            Btest = supercell(Btest, g)
+            spacegroup = space_group(Btest)
+            sg = spglib.get_spacegroup(Btest, symprec=1e-4, angle_tolerance=2.0)
+            print "target has %d syms and sg %s" % (len(spacegroup), str(sg))
+            Bend = deepcopy(Bpath)
+
         tag = "traj.%d" % iter
         write_xyz(options, Bpath, tag, options.output_tiles)
         fout = file("%s.tcl" % tag, "w")
@@ -99,24 +153,23 @@ def make_anim(A,B,Tm,shift,pairs,bigA,options):
 #        bigB = supercell(Bpath, np.dot(eye2,Bpath.cell))  # for writing a big poscar
         with open("%s.POSCAR" % tag, "w") as f: pcwrite.poscar(Bpath, f, vasp5=True)
 
-        sg = spglib.get_spacegroup(Bpath, symprec=1e-4, angle_tolerance=2.0)
-        print t, sg, tag
-
         t += dt
         iter += 1
 
     os.chdir(savedir)
+    write_tcl(options, Bend, Bstart, pairs[1], "pairs")
 
     # some special work to verify we really arrived at B:
-    Borig = pcread.poscar(options.A)
-    M = np.dot(Borig.cell, npl.inv(Bpath.cell)) 
-    Bfinal = transform_cell(M,Bpath)
-    bigB = supercell(Bfinal, np.dot(eye2,Bfinal.cell))
-    with open("final.POSCAR", "w") as f: pcwrite.poscar(bigB, f, vasp5=True)
-    sg = spglib.get_spacegroup(bigB, symprec=1e-4, angle_tolerance=2.0)
-    print "spacegroup of final structure: ", sg
+#    Borig = pcread.poscar(options.A)
+#    M = np.dot(Borig.cell, npl.inv(Bpath.cell)) 
+#    Bfinal = transform_cell(M,Bpath)
+#    bigB = supercell(Bfinal, np.dot(eye2,Bfinal.cell))  ## this is a special "doubling" test
+#    with open("final.POSCAR", "w") as f: pcwrite.poscar(bigB, f, vasp5=True)
+#    with open("final.POSCAR", "w") as f: pcwrite.poscar(Bfinal, f, vasp5=True)
+#    sg = spglib.get_spacegroup(Bfinal, symprec=1e-4, angle_tolerance=2.0)  ## this is "B in A coords"
+#    print "spacegroup of final structure: ", sg
     sg = spglib.get_spacegroup(B, symprec=1e-4, angle_tolerance=2.0)
-    print "spacegroup of initial structure (B, Bflip in code) ", sg
+    print "spacegroup of initial structure (B, [Bflip in code]) ", sg
     sg = spglib.get_spacegroup(A, symprec=1e-4, angle_tolerance=2.0)
     print "spacegroup of target structure (A) ", sg
 
@@ -132,6 +185,7 @@ def get_options():
     parser.add_option("-z", "--trajdir", dest="trajdir",  type="string", default=".", help="where to find trajectory files")
     parser.add_option("-A", "--A", dest="A",  type="string", default=None, help="poscar 1")
     parser.add_option("-B", "--B", dest="B",  type="string", default=None, help="poscar 2")
+    parser.add_option("-e", "--tol", dest="tol",  type="float", default=1e-1, help="tolerance for coordination calcs")
 
     (options, args) = parser.parse_args()
     return options, args
@@ -139,7 +193,7 @@ def get_options():
 
 def test_shift(src):
     from pylada.crystal.iterator import equivalence as equivalence_iterator
-    from dist import my_space_group, my_equivalence_iterator
+    from pmpaths import my_space_group, my_equivalence_iterator
     from copy import deepcopy
 
     src0 = deepcopy(src)
@@ -163,47 +217,60 @@ def test_shift(src):
         print "shift, sg", shift, sg
         
 
-
-def main():
-    options, args = get_options()
-
+def anim_main(options):
     sgnum = []
     sgfull = []
     dat = []
     c2dat = []
+    c2 = False
     for iter in range(options.frames):
         fname = "traj.%d.POSCAR" % iter
         fname = os.path.join(options.trajdir, fname)
         structure = pcread.poscar(fname)
         row = []
-        c2row = []
+        if (c2):
+            c2row = []
         for i in range(len(structure)):
-            nb = neighbors(structure, 1, structure[i].pos, 1e-1)
-            cs = coordination_shells(structure, 2, structure[i].pos, 1e-2)
+            nb = neighbors(structure, 1, structure[i].pos, options.tol)
+            if (c2):
+                cs = coordination_shells(structure, 2, structure[i].pos, options.tol)
 #            print "cs = ", cs
 #            print "nb = ", nb
             row.append(len(nb))
             #row.append(len(cs[0])) # size of of 1st shell
-            c2row.append([len(cs[0]),len(cs[0])]) # size of of 2nd shell
+            if (c2):
+                c2row.append([len(cs[0]),len(cs[0])]) # size of of 2nd shell
         sg = spglib.get_spacegroup(structure, symprec=1e-4, angle_tolerance=2.0)
         sgfull.append(sg)
         sg = sg.split("(")[1].split(")")[0]
         sgnum.append(int(sg))
 
         dat.append(row)
-        c2dat.append(c2row)
+        if (c2):
+            c2dat.append(c2row)
 
+    tot_coord_lost = 0
+    natoms = len(structure)
+    print "#coordination for %s to %s transition:" % (options.B, options.A)
     s = "#frame spacegroup  "
     for i in range(len(structure)):
         s += "atom%d " % i
     print s
     for i in range(len(dat)):
         s = "%d   %s %d   " % (i, sgfull[i], sgnum[i])
-        row = dat[i]
-        c2row = c2dat[i]                 
+        row = dat[i]        
+        if (c2):
+            c2row = c2dat[i]                 
         for j in range(len(row)):
-            s += "%d/%d,%d   " % ( row[j], c2row[j][0], c2row[j][1] )
+            if (i > 0):
+                tot_coord_lost += max(0,last_row[j] - row[j])  ## counting how many total bonds have broken, not how many restored 
+            if (c2):
+                s += "%d/%d,%d   " % ( row[j], c2row[j][0], c2row[j][1] )
+            else:
+                s += "%d   " % ( row[j])
         print s
+        last_row = row
+    print "#Total of %.2f bonds per atom broken in %s to %s transition." % (tot_coord_lost/float(natoms), options.B, options.A)
 
 
     if (options.A != None):
@@ -216,7 +283,7 @@ def main():
             s += "%d   " % len(nb)
         print s
 
-        test_shift(structure)
+#        test_shift(structure)
 
     if (options.B != None):
         structure = pcread.poscar(options.B)
@@ -230,6 +297,6 @@ def main():
 
 
 
-
 if __name__=="__main__":
-    main()
+    options, args = get_options()
+    anim_main(options)
