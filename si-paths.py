@@ -1,5 +1,5 @@
 
-import os
+import os, subprocess
 
 import pylada.crystal.read as pcread
 
@@ -10,6 +10,8 @@ from anim import anim_main
 
 if __name__=="__main__":
     options, arg = get_options()
+
+    direct = False
 
     pre = "POSCAR_"
     post = ".cif"
@@ -27,9 +29,15 @@ if __name__=="__main__":
             options.B = os.path.join(dir, "%s%s%s" % (pre,poscars[j],post))
             options.trajdir = os.path.join(tdir, "%s-to-%s" % (poscars[i], poscars[j]))
 
-            A = pcread.poscar(options.A)
-            B = pcread.poscar(options.B)
-            
-            test_enum(A,B,options)
-            anim_main(options)
-
+            if (direct):
+                A = pcread.poscar(options.A)
+                B = pcread.poscar(options.B)
+                
+                test_enum(A,B,options)
+                anim_main(options)
+                
+            else:
+                args = ["python", "pmpaths.py", "-t", "1", "-z", options.trajdir, "-n", "21", "-A", options.A, "-B", options.B]
+                stdout = file("stdout.%s-to-%s" % (poscars[i], poscars[j]), "w")
+                print "starting up with" , args
+                subprocess.Popen(args, stdout = stdout)
