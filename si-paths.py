@@ -23,6 +23,7 @@ if __name__=="__main__":
                "Tridymite_b", "Cristobalite_a",	"Moganite", 
                "Quartz_b", "Tridymite_a"]
 
+    procs = []
     for i in range(len(poscars)-1):
         for j in range(i+1, len(poscars)):
             options.A = os.path.join(dir, "%s%s%s" % (pre,poscars[i],post))
@@ -40,4 +41,14 @@ if __name__=="__main__":
                 args = ["python", "pmpaths.py", "-t", "1", "-z", options.trajdir, "-n", "21", "-A", options.A, "-B", options.B]
                 stdout = file("stdout.%s-to-%s" % (poscars[i], poscars[j]), "w")
                 print "starting up with" , args
-                subprocess.Popen(args, stdout = stdout)
+                procs.append(subprocess.Popen(args, stdout = stdout))
+
+
+    sleep_time = 1
+    if (not direct):
+        done = False
+        while not done:
+            time.sleep(sleep_time)
+            done = True
+            for p in procs:
+                done = done and p.poll() != None
