@@ -467,14 +467,22 @@ def ucell_surface(A):
     return 2*s
 
 
-def stats_to_value(aa, av, ba, bv, asa, bsa):
-    m1 = 10.0  # 10 is a big angle
-    m2 = 1.0  # 1 is a big distance
+def stats_to_value(aa, aang, ba, bang, asa, bsa):
+    # combine cell stats into one measure of similarity.
+    # roughly...:
+    m1 = 1.0  # 1 is a big distance
+    m2 = 10.0  # 10 is a big angle
     m3 = 10.0 # 10 is a big surface area
-    d1 = sum([abs(bv[i]-av[i]) for i in range(3)]) / m1
-    d2 = sum([abs(bv[i]-av[i]) for i in range(3)]) / m2
+    maxangle = 150
+    minangle = 30
+    d1 = sum([abs(ba[i]-aa[i]) for i in range(3)]) / m1
+    d2 = sum([abs(bang[i]-aang[i]) for i in range(3)]) / m2
     d3 = abs(asa-bsa) / m3
-    return d1+d2+d3
+
+    if (max(bang) > maxangle or min(bang)<minangle or max(aang) > maxangle or min(aang)<minangle):
+        return 1e10
+    else:
+        return d1+d2+d3
 
 def calc_cell_bignorms(A, Acells):
     # note uses "supercell", which results in atoms all _in_ supercell
@@ -507,20 +515,20 @@ def find_closest_cells(A, Acells, B, Bcells):
         # make canonical versions:
         Ap = canonicalize(Ap)
         asa = ucell_surface(Ap.cell)
-        aa,av = vec2alpha(Ap.cell)
+        aa,aang = vec2alpha(Ap.cell)
 
         for j in range(len(Bcells)):
             Bp = supercell(B,np.dot(B.cell,Bcells[j]))
             # make canonical versions:
             Bp = canonicalize(Bp)
             bsa = ucell_surface(Bp.cell)
-            ba,bv = vec2alpha(Bp.cell)
-            d = stats_to_value(aa, av, ba, bv, asa, bsa)
+            ba,bang = vec2alpha(Bp.cell)
+            d = stats_to_value(aa, aang, ba, bang, asa, bsa)
             if (d < dmin):
                 dmin = d
                 imin = i
                 jmin = j
-                print "new best stats", d, aa, ba, av, bv, asa, bsa
+                print "new best stats", d, aa, ba, aang, bang, asa, bsa
             
     return imin, jmin
 
@@ -617,14 +625,14 @@ def final_fix_gruber(A,B):
                             Ap = np.dot(A.cell, Q)
                             asa = ucell_surface(Ap)
                             bsa = ucell_surface(Bp)
-                            aa,av = vec2alpha(Ap)
-                            ba,bv = vec2alpha(Bp)
-                            d = stats_to_value(aa, av, ba, bv, asa, bsa)
+                            aa,aang = vec2alpha(Ap)
+                            ba,bang = vec2alpha(Bp)
+                            d = stats_to_value(aa, aang, ba, bang, asa, bsa)
                             if (d < dmin):
                                 Pmin = P
                                 Qmin = Q
                                 dmin = d
-                                print "new best stats", d, aa, ba, av, bv, asa, bsa
+                                print "new best stats", d, aa, ba, aang, bang, asa, bsa
 #    print "final_fix P = "
 #    print Pmin
     newA = np.dot(A.cell, Qmin)
