@@ -95,6 +95,9 @@ def make_dist_map(A,B):
     details = False
     alg = 1
 
+    if (details):
+        print A
+        print B
     if (alg == 1):
         dist_map = []
         iacell = npl.inv(A.cell)
@@ -323,18 +326,19 @@ def analyze_commensurized(src, dst, options):
     """ loop over symmetry of lattic and call analyzed_commensurized for each config"""
     from pylada.crystal import space_group, primitive
     from copy import deepcopy
-    # find syms of the lattice (not nec. the struct).
-    AA = primitive(src)
-    AA.clear()
-    AA.add_atom(0,0,0,"Au")
-    asym = space_group(AA)
     dmm = 1e10
 
     if (options.check_syms):
+        # find syms of the lattice (not nec. the struct).
+        AA = primitive(src)
+        AA.clear()
+        AA.add_atom(0,0,0,"Au")
+        asym = space_group(AA)
         nsym = len(asym)
         print "A lattice has %d symmetries" % len(asym)
     else:
         nsym = 1
+        asym = [np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,0]])]
         print "Ignoring A lattice symmetry"        
     for isym in range(nsym): 
         sym = asym[isym]
@@ -358,8 +362,11 @@ def analyze_commensurized(src, dst, options):
 
 def center_cell(A):
     from copy import deepcopy
+    from pylada.crystal import into_cell
     newA = deepcopy(A)
-    pos = [a.pos for a in A]
+    for a in newA:
+        a.pos = into_cell(a.pos, A.cell)
+    pos = [a.pos for a in newA]
     amean = np.mean(pos, axis=0)
     for a in newA:
         p = deepcopy(a.pos)
@@ -396,8 +403,8 @@ def analyze_commensurized_sym(src, dst, options):
         if (options.no_shift):
             shift = np.array(test_shifts[igroup])   ### for debugging, turn off shifting
         else:
-            shift = deepcopy(src[iorg].pos)  # note, uncentered sourc here
-            print "shifting to origin:", iorg, shift
+            shift = deepcopy(src[iorg].pos - src[0].pos)  # note, arbitrarily using atom 0 as reference
+            print "shifting to position 0:", iorg, shift
         for ia in range(len(src)):
             src1[ia].pos = src0[ia].pos - shift
         
