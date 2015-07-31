@@ -21,6 +21,8 @@ if __name__=="__main__":
     options, arg = get_options()
 
     direct = False
+    run_pmpaths = False
+    run_anim = True
 
     pre = "POSCAR_"
     post = ".cif"
@@ -50,27 +52,30 @@ if __name__=="__main__":
                 
             else:
                 args = ["python", "pmpaths.py", "-t", "1", "-b", "1.9", "-z", options.trajdir, "-n", "21", "-A", options.A, "-B", options.B]
-                stdout = file("stdout.%s-to-%s" % (poscars[i], poscars[j]), "w")
-                print "starting up with" , args
-                procs.append(subprocess.Popen(args, stdout = stdout))
-                # this just fires up the actual searches
+                if (run_pmpaths):
+                    stdout = file("stdout.%s-to-%s" % (poscars[i], poscars[j]), "w")
+                    print "starting pmpaths with" , args
+                    procs.append(subprocess.Popen(args, stdout = stdout))
+                    # this just fires up the actual searches
 
-                a2 = ["python", "anim.py", "-e", "2e-1", "-z", options.trajdir, "-n", "21", "-A", options.A, "-B", options.B]
-                std = "stdout.anim.%s-to-%s" % (poscars[i], poscars[j])
-                args2.append(a2)
-                fnames.append(std)
+                args2 = ["python", "anim.py", "-e", "2e-1", "-z", options.trajdir, "-n", "21", "-A", options.A, "-B", options.B]
+                std2 = "stdout.anim.%s-to-%s" % (poscars[i], poscars[j])
+                a2.append(args2)
+                fnames.append(std2)
 
     if (not direct):
         wait_til_done(procs)
 
         # now anim part
-        procs = []
-        print "starting up with" , args
-        for i in range(len(a2)):
-            stdout = file(fnames[i], "w")
-            procs.append(subprocess.Popen(args, stdout = stdout))
+        if run_anim:
+            procs = []
+            for i in range(len(a2)):
+                args = a2[i]
+                stdout = file(fnames[i], "w")
+                print "starting anim with" , args
+                procs.append(subprocess.Popen(args, stdout = stdout))
 
-        # wait til done so (on compute nodes) the job doesn't get killed
-        wait_til_done(procs)
+            # wait til done so (on compute nodes) the job doesn't get killed
+            wait_til_done(procs)
 
 
