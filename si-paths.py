@@ -8,7 +8,7 @@ from anim import anim_main
 
 
 def wait_til_done(procs):
-    sleep_time = 1
+    sleep_time = 30
     done = False
     while not done:
         time.sleep(sleep_time)
@@ -21,7 +21,7 @@ if __name__=="__main__":
     options, arg = get_options()
 
     direct = False
-    run_pmpaths = False
+    run_pmpaths = True
     run_anim = True
 
     pre = "POSCAR_"
@@ -30,15 +30,15 @@ if __name__=="__main__":
     tdir = "trajSi"
 
     ## deleted:"Coesite", 
-    poscars = ["Cristobalite_b", "Quartz_a", "Stishovite",  
-               "Tridymite_b", "Cristobalite_a",	"Moganite", 
-               "Quartz_b", "Tridymite_a"]
+    poscars = ["Quartz_a", "Quartz_b", "Tridymite_a",
+               "Tridymite_b", "Cristobalite_a",	"Cristobalite_b", "Moganite", 
+                 "Stishovite" ]
 
     procs = []
     a2 = []
     fnames = []
     for i in range(len(poscars)-1):
-        for j in range(i+1, len(poscars)):
+        for j in range(len(poscars)):
             options.A = os.path.join(dir, "%s%s%s" % (pre,poscars[i],post))
             options.B = os.path.join(dir, "%s%s%s" % (pre,poscars[j],post))
             options.trajdir = os.path.join(tdir, "%s-to-%s" % (poscars[i], poscars[j]))
@@ -64,18 +64,36 @@ if __name__=="__main__":
                 fnames.append(std2)
 
     if (not direct):
-        wait_til_done(procs)
-
-        # now anim part
-        if run_anim:
-            procs = []
-            for i in range(len(a2)):
+        p2 = []
+        if (not run_anim):
+            wait_til_done(procs)
+        elif (not run_pmpaths):
+            for i in range(len(procs)):
                 args = a2[i]
                 stdout = file(fnames[i], "w")
                 print "starting anim with" , args
-                procs.append(subprocess.Popen(args, stdout = stdout))
+                p2.append(subprocess.Popen(args, stdout = stdout))
+        else:
+            # now anim part, launch each one after corresponding proc is done
+            sleep_time = 10
+            done = False
+            anim_running = [False for i in range(len(p2))]
+            while not done:
+                time.sleep(sleep_time)
+                for i in range(len(procs)):
+                    p = procs[i]
+                    # p.poll() != None means process is finished
+                    done = p.poll() != None
+                    if (done and not anim_running[i]):
+                        args = a2[i]
+                        stdout = file(fnames[i], "w")
+                        print "starting anim with" , args
+                        p2.append(subprocess.Popen(args, stdout = stdout))
+                        anim_running[i] = True
 
-            # wait til done so (on compute nodes) the job doesn't get killed
-            wait_til_done(procs)
+                done = all(anim_running)
+
+        # wait til done so (on compute nodes) the job doesn't get killed
+        wait_til_done(p2)
 
 
