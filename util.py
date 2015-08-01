@@ -53,12 +53,12 @@ def rot_euler(thx, thy, thz):
 tcl_str1 = """
 mol new %s type xyz
 mol delrep 0 top
-mol rep CPK 0.9 0 10 0
+mol rep CPK 0.9 0 150 0
 mol addrep top 
 """
 
 tcl_str2 = """
-mol rep DynamicBonds %f 0.1 12
+mol rep DynamicBonds %f 0.1 100
 mol addrep top 
 """
 
