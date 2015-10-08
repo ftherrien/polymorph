@@ -16,30 +16,24 @@ Next we optimize the "overlap" of the cell, and permute the unit cell vectors so
 coordinate system in the rotated frame that gives best overlap are as closely aligned as possible.  This is the starting point for
 determining the best atom pairing, and subsequent analysis.
 
-To run the code today (5/21/15), try, for example
+To run the code today (8/10/15), try, for example
 ```
-   python paths.py -m "enum" -v 0 -t 1 -A myaragonite.poscar -B mycalcite.poscar -z traj_c2a/   -b 1.6
-   python anim.py -n 51 -z traj_c2a/
+   pmpaths.py -t 4 -z traj_c2r/ -n 21 -A geometry/CsCl/POSCAR_CsCl -B geometry/CsCl/POSCAR_RS -b 3.6
+   python anim.py -e 1e-1 -z traj_c2r/ -n 21 -A geometry/CsCl/POSCAR_CsCl -B geometry/CsCl/POSCAR_RS
 ```
 
 Some help is built in:
 ```
-   (lada)stc-24038s:polymorph pgraf$ python paths.py --help
-Usage: paths.py [options]
+(lada)stc-24038s:polymorph pgraf$ python pmpaths.py --help
+Usage: pmpaths.py [options]
 
 Options:
   -h, --help            show this help message and exit
   -A A, --A=A           poscar 1
   -B B, --B=B           poscar 2
-  -m MODE, --mode=MODE  mode:one of 'path','sym','opt'
   -t OUTPUT_TILES, --tiles=OUTPUT_TILES
                         how many cells to tile in output
-  -r ROTATE_TEST_ANGLE, --rotate_test=ROTATE_TEST_ANGLE
-                        if specified, ignores B and triggers a test: can we
-                        find a simple rotation?
   -H, --hlst            perform HLST fitting
-  -e ATOM_DIST_EPS, --atom_dist_eps=ATOM_DIST_EPS
-                        threshold for atom closeness
   -v VERBOSE, --verbose=VERBOSE
                         verbosity
   -z TRAJDIR, --trajdir=TRAJDIR
@@ -49,9 +43,26 @@ Options:
   -s, --no_shift        prevent shift of inequiv atoms to origin
   -b BOND_LEN, --bond_len=BOND_LEN
                         bond length
+  -n FRAMES, --frames=FRAMES
+                        how many frames in trajectory
+  -y, --check_syms      prevent checking of all syms
+  -e TOL, --tol=TOL     tolerance for coordination calcs
+
+(lada)stc-24038s:polymorph pgraf$ python anim.py --help
+Usage: anim.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -n FRAMES, --frames=FRAMES
+                        how many frames in trajectory
+  -z TRAJDIR, --trajdir=TRAJDIR
+                        where to find trajectory files
+  -A A, --A=A           poscar 1
+  -B B, --B=B           poscar 2
+  -e TOL, --tol=TOL     tolerance for coordination calcs
+  -r, --raw_anim        interpolate B to A  ### this option is under
+                        development
 ```
-The "-r" and  "-e" are outdated/for testing.
-The "-c" option is only relevant together with "-h". 
 
 The code relies on some libraries:
 
@@ -60,6 +71,15 @@ The code relies on some libraries:
    pyspglib (as modified by Vladan)  
 
 I think the first two can be install with "pip"
+
+The output of pmpaths.py (besides all it writes to stdout) is a directory ("traj_dir") that contains the "frames"
+along the path.  These are then further analyzed (for coordination) with anim.py.  The output of anim.py 
+is a "frame by frame" description of the coordination and space group along the path.
+
+There are a couple of other helper scripts (e.g. si-paths.py), but pmpaths.py (especially) is the main code,
+and anim.py the main postprocessor.
+
+------------------------------------------------------
 
 Some details, thoughts, and notes about the analysis after we've aligned the unit cells, and other matters:
 
