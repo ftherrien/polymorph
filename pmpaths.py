@@ -271,10 +271,16 @@ def test_one_shifted_pair(A,B, options):
 def my_space_group(s):
     from pylada.crystal import space_group, primitive
 
-    sprim = primitive(s)
-    spacegroup = space_group(sprim)
+#    print "in my_space_group with s = ", s
+    try:
+        sprim = primitive(s)
+        spacegroup = space_group(sprim)
+    except:
+        print "space_group failed"
+        return []
+
     if len(spacegroup) == 0:
-        spacegroup = zeros((1, 4, 3))
+        spacegroup = np.zeros((1, 4, 3))
         spacegroup[0,0,0] = 1
         spacegroup[0,1,1] = 1
         spacegroup[0,2,2] = 1
@@ -381,6 +387,8 @@ def analyze_commensurized_sym(src, dst, options):
 
     src0 = deepcopy(src)
     src_sg = my_space_group(src)
+    if (len(src_sg) == 0):  ### bail here for bad and unusual case of pylada.crystal.primitive failing
+        return 1e100, None, None, None, None
 
     dofmin = 1000
     dmin = 1e10
