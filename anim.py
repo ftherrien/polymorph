@@ -315,8 +315,16 @@ def test_shift(src):
             src1[ia].pos = src0[ia].pos - shift 
         sg = spglib.get_spacegroup(src1, symprec=1e-5, angle_tolerance=-1.0)
         print "shift, sg", shift, sg
-        
 
+def get_nnb(s,i,mytol):        
+    ### this is a bit of a hack to get around a pylada bug; pylada crashes if tol is too high
+    nb = neighbors(s, 2, s[i].pos)
+    nnb = 1
+    for k in range(1,len(nb)):
+        if nb[k][2] - nb[0][2] < mytol: # difference between k'th neighbor and 0'th (which is closest)
+            nnb += 1
+    return nnb
+            
 def anim_main(options):
     sgnum = []
     sgfull = []
@@ -331,12 +339,16 @@ def anim_main(options):
         if (c2):
             c2row = []
         for i in range(len(structure)):
-            nb = neighbors(structure, 1, structure[i].pos, options.tol)
+            ## should just be doing this and be done:
+#            nb = neighbors(structure, 1, structure[i].pos, options.tol)
+            ## but not quite working, so do this:
+            nnb = get_nnb(structure, i, options.tol)
             if (c2):
                 cs = coordination_shells(structure, 2, structure[i].pos, options.tol)
 #            print "cs = ", cs
 #            print "nb = ", nb
-            row.append(len(nb))
+#            row.append(len(nb))
+            row.append(nnb)
             #row.append(len(cs[0])) # size of of 1st shell
             if (c2):
                 c2row.append([len(cs[0]),len(cs[0])]) # size of of 2nd shell
@@ -379,8 +391,8 @@ def anim_main(options):
 #        sg = sg.split("(")[1].split(")")[0]
         s = "#A   %s   " % ( sg)
         for i in range(len(structure)):
-            nb = neighbors(structure, 1, structure[i].pos, 0.1)
-            s += "%d   " % len(nb)
+            nnb = get_nnb(structure, i, options.tol)
+            s += "%d   " % nnb
         print s
 
 #        test_shift(structure)
@@ -391,8 +403,8 @@ def anim_main(options):
 #        sg = sg.split("(")[1].split(")")[0]
         s = "#B   %s   " % ( sg)
         for i in range(len(structure)):
-            nb = neighbors(structure, 1, structure[i].pos, 0.1)
-            s += "%d   " % len(nb)
+            nnb = get_nnb(structure, i, options.tol)
+            s += "%d   " % nnb
         print s
 
 

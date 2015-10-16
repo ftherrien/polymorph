@@ -423,7 +423,6 @@ def analyze_commensurized_sym(src, dst, options):
                     extra_shifts.append(next)
         nextra = len(extra_shifts)
                 
-
     for igroup in range(nshift+nextra): 
         src1 = deepcopy(src0)
 
