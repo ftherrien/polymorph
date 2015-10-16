@@ -29,6 +29,104 @@ def closest_to(pos, cell, trg):
     return pmin
 
 
+def raw_anim(A,B,options):
+    # just animate between A and B, straight up!
+    ### this option is under development
+    savedir = os.getcwd()
+    os.chdir(options.trajdir)
+
+    structure = pcread.poscar(options.A)
+    structure = pcread.poscar(options.B)
+
+    print "saving starting anim"
+    Bpath = deepcopy(B)
+    tag = "Bpath0" 
+    write_xyz(options, Bpath, tag, options.output_tiles)
+    fout = file("%s.tcl" % tag, "w")
+    write_struct(fout, Bpath, "%s.xyz" % tag, 0, center=False, bonds=True, bond_len = options.bond_len)
+    fout.close()
+
+    # now write frames
+    dt = 1.0/(options.frames-1)
+    t = 0
+    iter = 0
+    eps = 1e-6
+    curpos = []
+    while t <= 1+eps:
+        Bpath = deepcopy(B)
+        Bpath.cell = t*A.cell + (1.0-t)*B.cell
+        for i in range(len(apos)):
+            pos  = t*A[i].pos[i] + (1.0-t)*B[i].pos[i]
+            if (iter == 0):
+                Bpath[i].pos = into_cell(pos, Bpath.cell)  # then make sure it's _in_ the unit cell
+                curpos.append(Bpath[i].pos)
+            else:
+                Bpath[i].pos = closest_to(pos, Bpath.cell, curpos[i])
+                curpos[i] = Bpath[i].pos
+
+        if (iter == 0): ## testing/bug fixing
+            from pylada.crystal import space_group, primitive
+            from pylada.math import gruber
+            Btest = primitive(Bpath)
+            g = gruber(Btest.cell)
+            print "src has cell:"
+            print Btest.cell
+#            print g
+            Btest = supercell(Btest, g)
+            spacegroup = space_group(Btest)
+            sg = spglib.get_spacegroup(Btest, symprec=1e-4, angle_tolerance=2.0)
+            print "src has %d syms and sg %s" % (len(spacegroup), str(sg))
+            Bstart = deepcopy(Bpath)
+
+        sg = spglib.get_spacegroup(Bpath, symprec=1e-4, angle_tolerance=2.0)
+#        sg = spglib.get_spacegroup(Bpath, symprec=1e-1, angle_tolerance=10.0) ### debugging
+        print t, sg, tag
+
+        if (iter == options.frames-1): ## testing/bug fixing
+            from pylada.crystal import space_group, primitive
+            from pylada.math import gruber
+            Btest = primitive(Bpath)
+            g = gruber(Btest.cell)
+            print "target has cell:"
+            print Btest.cell
+#            print g
+            Btest = supercell(Btest, g)
+            spacegroup = space_group(Btest)
+            sg = spglib.get_spacegroup(Btest, symprec=1e-4, angle_tolerance=2.0)
+            print "target has %d syms and sg %s" % (len(spacegroup), str(sg))
+            Bend = deepcopy(Bpath)
+
+        tag = "traj.%d" % iter
+        write_xyz(options, Bpath, tag, options.output_tiles)
+        fout = file("%s.tcl" % tag, "w")
+        write_struct(fout, Bpath, "%s.xyz" % tag, 0, center=False, bonds=True, bond_len = options.bond_len)
+        fout.close()
+
+        # write poscar we can analyze later
+#        bigB = supercell(Bpath, np.dot(eye2,Bpath.cell))  # for writing a big poscar
+        with open("%s.POSCAR" % tag, "w") as f: pcwrite.poscar(Bpath, f, vasp5=True)
+
+        t += dt
+        iter += 1
+
+    os.chdir(savedir)
+    write_tcl(options, Bend, Bstart, pairs[1], "pairs")
+
+    # some special work to verify we really arrived at B:
+#    Borig = pcread.poscar(options.A)
+#    M = np.dot(Borig.cell, npl.inv(Bpath.cell)) 
+#    Bfinal = transform_cell(M,Bpath)
+#    bigB = supercell(Bfinal, np.dot(eye2,Bfinal.cell))  ## this is a special "doubling" test
+#    with open("final.POSCAR", "w") as f: pcwrite.poscar(bigB, f, vasp5=True)
+#    with open("final.POSCAR", "w") as f: pcwrite.poscar(Bfinal, f, vasp5=True)
+#    sg = spglib.get_spacegroup(Bfinal, symprec=1e-4, angle_tolerance=2.0)  ## this is "B in A coords"
+#    print "spacegroup of final structure: ", sg
+    sg = spglib.get_spacegroup(B, symprec=1e-4, angle_tolerance=2.0)
+    print "spacegroup of initial structure (B, [Bflip in code]) ", sg
+    sg = spglib.get_spacegroup(A, symprec=1e-4, angle_tolerance=2.0)
+    print "spacegroup of target structure (A) ", sg
+
+
 def make_anim(A,B,Tm,shift,pairs,options):
     # combined view of the unit call and atom transforms
     # A is target, B is src, after src has been rotated and its unit cell axes permuted so that they
@@ -112,36 +210,38 @@ def make_anim(A,B,Tm,shift,pairs,options):
                 curpos[i] = Bpath[i].pos
 
         if (iter == 0): ## testing/bug fixing
-            from pylada.crystal import space_group, primitive
-            from pylada.math import gruber
-            Btest = primitive(Bpath)
-            g = gruber(Btest.cell)
-            print "src has cell:"
-            print Btest.cell
-#            print g
-            Btest = supercell(Btest, g)
-            spacegroup = space_group(Btest)
-            sg = spglib.get_spacegroup(Btest, symprec=1e-4, angle_tolerance=2.0)
-            print "src has %d syms and sg %s" % (len(spacegroup), str(sg))
             Bstart = deepcopy(Bpath)
+            if (details):
+                from pylada.crystal import space_group, primitive
+                from pylada.math import gruber
+                Btest = primitive(Bpath)
+                g = gruber(Btest.cell)
+                print "src has primitive cell:"
+                print Btest.cell
+    #            print g
+                Btest = supercell(Btest, g)
+                spacegroup = space_group(Btest)
+                sg = spglib.get_spacegroup(Btest, symprec=1e-4, angle_tolerance=2.0)
+                print "src has %d syms and sg %s" % (len(spacegroup), str(sg))
 
         sg = spglib.get_spacegroup(Bpath, symprec=1e-4, angle_tolerance=2.0)
 #        sg = spglib.get_spacegroup(Bpath, symprec=1e-1, angle_tolerance=10.0) ### debugging
         print t, sg, tag
 
         if (iter == options.frames-1): ## testing/bug fixing
-            from pylada.crystal import space_group, primitive
-            from pylada.math import gruber
-            Btest = primitive(Bpath)
-            g = gruber(Btest.cell)
-            print "target has cell:"
-            print Btest.cell
-#            print g
-            Btest = supercell(Btest, g)
-            spacegroup = space_group(Btest)
-            sg = spglib.get_spacegroup(Btest, symprec=1e-4, angle_tolerance=2.0)
-            print "target has %d syms and sg %s" % (len(spacegroup), str(sg))
             Bend = deepcopy(Bpath)
+            if (details):
+                from pylada.crystal import space_group, primitive
+                from pylada.math import gruber
+                Btest = primitive(Bpath)
+                g = gruber(Btest.cell)
+                print "target has primitive cell:"
+                print Btest.cell
+    #            print g
+                Btest = supercell(Btest, g)
+                spacegroup = space_group(Btest)
+                sg = spglib.get_spacegroup(Btest, symprec=1e-4, angle_tolerance=2.0)
+                print "target has %d syms and sg %s" % (len(spacegroup), str(sg))
 
         tag = "traj.%d" % iter
         write_xyz(options, Bpath, tag, options.output_tiles)
@@ -181,11 +281,11 @@ def get_options():
     from optparse import OptionParser
     parser = OptionParser()    
     parser.add_option("-n", "--frames", dest="frames",  type="int", default=1, help="how many frames in trajectory")
-#    parser.add_option("-r", "--rotate_test", dest="rotate_test_angle",  type="int", default=None, help="if specified, ignores B and triggers a test: can we find a simple rotation?")
     parser.add_option("-z", "--trajdir", dest="trajdir",  type="string", default=".", help="where to find trajectory files")
     parser.add_option("-A", "--A", dest="A",  type="string", default=None, help="poscar 1")
     parser.add_option("-B", "--B", dest="B",  type="string", default=None, help="poscar 2")
     parser.add_option("-e", "--tol", dest="tol",  type="float", default=1e-1, help="tolerance for coordination calcs")
+    parser.add_option("-r", "--raw_anim", dest="raw_anim", help="interpolate B to A  ### this option is under development", action="store_true", default=False)
 
     (options, args) = parser.parse_args()
     return options, args
@@ -299,4 +399,8 @@ def anim_main(options):
 
 if __name__=="__main__":
     options, args = get_options()
-    anim_main(options)
+
+    if (options.raw_anim):
+        raw_anim(options)  ### this option is under development
+    else:
+        anim_main(options)

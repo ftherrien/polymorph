@@ -159,12 +159,13 @@ def write_xyz_noopt(A, tag, repeat=1, no_atoms = False):
                         p = a.pos + off
                         f.write("%s %f %f %f\n" % (a.type, p[0], p[1], p[2]))
         
-def write_xyz(options, A, tag, repeat=1):
+def write_xyz(options, A, tag, repeat=1, noztile=True):  ## temporarily disabled z-tiling
+    zrepeat = repeat if not noztile else 1
     with open("%s.xyz" %tag, "w") as f: 
-        f.write("%d\nA\n" % (len(A)*(repeat**3)))
+        f.write("%d\nA\n" % (len(A)*(repeat*repeat*zrepeat)))
         for ix in range(repeat):
             for iy in range(repeat):
-                for iz in range(repeat):
+                for iz in range(zrepeat):
                     off = np.dot(A.cell, np.array([ix,iy,iz]))
                     for a in A:
                         p = a.pos + off

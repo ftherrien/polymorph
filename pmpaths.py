@@ -1,16 +1,18 @@
 import os,sys
+from copy import deepcopy
 
 #import pylada.crystal as pyc
 #import pylada.crystal.read
 import pylada.crystal.read as pcread
 import pylada.crystal.write as pcwrite
-from pylada.crystal import supercell, space_group
+from pylada.crystal import supercell, space_group, into_cell
 import numpy as np
 import numpy.linalg as npl
 from math import cos, sin, acos, pi
 
 from util import write_tcl, transform_cell, lcm, gcd, write_struct, write_xyz
 from anim import closest_to, make_anim
+from util import rot_euler
 
 def get_options():
     import os, os.path
@@ -334,12 +336,21 @@ def analyze_commensurized(src, dst, options):
     from copy import deepcopy
     dmm = 1e10
 
+#################
+ # some debate in my mind; do we need consider symmetry within cell, or does a search over rotations cover it?
+### Answer:We absolutely need this: the given structures may be given to us in any of the symmetry-equivalent
+# forms allowed by the lattice; e.g. in a cubic lattice, we may get the exact same structure, just mirrored across x axis.
+# The atom positions might be quite different, but it's clearly the same structure
+# The cell is determined by gruber, niggli et al.
+# Once we've chosen it, we have to mess with the decoration at a lower level in the hierarchy. (i.e. here)
+#################
     if (options.check_syms):
         # find syms of the lattice (not nec. the struct).
         AA = primitive(src)
         AA.clear()
         AA.add_atom(0,0,0,"Au")
         asym = space_group(AA)
+#        asym.append(rot_euler(0,0,90))  # special case.  testing here.  cures Vladan's SnS problem case
         nsym = len(asym)
         print "A lattice has %d symmetries" % len(asym)
     else:
@@ -368,7 +379,6 @@ def analyze_commensurized(src, dst, options):
 
 def center_cell(A):
     from copy import deepcopy
-    from pylada.crystal import into_cell
     newA = deepcopy(A)
     for a in newA:
         a.pos = into_cell(a.pos, A.cell)
@@ -395,26 +405,43 @@ def analyze_commensurized_sym(src, dst, options):
 
     if options.no_shift:
         nshift = 1
+        nextra = 0
         groups = [[0]]
         test_shifts = [[0,0,0]]
     else:
         groups = [u for u in my_equivalence_iterator(src, src_sg)]
+#        groups = [[k] for k in range(len(src))]  experiment!
         print "groups of equiv atom indices in src:" , groups
         nshift = len(groups)
+        extra_shifts = []
+        for i in range(2):
+            for j in range(2):
+                for k in range(2):
+                    if i==0 and k==0 and j==0: continue
+                    ijk = [0.0 + 0.5*i, 0.0 + 0.5*j, 0.0 + 0.5*k]
+                    next = np.dot(src.cell, ijk)
+                    extra_shifts.append(next)
+        nextra = len(extra_shifts)
+                
 
-    from pylada.crystal import into_cell
-
-    for igroup in range(nshift): 
+    for igroup in range(nshift+nextra): 
         src1 = deepcopy(src0)
 
-        iorg = groups[igroup][0]
         if (options.no_shift):
             shift = np.array(test_shifts[igroup])   ### for debugging, turn off shifting
-        else:
+        elif igroup < nshift:
+            iorg = groups[igroup][0]
             shift = deepcopy(src[iorg].pos - src[0].pos)  # note, arbitrarily using atom 0 as reference
             print "shifting to position 0:", iorg, shift
+        else:
+            shift = extra_shifts[igroup-nshift]
+            print "shifting to extra position %d:" % (igroup-nshift), shift
+#            import pdb; pdb.set_trace()
+
         for ia in range(len(src)):
             src1[ia].pos = src0[ia].pos - shift
+
+        write_tcl(options, src1, dst, [], "dist")
         
 ## call to center cell here after equivalence check b/c it messes up the computation of which atoms are equivalent
         src2 = center_cell(src1)
@@ -424,6 +451,7 @@ def analyze_commensurized_sym(src, dst, options):
 
 #        print "computing dist map and hlst for shift ", shift
         dist, pairs, hlst = test_one_shifted_pair(src2,dst2, options)
+
         # pairs = list of which atoms where paired for minimal distance
         # hlst = [dof, partitioning, bigA] for best pairing and partitoning
         dof = hlst[0]
@@ -523,29 +551,89 @@ def find_closest_cells(A, Acells, B, Bcells):
     # note uses "supercell", which results in atoms all _in_ supercell
 
     print "finding closest match among %d A cells and %d B cells" % (len(Acells), len(Bcells))
-    
-    dmin = 1e10
+    Amincells = []  ## these lists all correspond.  the cells are integer matrices from which to build supercells (ala Gus Hart)
+    Bmincells = []
+    Bflags = []  ## the flags handle special cases, only one so far: include extra 90 deg rotated versions, because
+    dmins = []  ## B is "near-symmetric", which seems to mean that a,b,and/or c are similar, and corresponding alpha, beta,
+    dmin = 1e10 ## gamma is near 90.  I think inversion symmetry will handle 180 degrees (?).
+
+    dthresh = 1000  ## don't really need this now, just prevents a litle copying
+    max_cells = 10  ## max number of "similarly good" cell pairs to return
+    max_diff = 0.001 ## defines "similarly good"
+    small_angle = 10 ## angle for alpha that triggers an extra rotated version being added
+## unused yet    small_distance = 2 ## distance for a that triggers .. 
+
     for i in range(len(Acells)):
-        Ap = supercell(A,np.dot(A.cell,Acells[i]))
+        acell = np.dot(A.cell,Acells[i])
+        Ap = supercell(A,acell)
         # make canonical versions:
         Ap = canonicalize(Ap)
         asa = ucell_surface(Ap.cell)
         aa,aang = vec2alpha(Ap.cell)
 
         for j in range(len(Bcells)):
-            Bp = supercell(B,np.dot(B.cell,Bcells[j]))
+            bcell = np.dot(B.cell,Bcells[j])   ## a candidate commensurate (# atoms) cell
+            Bp = supercell(B,bcell)
+            print "bcell0"
+            print bcell
             # make canonical versions:
-            Bp = canonicalize(Bp)
-            bsa = ucell_surface(Bp.cell)
+            Bp = canonicalize(Bp)   ## make it blocky with gruber()
+            bsa = ucell_surface(Bp.cell)  ## get cell stats
             ba,bang = vec2alpha(Bp.cell)
-            d = stats_to_value(aa, aang, ba, bang, asa, bsa)
-            if (d < dmin):
-                dmin = d
-                imin = i
-                jmin = j
-                print "new best stats", d, aa, ba, aang, bang, asa, bsa
+            perms = [[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]]  ## permute a,b,c in case there are other orders also good
+            for p in perms:
+                pba = [ba[p[k]] for k in range(3)]
+                pbang = [bang[p[k]] for k in range(3)]
+
+                d = stats_to_value(aa, aang, pba, pbang, asa, bsa)
+                print "new stats", d, aa, pba, aang, pbang, asa, bsa, p
+                if (d < dmin):
+                    dmin = d
+                    imin = i
+                    jmin = j
+                    pmin = p
+                    print "new best stats", d, aa, ba, aang, bang, asa, bsa, pmin
+                if (d < dthresh):
+                    print "new cell pairing with stats", d, aa, ba, aang, bang, asa, bsa, pmin
+                    ## construct (with possible permuted a,b,c) unit cell we'll use 
+                    ## note, it's not yet actually "on top of" acell, just _could_ be (judging by a,b,c,alpha,beta,gamma)
+                    bcell = np.array([ [bcell[zz,p[xx]] for xx in range(3)] for zz in range(3)])
+#                    print acell
+#                    print bcell
+
+                    # make supercell as a test
+#                    print "making scell"
+                    Bp = supercell(B,bcell)
+#                    print "made scell"
+
+                    Amincells.append(acell)
+                    Bmincells.append(bcell)
+                    Bflags.append(None)
+                    dmins.append(d)
+                    
+                    if (abs(pbang[0] - 90) < small_angle):
+                        Amincells.append(acell)
+                        Bmincells.append(bcell)
+                        Bflags.append(2)  ## triggers 90 deg. rotation around z axis
+                        dmins.append(d)
+                        
+                    
             
-    return imin, jmin
+    idx = [i[0] for i in sorted(enumerate(dmins), key=lambda x:x[1])]
+    best_dmins = []
+    best_Amincells = []
+    best_Bmincells = []
+    best_Bflags = []
+    dmin = dmins[idx[0]]
+    for i in range(min(max_cells,len(dmins))):
+        if (dmins[idx[i]] - dmin < max_diff):
+            best_dmins.append (dmins[idx[i]])
+            best_Amincells.append(Amincells[idx[i]])
+            best_Bmincells.append(Bmincells[idx[i]])
+            best_Bflags.append(Bflags[idx[i]])
+
+    print best_dmins
+    return  best_dmins, best_Amincells, best_Bmincells, best_Bflags
 
 def abs_cap(x):
     return max(-1,min(x,1))
@@ -585,7 +673,6 @@ def vec2alpha(A):
 
 def basic_tform_cell(M, A):
     # transform cell by a left multiplication
-    from pylada.crystal import into_cell
     from copy import deepcopy
     B = deepcopy(A)
     B.cell = np.dot(M, A.cell)
@@ -593,7 +680,16 @@ def basic_tform_cell(M, A):
         b.pos = into_cell(np.dot(M, b.pos), B.cell)
     return B
 
-def super_canon(A):
+def wrong_quad(v):
+    ## check if in or on border of first quadrant, i.e. x,y,z all >=0
+    eps = 1e-8
+    print "wq", v
+    for i in range(3):
+        if v[i]+eps < 0:
+            return True
+    return False
+
+def super_canon(A, flags = None):
     from pylada.math import gruber
     g = gruber(A.cell)
     # gruber gets us almost there (makes the cell "boxy"). 
@@ -602,11 +698,47 @@ def super_canon(A):
     # equal cells actually equal.
     a,v = vec2alpha(g)
     A2 = ang2vec(a[0],a[1],a[2],v[0],v[1],v[2])
+    # going back and forth likes this makes A2 have the following properties:
+    # "a3" along z-axis,
+    # "a1" in x-z plane within 45 degrees of z axis, 
+    # "a2" is pointing up in a 45 degree "cone" around y axis.
+    if (flags != None):
+        if flags == 2:
+            print "adding 90 z-rotation"
+            print "before"
+            print A2
+            A2 = np.dot(rot_euler(0,0,90), A2)
+            print "after"
+            print A2
+            
+    print "g"
+    print g
     print "A2"
     print A2
-    ## A2 is actually not a supercell of A, it is a rotated version.  
+#    print "calcs..."
+#    print np.dot(npl.inv(A.cell), g)
+#    print np.dot(npl.inv(A.cell), A2)
+    ## g is actually a supercell of A, in the desired "blocky" shape.
+    ## A2 is actually not a supercell of A (or g), it is a rotated version.
+    ## so to make A, we go A->g->A2, first by supercell, then by transform.
+    ## [ A <- A2 * g^-1 * g  = A2 ]
     A = supercell(A,g)
-    A = basic_tform_cell(np.dot(A2, npl.inv(g)), A)
+    Tfinal = np.dot(A2, npl.inv(g))
+    A = basic_tform_cell(Tfinal, A)
+
+    # rotations swap a<->b, etc, so we have to switch them around:
+    if (flags != None):
+        if flags == 2:
+            tmp = deepcopy(A.cell[:,0])
+            A.cell[:,0] = deepcopy(A.cell[:,1])
+            A.cell[:,1] = -tmp
+            
+    for i in range(len(A)):
+        A[i].pos = into_cell(A[i].pos, A.cell)
+
+    print "A.cell"
+    print A.cell
+
     return A
 
 def canonicalize(A):
@@ -626,8 +758,16 @@ def final_fix_gruber(A,B):
     # and "a2" is pointing up in a 45 degree "cone" around y axis.
     # But this doesn't mean they are as close to EACH OTHER as they could be.
     # so here we do one last step:
-    dmin = 1e10
-    print B.cell
+
+    asa = ucell_surface(A.cell)
+    bsa = ucell_surface(B.cell)
+    aa,aang = vec2alpha(A.cell)
+    ba,bang = vec2alpha(B.cell)
+    dmin = stats_to_value(aa, aang, ba, bang, asa, bsa)
+    Pmin = np.identity(3)
+    Qmin = np.identity(3)
+    eps = 1e-2
+    print "starting dmin", dmin  ### this is just to slightly favor the good match we already found
     for i1 in range(-1,2):
         for i2 in range(-1,2):
             for i3 in range(-1,2):
@@ -643,13 +783,16 @@ def final_fix_gruber(A,B):
                             aa,aang = vec2alpha(Ap)
                             ba,bang = vec2alpha(Bp)
                             d = stats_to_value(aa, aang, ba, bang, asa, bsa)
-                            if (d < dmin):
+                            if d < 100:
+                                print "new stats", d, aa, ba, aang, bang, asa, bsa
+                            if (d < dmin-eps):
                                 Pmin = P
                                 Qmin = Q
                                 dmin = d
                                 print "new best stats", d, aa, ba, aang, bang, asa, bsa
-#    print "final_fix P = "
-#    print Pmin
+    print "final_fix_gruber: P,Q = "
+    print Pmin
+    print Qmin
     newA = np.dot(A.cell, Qmin)
     newB = np.dot(B.cell, Pmin)
 #    print newB
@@ -657,23 +800,88 @@ def final_fix_gruber(A,B):
     B = supercell(B, newB)
     return A, B
 
+def prepare_final_cells(A, B, Acell, Bcell, Bflags, options, idx):
+    print "About to start on A:"
+    print A.cell, Acell
+    Atest = supercell(A,Acell)
+    #        Atest = basic_tform_cell(np.dot(A2, npl.inv(g)), Atest)
+    #        Atest = basic_tform_cell(...
+    print "... and B:"
+    print B.cell, Bcell
+    Btest = supercell(B,Bcell)
+    
+    write_tcl(options, Atest, Btest, [], "enum%d" %idx)
+
+    # make canonical versions, including final rotation to known quadrant (see super_canon())
+    Acan = super_canon(Atest, None)
+    print "A after cannon"
+    print Acan
+    Bcan = super_canon(Btest, Bflags)
+    print "B after cannon"
+    print Bcan
+
+    write_tcl(options, Acan, Bcan, [], "canon%d" % idx)
+
+    # Using gruber, still one last fix ("flip"), (see comment in final_fix_gruber)
+    A,Bflip = final_fix_gruber(Acan,Bcan)
+
+    # A and Bflip are now commensurate structures with "most" overlapping unit cells
+    return A, Bflip
+
+
+class OneCellPairingResult(object):
+    def __init__(self,dmin, A, Bflip, Tmatch, shiftmin, pairsmin):
+        self.dmin = dmin
+        self.A = A
+        self.Bflip = Bflip
+        self.Tmatch = Tmatch
+        self.shiftmin = shiftmin
+        self.pairsmin = pairsmin
+
+def analyze_one_cell_mapping(A,B, options, idx):
+    print "STARTING ANALYSIS OF ONE CELL PAIRING"
+    # now _final_ warp of B to A cell
+    Tmatch = np.dot(A.cell, npl.inv(B.cell))  # get exact map from B to A
+    Bmatch = transform_cell(Tmatch, B)
+    dmin_match = npl.norm(Tmatch-np.identity(3))  # we want this to be close to identity, i.e. minimize d
+    write_tcl(options, A, Bmatch, [], "match%d"%idx, center=False)
+    write_tcl(options, A, B, [], "flip%d"%idx, center=False)
+
+#---------------    
+    # do atom level pairing:
+    dmin, pairsmin,  shiftmin = analyze_commensurized(A, Bmatch, options)
+    print "DONE: found dmin, shiftmin=", dmin,  shiftmin
+    print "      |Tmatch-I| = ", dmin_match 
+    #print "Tperm", Tperm
+    print "Tmatch", 
+    print Tmatch
+
+    # some interesting mid way files. rot and flip have original unit cell, just rotated, permuted, flipped.
+    # but match has been transformed to target cell, so don't expect to see original structure
+#    write_xyz(options, Brot, "rot", 4)
+    write_xyz(options, B, "flip%d"%idx, 4)
+    write_xyz(options, Bmatch, "match%d"%idx, 4)
+
+    one_res = OneCellPairingResult(dmin, A, B, Tmatch, shiftmin, pairsmin)
+    return one_res
+
+    print "FINISHED ANALYSIS OF ONE CELL PAIRING"
+
+
+
 def test_enum(A,B, options):
     from pylada import enum
     from pylada.crystal import supercell, primitive
     from util import write_xyz
+    from copy import deepcopy
 
+    # record starting state
     write_tcl(options, A, B, [], "start")
-
     print "incoming structures are %s and %s" % (options.A, options.B)
     print "incoming cells have %d and %d atoms, resp." % ( len(A), len(B) )
     print "incoming ucell surface areas:", ucell_surface(A.cell), ucell_surface(B.cell)
-#    A = canonicalize(A)
-#    B = canonicalize(B)
-#    print "incoming ucell surface areas:", ucell_surface(A.cell), ucell_surface(B.cell)
-#    write_tcl(options, A, B, [], "c0")
-#    write_xyz(options, B, "c0", 4)
 
-    # get primitive cells
+   # get primitive cells
     A = primitive(A)
     B = primitive(B)
     
@@ -702,145 +910,38 @@ def test_enum(A,B, options):
     m1 = N/n1
     m2 = N/n2
 
-    # make all supercells that match
+    # make all inequivalent supercells that match number of atoms
     Acells = enum.supercells(A,[m1])
     Bcells = enum.supercells(B,[m2])
     Acells = Acells[m1]
     Bcells = Bcells[m2]
 
-    cell_algo = 2
-    if (cell_algo == 1):
-        # calculate their norm in big space (different for each cell, but same for every instance of that cell)
-        n1 = calc_cell_bignorms(A, Acells)
-        n2 = calc_cell_bignorms(B, Bcells)
-        
-    # find the closest cells in this sense.
-        print n1
-        print n2
-        dmin = 1e100
-        for i in range(len(n1)):
-            for j in range(len(n2)):
-                d = abs(n1[i]-n2[j])
-                if d <= dmin:
-                    dmin = d
-                    imin = i
-                    jmin = j
+    # find which ones have the most potential overlap (using gruber())
+    dmin, Amincells, Bmincells, Bflags = find_closest_cells(A, Acells, B, Bcells)
+    print "The %d close enough cells are" % len(Amincells)
+    for i in range(len(Amincells)):
+        print Amincells[i]
+        print Bmincells[i]
+        print "dist = ", dmin[i]
+        print "Bflags = ", Bflags[i]
+        print "------------"
 
-        print "closest cells are %d and %d, %e apart: " % (imin, jmin, dmin)
-    else:
-        imin, jmin = find_closest_cells(A, Acells, B, Bcells)
-        print "closest cells are %d and %d" % (imin, jmin)
+    dmin = 1e10
+    for imin in range(len(Amincells)):
+        # make desired "closest" supercells
+        Atest, Btest = prepare_final_cells(A, B, Amincells[imin],Bmincells[imin], Bflags[imin], options, imin)
+        # run analyzis on this cell mapping
+        one_res = analyze_one_cell_mapping(Atest,Btest, options, imin)
+        if (one_res.dmin < dmin):
+            best_res = deepcopy(one_res)
+            dmin = one_res.dmin
 
-    print Acells[imin]
-    print Bcells[jmin]
-
-    # make desired "closest" supercells
-    print A.cell, Acells[imin]
-    A = supercell(A,np.dot(A.cell,Acells[imin]))
-    print B.cell, Bcells[jmin]
-    B = supercell(B,np.dot(B.cell,Bcells[jmin]))
-
-    write_tcl(options, A, B, [], "enum")
-    write_xyz(options, B, "enum", 4)
-
-    # make canonical versions:
-    A = super_canon(A)
-    print "A after cannon"
-    print A
-    B = super_canon(B)
-    print "B after cannon"
-    print B
-
-    # A and B are now commensurate structures with closest norm in 3N-space
-    write_tcl(options, A, B, [], "canon")
-    write_xyz(options, B, "canon", 4)
-
-    # find rotation that makes best overlap
-    from pylada.crystal import space_group
-#    from dist import cell_intersection, test_cell_intersection, optimize_cell_intersection
-#################
- # some debate in my mind; do we need this, or does a search over rotations cover it
-### We absolutely need this: the given structures may be given to us in any of the symmetry-equivalent
-# forms allowed by the lattice; e.g. in a cubic lattice, we may get the exact same structure, just mirrored across x axis.
-# The atom positions might be quite different, but it's clearly the same structure
-# BUT, we don't need this HERE. The cell is determined by gruber, niggli et al.
-# Once we've chosen it, we have to mess with the decoration at a lower level in the hierarchy.
-###
-#    bsym = space_group(B)
-#    print "B has %d symmetries" % len(bsym)
-#    for isym in range(len(bsym)): 
-#    for isym in range(0):
-#        sym = bsym[isym]
-#        newB = transform_cell(sym[0:3,:], B)
-#        v0 = cell_intersection(A.cell, newB.cell)
-#        if (v0 == None):
-#            ## something wrong with the cells
-#            continue # skip to next sym... TODO: sort out whether this is a bug
-#################
-    # maybe just use SVD to nail it quickly?:
-    matchalgo = 3
-    if (matchalgo == 1):
-        Tperm, Trot, Tskew = rotate_closest(A,B)
-        newB = transform_cell(Tperm, B)
-        write_tcl(options, A, newB, [], "perm", center=False)
-        newB = transform_cell(Trot, newB)
-        write_tcl(options, A, newB, [], "rot", center=False)
-        newB = transform_cell(Tskew, newB)
-        write_tcl(options, A, newB, [], "skew", center=False)
-    
-        sys.exit() # for testing! 
-    elif matchalgo == 2:
-        #    test_cell_intersection()
-        Trot,vol,th = optimize_cell_intersection(A.cell, B.cell)
-        print "volume of cell intersection: ", vol, th, Trot
-        Brot = transform_cell(Trot, B)
-        write_tcl(options, A, Brot, [], "opt", center=True)
-        
-        # this just maps unit cell of B onto A, now that we've found the best rotation
-        A,Bmatch,Tmatch, Tperm, Tflip, dmin_match = match_cells(A,Brot, options)
-        write_tcl(options, A, Bmatch, [], "match", center=False)
-        Bflip = transform_cell(np.identity(3), Brot, Tperm, Tflip) # everything except unit cell tform and final atom mapping
-        write_tcl(options, A, Bflip, [], "flip2", center=True)
-    else:
-        # Using gruber, still one last fix (see comment in final_fix_gruber)
-        A,Bflip = final_fix_gruber(A,B)
-        # now _final_ warp of B to A cell
-        Tmatch = np.dot(A.cell, npl.inv(Bflip.cell))  # get exact map from B to A
-        Bmatch = transform_cell(Tmatch, Bflip)
-        dmin_match = npl.norm(Tmatch-np.identity(3))  # we want this to be close to identity, i.e. minimize d
-        write_tcl(options, A, Bmatch, [], "match", center=False)
-        write_tcl(options, A, Bflip, [], "flip", center=False)
-
-        ##  testing/ debugging
-        #print Bmatch.cell
-        #print Bflip.cell
-        #print A.cell
-        #from pyspglib import spglib
-        #Btest = supercell(Bflip, np.dot(Bflip.cell, np.array([[2,1,0],[0,1,0],[3,0,1]])))
-        #sg = spglib.get_spacegroup(Btest, symprec=1e-4, angle_tolerance=2.0)
-        #print "Bflip sg is ", str(sg)
-        #print Btest.cell
-
-
-    # do pairing and calculate its HLST
-#    from dist import analyze_commensurized
-    dmin, pairsmin,  shiftmin = analyze_commensurized(A, Bmatch, options)
-    print "DONE: found dmin, shiftmin=", dmin,  shiftmin
-    print "      |Tmatch-I| = ", dmin_match 
-    #print "Tperm", Tperm
-    print "Tmatch", 
-    print Tmatch
-
-    # some interesting mid way files. rot and flip have original unit cell, just rotated, permuted, flipped.
-    # but match has been transformed to target cell, so don't expect to see original structure
-#    write_xyz(options, Brot, "rot", 4)
-    write_xyz(options, Bflip, "flip", 4)
-    write_xyz(options, Bmatch, "match", 4)
-
-    # save trajectory
+    print "-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+    print "HIERARCHICAL SEARCH DONE, dmin = ", best_res.dmin
+    # save trajectory of best found
     from anim import make_anim
-#    bigA = hlstmin[2]
-    make_anim(A, Bflip, Tmatch, shiftmin, pairsmin, options) 
+    make_anim(best_res.A, best_res.Bflip, best_res.Tmatch, best_res.shiftmin, best_res.pairsmin, options) 
+
 
 if __name__=="__main__":
     options, arg = get_options()
