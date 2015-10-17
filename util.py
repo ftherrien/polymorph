@@ -159,7 +159,7 @@ def write_xyz_noopt(A, tag, repeat=1, no_atoms = False):
                         p = a.pos + off
                         f.write("%s %f %f %f\n" % (a.type, p[0], p[1], p[2]))
         
-def write_xyz(options, A, tag, repeat=1, noztile=True):  ## temporarily disabled z-tiling
+def write_xyz(options, A, tag, repeat=1, noztile=False):  ## temporarily disabled z-tiling
     zrepeat = repeat if not noztile else 1
     with open("%s.xyz" %tag, "w") as f: 
         f.write("%d\nA\n" % (len(A)*(repeat*repeat*zrepeat)))

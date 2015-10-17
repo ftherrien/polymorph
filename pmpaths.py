@@ -557,10 +557,10 @@ def find_closest_cells(A, Acells, B, Bcells):
     dmin = 1e10 ## gamma is near 90.  I think inversion symmetry will handle 180 degrees (?).
 
     dthresh = 1000  ## don't really need this now, just prevents a litle copying
-    max_cells = 10  ## max number of "similarly good" cell pairs to return
-    max_diff = 0.001 ## defines "similarly good"
+    max_cells = 20  ## max number of "similarly good" cell pairs to return
+    max_diff = 4 ## defines "similarly good"
     small_angle = 10 ## angle for alpha that triggers an extra rotated version being added
-## unused yet    small_distance = 2 ## distance for a that triggers .. 
+    small_distance = 2 ## distance for a that triggers .. 
 
     for i in range(len(Acells)):
         acell = np.dot(A.cell,Acells[i])
@@ -610,7 +610,7 @@ def find_closest_cells(A, Acells, B, Bcells):
                     Bflags.append(None)
                     dmins.append(d)
                     
-                    if (abs(pbang[0] - 90) < small_angle):
+                    if (abs(pbang[0] - 90) < small_angle and abs(pba[0]-pba[1])<small_distance):
                         Amincells.append(acell)
                         Bmincells.append(bcell)
                         Bflags.append(2)  ## triggers 90 deg. rotation around z axis
