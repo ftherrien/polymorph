@@ -110,7 +110,8 @@ def raw_anim(A,B,options):
         iter += 1
 
     os.chdir(savedir)
-    write_tcl(options, Bend, Bstart, pairs[1], "pairs")
+    if (options.verbose > 2):
+        write_tcl(options, Bend, Bstart, pairs[1], "pairs")
 
     # some special work to verify we really arrived at B:
 #    Borig = pcread.poscar(options.A)
@@ -257,7 +258,8 @@ def make_anim(A,B,Tm,shift,pairs,options):
         iter += 1
 
     os.chdir(savedir)
-    write_tcl(options, Bend, Bstart, pairs[1], "pairs")
+    if (options.verbose > 2):
+        write_tcl(options, Bend, Bstart, pairs[1], "pairs")
 
     # some special work to verify we really arrived at B:
 #    Borig = pcread.poscar(options.A)
@@ -369,12 +371,12 @@ def anim_main(options):
     tot_coord_lost = 0
     natoms = len(structure)
     print "#coordination for %s to %s transition:" % (options.B, options.A)
-    s = "#frame spacegroup  "
+    s = "#frame spacegroup : "
     for i in range(len(structure)):
         s += "atom%d " % i
     print s
     for i in range(len(dat)):
-        s = "%d   %s %d   " % (i, sgfull[i], sgnum[i])
+        s = "%d   %s %d :  " % (i, sgfull[i], sgnum[i])
         row = dat[i]        
         if (c2):
             c2row = c2dat[i]                 
