@@ -37,7 +37,7 @@ def get_option_parser():
     return parser
 
 def get_options():
-    parser = get_options_parser()
+    parser = get_option_parser()
     (options, args) = parser.parse_args()
     return options, args
 
@@ -700,7 +700,7 @@ def find_and_prepare_closest_cells(A, B, options):
                     # the new unit cell is "close" to the old one
 
                     # Using gruber, still one last fix ("flip"), (see comment in final_fix_gruber)
-                    fix_gruber = False
+                    fix_gruber = True
                     if (fix_gruber):
                         Afixed,Bflip = final_fix_gruber(Acan,Btest)
                     else:
