@@ -51,7 +51,7 @@ if __name__=="__main__":
                 anim_main(options)
                 
             else:
-                args = ["python", "pmpaths.py", "-t", "1", "-b", "1.9", "-z", options.trajdir, "-n", "21", "-A", options.A, "-B", options.B]
+                args = ["python", "pmpaths.py", "-t", "1", "-b", "2.0", "-z", options.trajdir, "-n", "231", "-A", options.A, "-B", options.B]
                 if (run_pmpaths):
                     stdout = file("stdout.%s-to-%s" % (poscars[i], poscars[j]), "w")
                     print "starting pmpaths with" , args
@@ -77,20 +77,21 @@ if __name__=="__main__":
             # now anim part, launch each one after corresponding proc is done
             sleep_time = 10
             done = False
-            anim_running = [False for i in range(len(p2))]
+            anim_running = [False for i in range(len(procs))]
             while not done:
                 time.sleep(sleep_time)
                 for i in range(len(procs)):
-                    p = procs[i]
-                    # p.poll() != None means process is finished
-                    done = p.poll() != None
-                    if (done and not anim_running[i]):
-                        args = a2[i]
-                        stdout = file(fnames[i], "w")
-                        print "starting anim with" , args
-                        p2.append(subprocess.Popen(args, stdout = stdout))
-                        anim_running[i] = True
-
+                    if (not anim_running[i]):
+                        p = procs[i]
+                        # p.poll() != None means process is finished
+                        done = p.poll() != None
+                        if (done):
+                            args = a2[i]
+                            stdout = file(fnames[i], "w")
+                            print "starting anim with" , args
+                            p2.append(subprocess.Popen(args, stdout = stdout))
+                            anim_running[i] = True
+                print anim_running
                 done = all(anim_running)
 
         # wait til done so (on compute nodes) the job doesn't get killed
