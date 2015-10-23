@@ -1,6 +1,8 @@
 import os,sys
 from copy import deepcopy
 from math import cos, sin, acos, pi
+import  os.path
+from optparse import OptionParser
 
 import numpy as np
 import numpy.linalg as npl
@@ -14,9 +16,7 @@ from util import write_tcl, transform_cell, lcm, gcd, write_struct, write_xyz
 from anim import closest_to, make_anim
 from util import rot_euler
 
-def get_options():
-    import os, os.path
-    from optparse import OptionParser
+def get_option_parser():
     parser = OptionParser()    
     parser.add_option("-A", "--A", dest="A",  type="string", default="A", help="poscar 1")
     parser.add_option("-B", "--B", dest="B",  type="string", default="B", help="poscar 2")
@@ -34,7 +34,10 @@ def get_options():
     parser.add_option("-y", "--nocheck_syms", dest="nocheck_syms", help="don't check syms", action="store_true", default=False)
     parser.add_option("-u", "--nocheck_ucells", dest="nocheck_ucells", help="don't check more than one unit cell pairing", action="store_true", default=False)
     parser.add_option("-e", "--tol", dest="tol",  type="float", default=1e-1, help="tolerance for coordination calcs")
-    
+    return parser
+
+def get_options():
+    parser = get_options_parser()
     (options, args) = parser.parse_args()
     return options, args
 
@@ -251,6 +254,8 @@ def test_one_shifted_pair(A,B, options):
         ## TODO: insert local ICP solution here, ie. best rotation and shift _for this pairing_.
         ### this should be first ICP step of HLST fitting? yes, it is. but sometimes it's nice to turn it off for "clean" input. 
 
+        #### Note: current implementation assumes hlst_fit is not being run. can ignore anything to do with hlst for now @@@@
+
         if (options.do_hlst):
             hlst = test_hlst_fit(ctx, srcpos, dstpos, options)
             # returns list: [dof, partitioning, bigA(3N-dim transform)]
@@ -259,7 +264,8 @@ def test_one_shifted_pair(A,B, options):
             hlst = [[0],[0],[0]]
             dof = dofmin ## ignored
 
-        # don't torture caller, just return best as judged first by lowest dof, then by lowest distance
+        # don't torture caller, just return best as judged first by lowest dof (an hlst thing; ignore for now), then by lowest distance
+            ### do right now it's all about the total distance measured; that prob. solve by Hungarian algorithm ("munkres.py")
         if (dof < dofmin or (dof == dofmin and dist < dmin)):
 #            write_tcl(options, src, dst, pp, "dist")
             dmin = dist
@@ -269,7 +275,16 @@ def test_one_shifted_pair(A,B, options):
             bigAmin = hlst[2]
             pairmin = amap  # these are pairs of indices in original order
 
+            #sort of a mess what's returned, for the pairs.
+            # if you call this fn like 
+            #   dist, pairs, hlst = test_one_shifted_pair(src2,dst2, options)
+            # then pairs[0] is a list of pairs of indices into the starting structures atom list that specifies what atoms goes with what.
+            # and pairs[1] is a list of the indices, distance and actual positions, w.r.t. the src-cell, used to make the minimal pairing.
+            # this is later used in anim.py to get the correct "as paired" positions of all the atoms.            
+            ### would be nice is this were a structure, hard to deconstruct the lists (TODO)
+
     return dmin, [pairmin, ppmin], [dofmin, partitionmin,  bigAmin]
+
 
 
 def eq_latt(A,B):
@@ -305,23 +320,36 @@ def find_sym(s, symset):
     return False
 
 def approx_space_group(s, options=None):
-    fcc = Structure([[0.5,0.5,0],[0.5,0,0.5],[0,0.5,0.5]])
-    fcc.add_atom(0,0,0,"Au")
-    grp = space_group(fcc)
-    nfcc = len(grp)
+    use_fcc = True
+    use_given = True
 
-## this should be unnecessary b/c fcc syms should be all of them, but I find that there are sometimes new ones.  why??
-    s0 = Structure(s.cell)
-    s0.add_atom(0,0,0,"Au")
-    grp2 = space_group(s0)
-    cnt = 0
-    for g in grp2:
-        if not find_sym(g,grp):
-            grp.append(g)
-            cnt += 1
     if (options != None and options.verbose > 0):
-        print "building test syms: added  %d of %d unrepresented syms from given structure to the %d of fcc lattice" % (cnt, len(grp2), nfcc)
-    
+        print "building test syms:",
+
+    grp = []
+    if (use_fcc):
+        fcc = Structure([[0.5,0.5,0],[0.5,0,0.5],[0,0.5,0.5]])
+        fcc.add_atom(0,0,0,"Au")
+        grp = space_group(fcc)
+        nfcc = len(grp)
+        print "using the %d of fcc lattice" % (nfcc),
+
+    grp2 = []
+    if (use_given):
+## this should be unnecessary b/c fcc syms should be all of them, but I find that there are sometimes new ones.  why??
+        s0 = Structure(s.cell)
+        s0.add_atom(0,0,0,"Au")
+        grp2 = space_group(s0)
+
+        cnt = 0
+        for g in grp2:
+            if not find_sym(g,grp):
+                grp.append(g)
+                cnt += 1
+        if (options != None and options.verbose > 0):
+            print "  added  %d unrepresented of %d total syms from given structure" % (cnt, len(grp2)),
+    print
+
     sg = []
     cells = []
 
@@ -499,7 +527,7 @@ def analyze_commensurized(src, dst, options):
                 print "shifting to position 0:", iorg, shift
         else:
             shift = extra_shifts[igroup-nshift]
-            if (options.verbose > 1):
+            if (options.verbose > 0):
                 print "shifting to extra position %d:" % (igroup-nshift), shift
 #            import pdb; pdb.set_trace()
 
@@ -645,9 +673,9 @@ def find_and_prepare_closest_cells(A, B, options):
                 Bcan = super_canon(Bp, options) 
     
                 # now consider syms.    
-                if (options.nocheck_syms):
+                if (options.nocheck_syms or options.nocheck_ucells):
                     grp = [np.identity(3)]
-                    cells = [Bp.cell]
+                    cells = [Bcan.cell]
                 else:
                     s3 =  Structure(Bcan.cell)
                     s3.add_atom(0,0,0, 'Au')
@@ -672,7 +700,12 @@ def find_and_prepare_closest_cells(A, B, options):
                     # the new unit cell is "close" to the old one
 
                     # Using gruber, still one last fix ("flip"), (see comment in final_fix_gruber)
-                    Afixed,Bflip = final_fix_gruber(Acan,Btest)
+                    fix_gruber = False
+                    if (fix_gruber):
+                        Afixed,Bflip = final_fix_gruber(Acan,Btest)
+                    else:
+                        Afixed = Acan
+                        Bflip = Btest
 
                     # Add each symmetric config of B to those to be considered
                     BminStructs.append(Bflip)
@@ -857,7 +890,6 @@ def analyze_one_cell_mapping(A,B, options, idx):
 
     # do atom level pairing:
     dmin, pairsmin, Amin, Bmin, shiftmin  =   analyze_commensurized(A, Bmatch, options)
-#    dmin, pairsmin,  shiftmin, Amin = analyze_commensurized(A, Bmatch, options)
 
     if (options.verbose > 0):
         dmin_match = npl.norm(Tmatch-np.identity(3))  # we want this to be close to identity, i.e. minimize d
@@ -929,16 +961,32 @@ def test_enum(A,B, options):
     make_anim(best_res.A, best_res.Bflip, best_res.Tmatch, best_res.shiftmin, best_res.pairsmin, options) 
 
 
-if __name__=="__main__":
+def main(options):
     np.set_printoptions(precision=3)
     np.set_printoptions(suppress=True)
-
-    options, arg = get_options()
     A = pcread.poscar(options.A)
     B = pcread.poscar(options.B)
 
     test_enum(A,B,options)
 
+#class OptionsStruct(object):
+#        def __init__(self, **entries):
+#            self.__dict__.update(entries)
+
+def pathfinder_run(option_dict):
+    """ a wrapper so you can call this from your code with options being a dictionary"""
+    parser = get_option_parser()
+#    opt_struct = OptionsStruct(option_dict)
+    options, args = parser.parse_args([])
+    options.__dict__.update(option_dict)
+    
+#    for key in option_dict:
+#        options.setattr(key, options_dict[key])
+    main(options)
+
+if __name__=="__main__":
+    options, arg = get_options()
+    main(options)
 
 
 

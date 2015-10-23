@@ -1,5 +1,7 @@
 # animations and postprocessing 
 import os
+import os, os.path
+from optparse import OptionParser
 import numpy as np
 import numpy.linalg as npl
 import pylada.crystal.write as pcwrite
@@ -277,10 +279,7 @@ def make_anim(A,B,Tm,shift,pairs,options):
 
 
 
-
-def get_options():
-    import os, os.path
-    from optparse import OptionParser
+def get_anim_option_parser():
     parser = OptionParser()    
     parser.add_option("-n", "--frames", dest="frames",  type="int", default=1, help="how many frames in trajectory")
     parser.add_option("-z", "--trajdir", dest="trajdir",  type="string", default=".", help="where to find trajectory files")
@@ -288,10 +287,12 @@ def get_options():
     parser.add_option("-B", "--B", dest="B",  type="string", default=None, help="poscar 2")
     parser.add_option("-e", "--tol", dest="tol",  type="float", default=1e-1, help="tolerance for coordination calcs")
     parser.add_option("-r", "--raw_anim", dest="raw_anim", help="interpolate B to A  ### this option is under development", action="store_true", default=False)
+    return parser
 
+def get_options():
+    parser = get_anim_option_parser()
     (options, args) = parser.parse_args()
     return options, args
-
 
 def test_shift(src):
     from pylada.crystal.iterator import equivalence as equivalence_iterator
@@ -415,11 +416,19 @@ def anim_main(options):
         print s
 
 
-
-if __name__=="__main__":
-    options, args = get_options()
-
+def main(options):
     if (options.raw_anim):
         raw_anim(options)  ### this option is under development
     else:
         anim_main(options)
+
+def anim_run(option_dict):
+    """ a wrapper so you can call this from your code with options being a dictionary"""
+    parser = get_anim_option_parser()
+    options, args = parser.parse_args([])
+    options.__dict__.update(option_dict)
+    main(options)
+
+if __name__=="__main__":
+    options, args = get_options()
+    main(options)
