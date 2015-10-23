@@ -318,11 +318,16 @@ def test_shift(src):
 
 def get_nnb(s,i,mytol):        
     ### this is a bit of a hack to get around a pylada bug; pylada crashes if tol is too high
-    nb = neighbors(s, 2, s[i].pos)
-    nnb = 1
-    for k in range(1,len(nb)):
-        if nb[k][2] - nb[0][2] < mytol: # difference between k'th neighbor and 0'th (which is closest)
-            nnb += 1
+    #nb = neighbors(s, 3, s[i].pos)
+    maxshells = 4
+    cs = coordination_shells(s, maxshells, s[i].pos, 0.1)
+    nnb = 0
+    closest = cs[0][0][2]
+    for k in range(maxshells):
+        shell = cs[k]
+        for i in range(len(shell)):
+            if shell[i][2] - closest < mytol: # difference between k'th neighbor and 0'th (which is closest)
+                nnb += 1
     return nnb
             
 def anim_main(options):
