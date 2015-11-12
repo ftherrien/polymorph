@@ -1,5 +1,6 @@
 
 import os,sys
+from copy import deepcopy
 
 #import pylada.crystal as pyc
 #import pylada.crystal.read
@@ -183,23 +184,38 @@ def write_tcl_one(options, A, tag):
 
 def write_tcl(options, A, B, pairs, tag="", center=False):
     """ write tcl file for viz in VMD """
-    with open("POSCAR_A.%s" % tag, "w") as f: pcwrite.poscar(A, f, vasp5=True)
-    with open("POSCAR_B.%s" % tag, "w") as f: pcwrite.poscar(B, f, vasp5=True)
-    write_xyz(options, A, "A.%s" % tag,options.output_tiles)
-    write_xyz(options, B, "B.%s" % tag,options.output_tiles)
+    AA = deepcopy(A)
+    BB = deepcopy(B)
+    if pairs != None and len(pairs) > 0:
+        for p in pairs:
+            ia = p[0]
+            ib = p[1]
+            AA[ia].pos = p[3]
+            BB[ib].pos = p[4]
+
+    with open("POSCAR_A.%s" % tag, "w") as f: pcwrite.poscar(AA, f, vasp5=True)
+    with open("POSCAR_B.%s" % tag, "w") as f: pcwrite.poscar(BB, f, vasp5=True)
+    write_xyz(options, AA, "A.%s" % tag,options.output_tiles)
+    write_xyz(options, BB, "B.%s" % tag,options.output_tiles)
 
     fout = file("plotpairs.%s.tcl" % tag, "w")
-    write_struct(fout, A, "A.%s.xyz" % tag, 0, center)
-    write_struct(fout, B, "B.%s.xyz" %tag, 1, center)
+    write_struct(fout, AA, "A.%s.xyz" % tag, 0, center)
+    write_struct(fout, BB, "B.%s.xyz" %tag, 1, center)
 
-    linestr = "graphics top line {%f %f %f} {%f %f %f} width 3 style dashed\n"
+    linestr = "draw color green; graphics top line {%f %f %f} {%f %f %f} width 3 style dashed\n"
+#    sum = 0
     for p in pairs:
+        print p
         ia = p[0]
         ib = p[1]
-        p1 = A.scale * A[ia].pos
-        p2 = B.scale * B[ib].pos
+        p1 = AA.scale * AA[ia].pos
+        p2 = BB.scale * BB[ib].pos
 ## double check!        print "TCL types: %s %s" % (A[ia].type, B[ib].type)
+#        val = npl.norm(np.array(p1)-np.array(p2))
+#        sum  += val
+#        print "write_tcl pairing: ", p1, p2, val
         fout.write(linestr % (p1[0], p1[1], p1[2], p2[0], p2[1], p2[2]))
+#    print "write_tcl total pairing dist: ", sum
 
     fout.close()
 

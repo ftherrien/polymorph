@@ -324,12 +324,13 @@ def get_nnb(s,i,mytol):
     #nb = neighbors(s, 3, s[i].pos)
     maxshells = 4
     cs = coordination_shells(s, maxshells, s[i].pos, 0.1)
-    nnb = 0
+    nnb = 0    
     closest = cs[0][0][2]
+    type = cs[0][0][0].type
     for k in range(maxshells):
         shell = cs[k]
         for i in range(len(shell)):
-            if shell[i][2] - closest < mytol: # difference between k'th neighbor and 0'th (which is closest)
+            if shell[i][0].type == type and shell[i][2] - closest < mytol: # difference between k'th neighbor and 0'th (which is closest)
                 nnb += 1
     return nnb
             
@@ -370,6 +371,7 @@ def anim_main(options):
             c2dat.append(c2row)
 
     tot_coord_lost = 0
+    tot_coord_gained = 0
     natoms = len(structure)
     print "#coordination for %s to %s transition:" % (options.B, options.A)
     s = "#frame spacegroup : "
@@ -384,14 +386,16 @@ def anim_main(options):
         for j in range(len(row)):
             if (i > 0):
                 tot_coord_lost += max(0,last_row[j] - row[j])  ## counting how many total bonds have broken, not how many restored 
+                tot_coord_gained += max(0, row[j] - last_row[j])  ## counting how many total bonds gained, not how many broken
             if (c2):
                 s += "%d/%d,%d   " % ( row[j], c2row[j][0], c2row[j][1] )
             else:
                 s += "%d   " % ( row[j])
         print s
         last_row = row
-    print "#Total of %.2f bonds per atom broken in %s to %s transition." % (tot_coord_lost/float(natoms), options.B, options.A)
-
+    print "#Total of %.2f (%.2f) bonds per atom broken (resp.,made) in %s to %s transition." % (tot_coord_lost/float(natoms), tot_coord_gained/float(natoms),options.B, options.A)
+    speed = "FAST" if (tot_coord_lost == 0 or tot_coord_gained == 0) else "SLOW"
+    print "This transition is likely to be ", speed
 
     if (options.A != None):
         structure = pcread.poscar(options.A)
@@ -415,6 +419,7 @@ def anim_main(options):
             s += "%d   " % nnb
         print s
 
+    return speed=="FAST"
 
 def main(options):
     if (options.raw_anim):

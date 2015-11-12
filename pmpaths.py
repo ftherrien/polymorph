@@ -292,8 +292,8 @@ def eq_latt(A,B):
     ## return pairing and sign information that can then be used
     ## to make a "1st quadrant" version of cell
     mind = 1e10
-    eps_costheta = 1e-1
-    eps_dist = 2
+    eps_costheta = 1e-1 #1e-2  #1e-1
+    eps_dist = 2 #0.1  #2
     pairs = []
     signs = []
 #    print "i j dist   costheta   "
@@ -332,7 +332,7 @@ def approx_space_group(s, options=None):
         fcc.add_atom(0,0,0,"Au")
         grp = space_group(fcc)
         nfcc = len(grp)
-        print "using the %d of fcc lattice" % (nfcc),
+#        print "using the %d of fcc lattice" % (nfcc),
 
     grp2 = []
     if (use_given):
@@ -488,6 +488,7 @@ def analyze_commensurized(src, dst, options):
 
     dofmin = 1000
     dmin = 1e10
+    eps = 1e-12
 
     if options.shifting == 0:
         nshift = 1
@@ -550,7 +551,7 @@ def analyze_commensurized(src, dst, options):
         # hlst = [dof, partitioning, bigA] for best pairing and partitoning
         dof = hlst[0]
 #        print "came back, dof = ", dof
-        if (dof < dofmin or (dof <= dofmin and dist < dmin)):
+        if (dof < dofmin or (dof <= dofmin and dist < dmin - eps)):
             dmin = dist
             hlstmin = hlst
             shiftmin = shift
@@ -637,6 +638,7 @@ def find_and_prepare_closest_cells(A, B, options):
 
     AminStructs = []
     BminStructs = []
+    gminSyms = []
 
     dthresh = 100  ## don't really need this now, just prevents a litle copying
     max_cells = 20  ## max number of "similarly good" cell pairs to return
@@ -667,7 +669,7 @@ def find_and_prepare_closest_cells(A, B, options):
                 print "A %d B %d " % (i,j)
             # key point: un-anchored cells judged only by a..,alpha...
             d = stats_to_value(aa, aang, ba, bang, asa, bsa)
-            #..independent of symmetry of decoration..
+            #..independent of symmetry or decoration..
             if (d<dmin or (max_cells > 1 and d < dthresh)):   # means cells same shape, but atoms not nec lined up.
                 ## first thing, make gruberized cell in first quadrant.
                 Bcan = super_canon(Bp, options) 
@@ -702,7 +704,7 @@ def find_and_prepare_closest_cells(A, B, options):
                     # Using gruber, still one last fix ("flip"), (see comment in final_fix_gruber)
                     fix_gruber = True
                     if (fix_gruber):
-                        Afixed,Bflip = final_fix_gruber(Acan,Btest)
+                        Afixed,Bflip,d = final_fix_gruber(Acan,Btest)
                     else:
                         Afixed = Acan
                         Bflip = Btest
@@ -710,6 +712,7 @@ def find_and_prepare_closest_cells(A, B, options):
                     # Add each symmetric config of B to those to be considered
                     BminStructs.append(Bflip)
                     AminStructs.append(deepcopy(Afixed))
+                    gminSyms.append(g)
                     dmins.append(d)
                     dmin = min(d,dmin)
 
@@ -718,16 +721,18 @@ def find_and_prepare_closest_cells(A, B, options):
     best_dmins = []
     best_AminStructs = []
     best_BminStructs = []
+    best_gminSyms = []
     dmin = dmins[idx[0]]
     for i in range(min(max_cells,len(dmins))):
         if (dmins[idx[i]] - dmin < max_diff):
             best_dmins.append (dmins[idx[i]])
             best_AminStructs.append(AminStructs[idx[i]])
             best_BminStructs.append(BminStructs[idx[i]])
+            best_gminSyms.append(gminSyms[idx[i]])
 
     if options.verbose > 0:
         print "best dmins = ", best_dmins
-    return  best_dmins, best_AminStructs, best_BminStructs
+    return  best_dmins, best_AminStructs, best_BminStructs, best_gminSyms
 
     
 def abs_cap(x):
@@ -866,7 +871,7 @@ def final_fix_gruber(A,B):
 #    print newB
     A = supercell(A, newA)
     B = supercell(B, newB)
-    return A, B
+    return A, B, dmin
 
 
 class OneCellPairingResult(object):
@@ -877,6 +882,33 @@ class OneCellPairingResult(object):
         self.Tmatch = Tmatch
         self.shiftmin = shiftmin
         self.pairsmin = pairsmin
+
+def calc_unmatched_distance(A,Tmatch,pairs):
+    Tunmatch = npl.inv(Tmatch)
+    ppos = pairs[1]
+    dist = 0
+    before = 0
+    dvecbefore = []
+    dvec = []
+    for i in range(len(ppos)):
+        q = ppos[i]
+        apos = q[3]  # target atom position
+        bpos = q[4]  # src atom position, BUT IN A'S CELL
+        val0 = npl.norm(bpos-apos)
+        dvecbefore.append(val0)
+        before += val0
+        bpos = np.dot(Tunmatch, bpos) # now this is it's real location
+        val = npl.norm(bpos-apos)
+        dist += val
+        dvec.append(val)
+#        print "unmatch p1, p2:", apos, bpos, val0, val
+
+    d = npl.norm(dvec)
+    b = npl.norm(dvecbefore)
+
+#    print "unmatch dist before and after:", before, b, dist, d
+    return d
+    
 
 def analyze_one_cell_mapping(A,B, options, idx):
     if options.verbose > 0:
@@ -890,6 +922,10 @@ def analyze_one_cell_mapping(A,B, options, idx):
 
     # do atom level pairing:
     dmin, pairsmin, Amin, Bmin, shiftmin  =   analyze_commensurized(A, Bmatch, options)
+    true_dist = calc_unmatched_distance(A,Tmatch,pairsmin)
+    if options.verbose > 1:
+        print "dist ", dmin, " is really ", true_dist
+    dmin = true_dist
 
     if (options.verbose > 0):
         dmin_match = npl.norm(Tmatch-np.identity(3))  # we want this to be close to identity, i.e. minimize d
@@ -920,6 +956,8 @@ def test_enum(A,B, options):
         if (options.verbose > 2):
             write_tcl(options, A, B, [], "start")
 
+    fast_one_found = False
+
    # get primitive cells
     A = primitive(A)
     B = primitive(B)
@@ -929,7 +967,7 @@ def test_enum(A,B, options):
         print B.cell
     
     # find which ones have the most potential overlap (using gruber())
-    dmin, Amincells, Bmincells = find_and_prepare_closest_cells(A,  B,  options)
+    dmin, Amincells, Bmincells, minSyms = find_and_prepare_closest_cells(A,  B,  options)
 
     if (options.verbose > 0):
         print "There are %d close enough cells" % len(Amincells)
@@ -937,6 +975,7 @@ def test_enum(A,B, options):
             for i in range(len(Amincells)):
                 print Amincells[i].cell
                 print Bmincells[i].cell
+                print minSyms[i]
                 print "dist = ", dmin[i]
                 print "------------"
 
@@ -946,20 +985,29 @@ def test_enum(A,B, options):
 #        Atest, Btest = prepare_final_cells(A, B, Amincells[imin],Bmincells[imin], Bflags[imin], options, imin)
         # run analyzis on this cell mapping
         one_res = analyze_one_cell_mapping(Amincells[imin],Bmincells[imin], options, imin)
-        if (one_res.dmin < dmin):
+
+        from anim import make_anim, anim_main
+        make_anim(one_res.A, one_res.Bflip, one_res.Tmatch, one_res.shiftmin, one_res.pairsmin, options) 
+        fast_one = anim_main(options)
+
+        if (fast_one and not fast_one_found) or (((fast_one_found and fast_one) or (not fast_one_found and not fast_one)) and  one_res.dmin < dmin):
             best_res = deepcopy(one_res)
             dmin = one_res.dmin
+            if (options.verbose > 0):
+                print "new winner w.r.t. cell pairing, dmin = ", dmin
+            fast_one_found = fast_one_found or fast_one
 
     if (options.verbose > 0):
         print "-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     print "polymorph pathfinder search DONE, dmin = ", best_res.dmin
 
     # save trajectory of best found
-    from anim import make_anim
+    from anim import make_anim, anim_main
     if (options.verbose > 2):
-        write_tcl(options, best_res.A, best_res.Bflip, [], "final", center=False)
+        write_tcl(options, best_res.A, best_res.Bflip, best_res.pairsmin[1], "final", center=False)
     make_anim(best_res.A, best_res.Bflip, best_res.Tmatch, best_res.shiftmin, best_res.pairsmin, options) 
-
+    fast_one = anim_main(options)
+    print "This is likely a %s transition" % ("FAST" if fast_one else "SLOW")
 
 def main(options):
     np.set_printoptions(precision=3)
