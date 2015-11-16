@@ -22,7 +22,7 @@ def get_option_parser():
     parser.add_option("-B", "--B", dest="B",  type="string", default="B", help="poscar 2")
 #    parser.add_option("-e", "--equal_blocks_ok", dest="equal_blocks_ok", help="generate DiADi cases, etc", action="store_true", default=False)
 #    parser.add_option("-m", "--mode", dest="mode",  type="string", default="path", help="mode:one of 'path','sym','opt'")
-    parser.add_option("-t", "--tiles", dest="output_tiles",  type="int", default=4, help="how many cells to tile in output")
+    parser.add_option("-t", "--tiles", dest="output_tiles",  type="int", default=1, help="how many cells to tile in output")
     parser.add_option("-H", "--hlst", dest="do_hlst",  action="store_true", default=False, help="perform HLST fitting")
 #    parser.add_option("-e", "--atom_dist_eps", dest="atom_dist_eps",  type="float", default=0.9, help="threshold for atom closeness")
     parser.add_option("-v", "--verbose", dest="verbose",  type="int", default=1, help="verbosity")
@@ -33,7 +33,10 @@ def get_option_parser():
     parser.add_option("-n", "--frames", dest="frames",  type="int", default=1, help="how many frames in trajectory")
     parser.add_option("-y", "--nocheck_syms", dest="nocheck_syms", help="don't check syms", action="store_true", default=False)
     parser.add_option("-u", "--nocheck_ucells", dest="nocheck_ucells", help="don't check more than one unit cell pairing", action="store_true", default=False)
-    parser.add_option("-e", "--tol", dest="tol",  type="float", default=1e-1, help="tolerance for coordination calcs")
+    parser.add_option("-d", "--noucell-dist", dest="no_ucell_dist", help="don't include unit cell vector movement in distance measure", action="store_true", default=False)
+    parser.add_option("-f", "--get-fast", dest="get_fast", help="use bonding to specifically search for FAST", action="store_true", default=False)
+    parser.add_option("-e", "--tol", dest="tol",  type="float", default=5e-1, help="tolerance for coordination calcs")
+
     return parser
 
 def get_options():
@@ -286,14 +289,41 @@ def test_one_shifted_pair(A,B, options):
     return dmin, [pairmin, ppmin], [dofmin, partitionmin,  bigAmin]
 
 
+def rough_eq_latt(A,B):
+    ## sort of like eq_latt, except no permutation and no sign changes,
+    ## but much looser tolerance
+    ## This fn is called in final_fix_gruber, where we might have found better cell params (a,b,c,etc), but
+    ## we may have ruined the overlap of the cells in doing so, so we need to check they're at least still close to matching.
+    mind = 1e10
+    eps_costheta = 5e-1 
+    eps_dist = .4   ## relative to length
+    pairs = []
+    signs = []
+    for i in range(3):
+        a = A[:,i]
+        b = B[:,i]
+        d = npl.norm(b-a)/ max(npl.norm(b),npl.norm(a))
+        c = abs(np.dot(a,b)/(npl.norm(b)*npl.norm(a)))
+#            print i,j, d, c, a, b
+        if d > eps_dist or 1-c > eps_costheta:  ## pair unit cell vectors that are close in both length and direction.
+            return False
+
+#    print "accepting that "
+#    print A
+#    print "and"
+#    print B
+#    print "are roughly equal"
+
+    return True
+    
 
 def eq_latt(A,B):
-    ## figure out: are A and B nearly the same lattice.
+    ## figure out: are A and B _nearly_ the same lattice.
     ## return pairing and sign information that can then be used
     ## to make a "1st quadrant" version of cell
     mind = 1e10
-    eps_costheta = 1e-1 #1e-2  #1e-1
-    eps_dist = 2 #0.1  #2
+    eps_costheta =  1e-1 
+    eps_dist = .1   ## relative to length
     pairs = []
     signs = []
 #    print "i j dist   costheta   "
@@ -301,12 +331,12 @@ def eq_latt(A,B):
         a = A[:,i]
         for j in range(3):
             b = B[:,j]
-            d = abs(npl.norm(b) - npl.norm(a))
-            c = abs(np.dot(a,b)/(npl.norm(b)*npl.norm(a)))
+            d = (npl.norm(b) - npl.norm(a)) / max(npl.norm(b),npl.norm(a))
+            c = np.dot(a,b)/(npl.norm(b)*npl.norm(a))
 #            print i,j, d, c, a, b
-            if d<eps_dist and 1-c < eps_costheta:  ## pair unit cell vectors that are close in both length and direction.
+            if abs(d)<eps_dist and 1-abs(c) < eps_costheta:  ## pair unit cell vectors that are close in both length and direction.
                 pairs.append([i,j])
-                signs.append(1 if npl.norm(b-a) < eps_dist else -1)
+                signs.append(1 if c > 0 else -1)
     return pairs, signs
 
 def eq_sym(s,t):
@@ -640,7 +670,7 @@ def find_and_prepare_closest_cells(A, B, options):
     BminStructs = []
     gminSyms = []
 
-    dthresh = 100  ## don't really need this now, just prevents a litle copying
+    dthresh = 20  ## don't really need this now, just prevents a litle copying
     max_cells = 20  ## max number of "similarly good" cell pairs to return
     if (options.nocheck_ucells):
         max_cells = 1
@@ -836,9 +866,9 @@ def final_fix_gruber(A,B):
     dmin = stats_to_value(aa, aang, ba, bang, asa, bsa)
     Pmin = np.identity(3)
     Qmin = np.identity(3)
-    eps = 1e-2
+    eps = 1e-2### this is just to slightly favor the good match we already found
     if options.verbose > 1:
-        print "final fix gruber, starting dmin", dmin  ### this is just to slightly favor the good match we already found
+        print "final fix gruber, starting dmin", dmin  
     for i1 in range(-1,2):
         for i2 in range(-1,2):
             for i3 in range(-1,2):
@@ -856,7 +886,7 @@ def final_fix_gruber(A,B):
                             d = stats_to_value(aa, aang, ba, bang, asa, bsa)
 #                            if d < 100:
 #                                print "new stats", d, aa, ba, aang, bang, asa, bsa
-                            if (d < dmin-eps):
+                            if (d < dmin-eps and rough_eq_latt(Ap, Bp)):
                                 Pmin = P
                                 Qmin = Q
                                 dmin = d
@@ -883,7 +913,7 @@ class OneCellPairingResult(object):
         self.shiftmin = shiftmin
         self.pairsmin = pairsmin
 
-def calc_unmatched_distance(A,Tmatch,pairs):
+def calc_unmatched_distance(A,Tmatch,pairs,no_ucell_dist):
     Tunmatch = npl.inv(Tmatch)
     ppos = pairs[1]
     dist = 0
@@ -903,11 +933,21 @@ def calc_unmatched_distance(A,Tmatch,pairs):
         dvec.append(val)
 #        print "unmatch p1, p2:", apos, bpos, val0, val
 
-    d = npl.norm(dvec)
+    d1 = npl.norm(dvec)
     b = npl.norm(dvecbefore)
 
-#    print "unmatch dist before and after:", before, b, dist, d
-    return d
+
+    if (not no_ucell_dist):
+        # include distance that unit cell vectors moved
+        Bmoved = A.cell -  np.dot(Tunmatch, A.cell)
+        for i in range(3):
+            dvec.append(npl.norm(Bmoved[:,i]))
+
+    d2 = npl.norm(dvec)
+    b = npl.norm(dvecbefore)
+
+    print "unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) :", before, b, dist, d1,d2
+    return d2
     
 
 def analyze_one_cell_mapping(A,B, options, idx):
@@ -922,7 +962,7 @@ def analyze_one_cell_mapping(A,B, options, idx):
 
     # do atom level pairing:
     dmin, pairsmin, Amin, Bmin, shiftmin  =   analyze_commensurized(A, Bmatch, options)
-    true_dist = calc_unmatched_distance(A,Tmatch,pairsmin)
+    true_dist = calc_unmatched_distance(A,Tmatch,pairsmin, options.no_ucell_dist)
     if options.verbose > 1:
         print "dist ", dmin, " is really ", true_dist
     dmin = true_dist
@@ -989,13 +1029,17 @@ def test_enum(A,B, options):
         from anim import make_anim, anim_main
         make_anim(one_res.A, one_res.Bflip, one_res.Tmatch, one_res.shiftmin, one_res.pairsmin, options) 
         fast_one = anim_main(options)
+        print "fast_one = ", fast_one
 
-        if (fast_one and not fast_one_found) or (((fast_one_found and fast_one) or (not fast_one_found and not fast_one)) and  one_res.dmin < dmin):
+        if (not options.get_fast and one_res.dmin < dmin) or (options.get_fast and fast_one and not fast_one_found) or (options.get_fast and (((fast_one_found and fast_one) or (not fast_one_found and not fast_one)) and  one_res.dmin < dmin)):
             best_res = deepcopy(one_res)
             dmin = one_res.dmin
             if (options.verbose > 0):
                 print "new winner w.r.t. cell pairing, dmin = ", dmin
             fast_one_found = fast_one_found or fast_one
+
+        if (not options.get_fast and not fast_one and one_res.dmin < dmin):
+            print "Found a shorter but SLOW transition", one_res.dmin, dmin
 
     if (options.verbose > 0):
         print "-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-="
