@@ -12,7 +12,7 @@ import pylada.crystal.read as pcread
 import pylada.crystal.write as pcwrite
 from pylada.crystal import supercell, space_group, into_cell, Structure, primitive
 
-from util import write_tcl, transform_cell, lcm, gcd, write_struct, write_xyz
+from util import write_tcl, write_tcl_one, transform_cell, lcm, gcd, write_struct, write_xyz
 from anim import closest_to, make_anim
 from util import rot_euler
 
@@ -32,7 +32,8 @@ def get_option_parser():
     parser.add_option("-b", "--bond_len", dest="bond_len",  type="float", default=2, help="bond length")
     parser.add_option("-n", "--frames", dest="frames",  type="int", default=1, help="how many frames in trajectory")
     parser.add_option("-y", "--nocheck_syms", dest="nocheck_syms", help="don't check syms", action="store_true", default=False)
-    parser.add_option("-u", "--nocheck_ucells", dest="nocheck_ucells", help="don't check more than one unit cell pairing", action="store_true", default=False)
+    parser.add_option("-u", "--nocheck_ucells", dest="nocheck_ucells", help="don't check more than one unit cell pairing, but DO do gruberization", action="store_true", default=False)
+    parser.add_option("-w", "--use_given_ucells", dest="use_given_ucells", help="use given unit cells as is, no gruberization", action="store_true", default=False)
     parser.add_option("-d", "--noucell-dist", dest="no_ucell_dist", help="don't include unit cell vector movement in distance measure", action="store_true", default=False)
     parser.add_option("-f", "--get-fast", dest="get_fast", help="use bonding to specifically search for FAST", action="store_true", default=False)
     parser.add_option("-e", "--tol", dest="tol",  type="float", default=5e-1, help="tolerance for coordination calcs")
@@ -224,12 +225,20 @@ def test_one_shifted_pair(A,B, options):
     src = deepcopy(A)
     dst = deepcopy(B)
     if (options.do_hlst):
+        ### HLST stands for "hierarchical linear subcell transform".  The idea is that there should be some structure to
+        # the way the atoms move, i.e some shifted up, some rotated by 30 degrees, etc, and so we can actuall decompose
+        # the overall transform and choose the simplest one.  Turns out this is not the crux of the matter, so this is
+        # "back-burner" for now, but an interesting concept going forward for this and other applications.
         from HLST import HLSTCtx, test_hlst_fit
         ctx = HLSTCtx()
+
+    # make all-to-all distance map
     distmap = make_dist_map(src,dst)  ## important: takes into account periodicity
-#    print "distmap done"
+
+    # Ths key function, solves the job-scheduling problem via the "Hungarian algorithm"
+    # Originally we had an algorithm that would return more than one (i.e. all "plausible" pairings), but currently it's just one
     pairings, alldist = plausible_pairs(src,dst,distmap)
-#    print "plausible pairs done, found %d pairs" % len(pairings)
+
     allhlst = []
     dmin = 1e10
     partitionmin = None
@@ -254,10 +263,9 @@ def test_one_shifted_pair(A,B, options):
         srcpos = np.transpose(np.array([a.pos for a in src]))
         dstpos = np.transpose(np.array([a.pos for a in dst]))
 
-        ## TODO: insert local ICP solution here, ie. best rotation and shift _for this pairing_.
+        ## TODO: insert local iterative closest point (ICP) solution here, ie. best rotation and shift _for this pairing_.
         ### this should be first ICP step of HLST fitting? yes, it is. but sometimes it's nice to turn it off for "clean" input. 
-
-        #### Note: current implementation assumes hlst_fit is not being run. can ignore anything to do with hlst for now @@@@
+        #### Note: current implementation assumes hlst_fit is not being run. can ignore anything to do with hlst and ICP for now @@@@
 
         if (options.do_hlst):
             hlst = test_hlst_fit(ctx, srcpos, dstpos, options)
@@ -378,7 +386,6 @@ def approx_space_group(s, options=None):
                 cnt += 1
         if (options != None and options.verbose > 0):
             print "  added  %d unrepresented of %d total syms from given structure" % (cnt, len(grp2)),
-    print
 
     sg = []
     cells = []
@@ -506,8 +513,8 @@ def center_cell(A):
     return newA
 
 def analyze_commensurized(src, dst, options):
-    """ read, do all possible shifts of sym-ineq cells, compute distmap, etc for each
-    Assuming symmetry already applied"""
+    """ do all possible shifts of sym-ineq atom positions, compute distmap, etc for each
+    Assuming symmetry already applied to unit cell, so only remaining DOF is just shifting atoms to "origin" """
     from pylada.crystal.iterator import equivalence as equivalence_iterator
     from copy import deepcopy
 
@@ -647,6 +654,20 @@ def find_and_prepare_closest_cells(A, B, options):
     # best overlap
     ## returns a list of pairs of cells to be submitted to
     # analyze_one_cell_mapping()
+
+    ## PG adding short circuit here to just use input unit cells AS GIVEN (different than nocheck_ucells, which does gruberization)
+    if (options.use_given_ucells):
+        asa = ucell_surface(A.cell)  ## get cell stats
+        aa,aang = vec2alpha(A.cell)
+        bsa = ucell_surface(B.cell)  ## get cell stats
+        ba,bang = vec2alpha(B.cell)
+        d = stats_to_value(aa, aang, ba, bang, asa, bsa)
+        if (options.verbose > 0):
+            print "using given unit cells as is, d = ", d
+            print "abc's for A,B are:", aa,aang, ba,bang
+            print A.cell
+            print B.cell
+        return [d], [A], [B], [np.identity(3)]
     
     # figure out multipliers needed to make supercells with the same number of atoms
     n1 = len(A)
@@ -670,11 +691,11 @@ def find_and_prepare_closest_cells(A, B, options):
     BminStructs = []
     gminSyms = []
 
-    dthresh = 20  ## don't really need this now, just prevents a litle copying
-    max_cells = 20  ## max number of "similarly good" cell pairs to return
+    dthresh = 15  ## don't really need this now, just prevents a litle copying
+    dthresh_fix_gruber = 5
+    max_cells = 1000  ## max number of "similarly good" cell pairs to return
     if (options.nocheck_ucells):
         max_cells = 1
-    max_diff = 4 ## defines "similarly good"
 #    small_angle = 10 ## angle for alpha that triggers an extra rotated version being added
 #    small_distance = 2 ## distance for a that triggers .. 
 
@@ -713,6 +734,7 @@ def find_and_prepare_closest_cells(A, B, options):
                     s3.add_atom(0,0,0, 'Au')
                     grp,cells = approx_space_group(s3, options)
     
+                shorted = False
                 for isym in range(len(grp)):
                     g = grp[isym]
                     c = cells[isym]
@@ -733,18 +755,30 @@ def find_and_prepare_closest_cells(A, B, options):
 
                     # Using gruber, still one last fix ("flip"), (see comment in final_fix_gruber)
                     fix_gruber = True
-                    if (fix_gruber):
-                        Afixed,Bflip,d = final_fix_gruber(Acan,Btest)
+                    short_circuit_fix_gruber = True
+                    if (fix_gruber and not shorted):
+                        # this may give us a list
+                        Afixed,Bflip,ds,gs = final_fix_gruber(Acan,Btest,g,dthresh_fix_gruber)
+                        if len(ds) == 0 and short_circuit_fix_gruber:
+                            shorted = True
                     else:
-                        Afixed = Acan
-                        Bflip = Btest
+                        Afixed = [Acan]
+                        Bflip = [Btest]
+                        gs = [g]
+                        ds = [d]
+                        if (options.verbose > 1):
+                            print "skipped gruber, d = ", d
 
                     # Add each symmetric config of B to those to be considered
-                    BminStructs.append(Bflip)
-                    AminStructs.append(deepcopy(Afixed))
-                    gminSyms.append(g)
-                    dmins.append(d)
-                    dmin = min(d,dmin)
+                    for istruct in range(len(ds)):
+                        BminStructs.append(Bflip[istruct])
+                        AminStructs.append(deepcopy(Afixed[istruct]))
+                        gminSyms.append(gs[istruct])
+                        dmins.append(ds[istruct])
+                        dmin = min(min(ds),dmin)
+
+    if (options.verbose > 1):
+        print "all unit cell pairing distances: ", sorted(dmins)
 
     # now grab only the best ones
     idx = [i[0] for i in sorted(enumerate(dmins), key=lambda x:x[1])]
@@ -752,10 +786,14 @@ def find_and_prepare_closest_cells(A, B, options):
     best_AminStructs = []
     best_BminStructs = []
     best_gminSyms = []
+    max_diff = 3 ## defines "similarly good", only cells within this "distance" of best will be kept, not matter value of max_cells
     dmin = dmins[idx[0]]
+    if (options.verbose > 0):
+        print "overall dmin = ", dmin
     for i in range(min(max_cells,len(dmins))):
-        if (dmins[idx[i]] - dmin < max_diff):
-            best_dmins.append (dmins[idx[i]])
+        dval = dmins[idx[i]]
+        if (dval - dmin < max_diff):    ### this was for debugging a special case: or abs(dval-3.456)<1e-2):
+            best_dmins.append (dval)
             best_AminStructs.append(AminStructs[idx[i]])
             best_BminStructs.append(BminStructs[idx[i]])
             best_gminSyms.append(gminSyms[idx[i]])
@@ -836,9 +874,11 @@ def super_canon(A, options=None):
     ## so to make A, we go A->g->A2, first by supercell, then by transform.
     ## [ A <- A2 * g^-1 * g  = A2 ]
     A = supercell(A,g)
+######## PG hacked this out for debugging
     Tfinal = np.dot(A2, npl.inv(g))
     A = basic_tform_cell(Tfinal, A)
-            
+#######
+    
     for i in range(len(A)):
         A[i].pos = into_cell(A[i].pos, A.cell)
 
@@ -852,9 +892,9 @@ def canonicalize(A):
     A = supercell(A,g)
     return A
 
-def final_fix_gruber(A,B):
+def final_fix_gruber(A,B,g, dthresh):
     # B and A are both canonincal, which means that "a3" are along z-axis,
-    # "a1" are in x-z plane within 45 degrees of z axis, 
+    # "a1" are in x-z plane within 45 degrees of x axis, 
     # and "a2" is pointing up in a 45 degree "cone" around y axis.
     # But this doesn't mean they are as close to EACH OTHER as they could be.
     # so here we do one last step:
@@ -864,8 +904,10 @@ def final_fix_gruber(A,B):
     aa,aang = vec2alpha(A.cell)
     ba,bang = vec2alpha(B.cell)
     dmin = stats_to_value(aa, aang, ba, bang, asa, bsa)
-    Pmin = np.identity(3)
-    Qmin = np.identity(3)
+    Amins = []
+    Bmins = []
+    dmins = []
+    gmins = []
     eps = 1e-2### this is just to slightly favor the good match we already found
     if options.verbose > 1:
         print "final fix gruber, starting dmin", dmin  
@@ -886,22 +928,19 @@ def final_fix_gruber(A,B):
                             d = stats_to_value(aa, aang, ba, bang, asa, bsa)
 #                            if d < 100:
 #                                print "new stats", d, aa, ba, aang, bang, asa, bsa
-                            if (d < dmin-eps and rough_eq_latt(Ap, Bp)):
-                                Pmin = P
-                                Qmin = Q
-                                dmin = d
-                                if (options.verbose > 1):
-                                    print "new best stats", d, aa, ba, aang, bang, asa, bsa
-    if options.verbose > 1:
-        print "final_fix_gruber: P,Q = "
-        print Pmin
-        print Qmin
-    newA = np.dot(A.cell, Qmin)
-    newB = np.dot(B.cell, Pmin)
+                            if (d < dthresh):  # and rough_eq_latt(Ap, Bp)):
+#                            if (d < dmin-eps and rough_eq_latt(Ap, Bp)):
+                                newA = np.dot(A.cell, Q)
+                                newB = np.dot(B.cell, P)
 #    print newB
-    A = supercell(A, newA)
-    B = supercell(B, newB)
-    return A, B, dmin
+                                Amins.append(supercell(A, newA))
+                                Bmins.append(supercell(B, newB))
+                                dmins.append(d)
+                                gmins.append(g)
+                            
+    if (options.verbose > 1):
+        print "ffg dmins:", dmins 
+    return Amins, Bmins, dmins, gmins
 
 
 class OneCellPairingResult(object):
@@ -946,13 +985,14 @@ def calc_unmatched_distance(A,Tmatch,pairs,no_ucell_dist):
     d2 = npl.norm(dvec)
     b = npl.norm(dvecbefore)
 
-    print "unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) :", before, b, dist, d1,d2
+    if (options.verbose > 0):
+        print "unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) :", before, b, dist, d1,d2
     return d2
     
 
 def analyze_one_cell_mapping(A,B, options, idx):
     if options.verbose > 0:
-        print "starting analysis of one cell pairing"
+        print "starting analysis of cell pairing", idx
     # now _final_ warp of B to A cell
     Tmatch = np.dot(A.cell, npl.inv(B.cell))  # get exact map from B to A
     Bmatch = transform_cell(Tmatch, B)
@@ -962,6 +1002,13 @@ def analyze_one_cell_mapping(A,B, options, idx):
 
     # do atom level pairing:
     dmin, pairsmin, Amin, Bmin, shiftmin  =   analyze_commensurized(A, Bmatch, options)
+
+    ###############
+    ## TODO: at this point, call something like:
+    #Amin, Bmin = optimize_unmatched_distance(Amin, Bmin, options)
+    # that solves the 3D or 6D optimzation problem of choosing the best unit cell alignment, GIVEN THE PAIRING.
+    ###############
+
     true_dist = calc_unmatched_distance(A,Tmatch,pairsmin, options.no_ucell_dist)
     if options.verbose > 1:
         print "dist ", dmin, " is really ", true_dist
@@ -987,6 +1034,122 @@ def analyze_one_cell_mapping(A,B, options, idx):
     return one_res
 
 
+
+def __translations(structure, tolerance):
+    """ Looks for internal translations """
+    from numpy.linalg import inv
+    from numpy import all, abs, allclose
+    from pylada.math import gruber
+    from pylada.crystal import into_cell, into_voronoi
+
+#    cell = gruber(structure.cell)
+    cell = structure.cell
+    invcell = inv(cell)
+
+    front_type = structure[0].type
+    center = structure[0].pos
+    translations = []
+    for site in structure:
+        if front_type != site.type:
+            continue
+
+        translation = into_voronoi(site.pos - center, cell, invcell)
+        if all(abs(translation) < tolerance):
+            continue
+
+        for mapping in structure:
+            pos = into_cell(mapping.pos + translation, cell, invcell)
+            for mappee in structure:
+                if mapping.type == mappee.type and allclose(mappee.pos, pos, tolerance):
+                    break
+            else:
+                break
+        else:
+            translations.append(into_voronoi(translation, cell, invcell))
+
+    return translations
+
+
+def primitive_no_gruber(structure, tolerance=1e-8):
+    from numpy.linalg import inv, det
+    from numpy import all, abs, array, dot, allclose, round
+    from pylada.math import gruber
+    from pylada.crystal import into_cell, into_voronoi, into_cell
+    from pylada import error
+
+    if len(structure) == 0:
+        raise error.ValueError("Empty structure")
+
+    result = structure.copy()
+    cell = result.cell
+#    cell = gruber(result.cell)
+    invcell = inv(cell)
+    for atom in result:
+        atom.pos = into_cell(atom.pos, cell, invcell)
+
+    translations = __translations(result, tolerance)
+    if len(translations) == 0:
+        return result
+
+    # adds original translations.
+    translations.append(cell[:, 0])
+    translations.append(cell[:, 1])
+    translations.append(cell[:, 2])
+
+    # Looks for cell with smallest volume 
+    new_cell = result.cell.copy()
+    volume = abs(det(new_cell))
+    for i, first in enumerate(translations):
+        for j, second in enumerate(translations):
+            if i == j:
+                continue
+            for k, third in enumerate(translations):
+                if i == k or j == k:
+                    continue
+                trial = array([first, second, third]).T
+                if abs(det(trial) < 1e-12):
+                    continue
+                if abs(det(trial)) > volume - 3.0 * tolerance:
+                    continue
+
+                if det(trial) < 0e0:
+                    trial[:, 2] = second
+                    trial[:, 1] = third
+                    if det(trial) < 0e0:
+                        raise error.RuntimeError("Negative volume")
+                integer_cell = dot(inv(trial), cell)
+                if allclose(integer_cell, round(integer_cell + 1e-7), 1e-8):
+                    new_cell = trial
+                    volume = abs(det(trial))
+
+    # Found the new cell with smallest volume (e.g. primivite)
+    if abs(float(structure.volume) - volume) < tolerance:
+        raise error.RuntimeError("Found translation but no primitive cell.")
+
+    # now creates new lattice.
+    result.clear()
+#    result.cell = gruber(new_cell)
+    result.cell = new_cell
+    invcell = inv(result.cell)
+    for site in structure:
+        pos = into_cell(site.pos, result.cell, invcell)
+        for unique in result:
+            if site.type == unique.type and allclose(unique.pos, pos, tolerance):
+                break
+        else:
+            result.append(site.copy())
+            result[-1].pos = pos
+
+    if len(structure) % len(result) != 0:
+        raise error.RuntimeError("Nb of atoms in output not multiple of input.")
+
+    if abs(len(structure) * result.volume - len(result) * structure.volume) > tolerance:
+        raise error.RuntimeError("Size and volumes do not match.")
+
+    return result;
+
+
+
 def test_enum(A,B, options):
     # record starting state
     if (options.verbose > 0):
@@ -999,8 +1162,11 @@ def test_enum(A,B, options):
     fast_one_found = False
 
    # get primitive cells
-    A = primitive(A)
-    B = primitive(B)
+    if (not options.use_given_ucells):
+        A = primitive(A)
+        B = primitive(B)
+#        A = primitive_no_gruber(A)
+#        B = primitive_no_gruber(B)
     if (options.verbose > 1):
         print "primitive cells:"
         print A.cell
@@ -1010,14 +1176,23 @@ def test_enum(A,B, options):
     dmin, Amincells, Bmincells, minSyms = find_and_prepare_closest_cells(A,  B,  options)
 
     if (options.verbose > 0):
+#        special_iter = 0
         print "There are %d close enough cells" % len(Amincells)
         if (options.verbose > 1):
             for i in range(len(Amincells)):
+                print "dist = ", i, dmin[i]
                 print Amincells[i].cell
+                print vec2alpha(Amincells[i].cell)
                 print Bmincells[i].cell
-                print minSyms[i]
-                print "dist = ", dmin[i]
+                print vec2alpha(Bmincells[i].cell)
+#                print minSyms[i]
+#                if (abs(dmin[i]-3.4564296977)<1e-5):  ## our special awful case!
+#                    write_tcl_one(options, Amincells[i], "badstruct345A%d" % special_iter)
+#                    write_tcl_one(options, Bmincells[i], "badstruct345B%d" % special_iter)
+#                    special_iter += 1
                 print "------------"
+
+#    import sys; sys.exit()  ## to bail after unit-cell-pair candidate set generation
 
     dmin = 1e10
     for imin in range(len(Amincells)):
@@ -1026,10 +1201,14 @@ def test_enum(A,B, options):
         # run analyzis on this cell mapping
         one_res = analyze_one_cell_mapping(Amincells[imin],Bmincells[imin], options, imin)
 
-        from anim import make_anim, anim_main
-        make_anim(one_res.A, one_res.Bflip, one_res.Tmatch, one_res.shiftmin, one_res.pairsmin, options) 
-        fast_one = anim_main(options)
-        print "fast_one = ", fast_one
+        if options.get_fast:
+            from anim import make_anim, anim_main
+            make_anim(one_res.A, one_res.Bflip, one_res.Tmatch, one_res.shiftmin, one_res.pairsmin, options) 
+            fast_one = anim_main(options)
+            if (options.verbose > 1):
+                print "fast_one = ", fast_one
+        else:
+            fast_one = False
 
         if (not options.get_fast and one_res.dmin < dmin) or (options.get_fast and fast_one and not fast_one_found) or (options.get_fast and (((fast_one_found and fast_one) or (not fast_one_found and not fast_one)) and  one_res.dmin < dmin)):
             best_res = deepcopy(one_res)
@@ -1038,7 +1217,7 @@ def test_enum(A,B, options):
                 print "new winner w.r.t. cell pairing, dmin = ", dmin
             fast_one_found = fast_one_found or fast_one
 
-        if (not options.get_fast and not fast_one and one_res.dmin < dmin):
+        if (not options.get_fast and not fast_one and one_res.dmin < dmin and options.verbose > 0):
             print "Found a shorter but SLOW transition", one_res.dmin, dmin
 
     if (options.verbose > 0):

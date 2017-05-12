@@ -327,6 +327,8 @@ def test_shift(src):
         sg = spglib.get_spacegroup(src1, symprec=1e-5, angle_tolerance=-1.0)
         print "shift, sg", shift, sg
 
+'''
+Vldan
 def get_nnb(s,i,mytol):        
     ### this is a bit of a hack to get around a pylada bug; pylada crashes if tol is too high
     #nb = neighbors(s, 3, s[i].pos)
@@ -347,7 +349,49 @@ def get_nnb(s,i,mytol):
             if shell[i][0].type == type and shell[i][2] - closest < phystol: # difference between k'th neighbor and 0'th (which is closest)
                 nnb += 1
     return nnb
-            
+'''
+
+def get_nnb(s,i,mytol):
+    
+    nghs=neighbors(s,20,s[i].pos,0.001)
+    shortest_dist=nghs[0][-1]
+    shortest_type=nghs[0][0].type
+
+    hlp=[]
+    for ng in nghs:
+        if ng[0].type!=shortest_type: break
+        if ng[-1] > shortest_dist*(1 + mytol):continue
+        hlp.append(ng)
+
+    return len(hlp)
+
+
+def get_2shells(s,i,mytol):
+    
+    nghs=neighbors(s,50,s[i].pos,0.001)
+    shortest_dist=nghs[0][-1]
+    shortest_type=nghs[0][0].type
+
+    hlp=[]
+    for ii in range(len(nghs)):
+        ng=nghs[ii]
+        if ng[0].type!=shortest_type: break
+        if ng[-1] > shortest_dist*(1 + mytol):continue
+        hlp.append(ng)
+
+    shortest_dist=nghs[ii][-1]
+    shortest_type=nghs[ii][0].type
+
+    hlphlp=[]
+    for jj in range(ii,len(nghs)):
+        ng=nghs[jj]
+        if ng[0].type!=shortest_type: break
+        if ng[-1] > shortest_dist*(1 + mytol):continue
+        hlphlp.append(ng)
+
+    return [hlp,hlphlp]
+
+
 def anim_main(options):
     sgnum = []
     sgfull = []
@@ -367,14 +411,17 @@ def anim_main(options):
             ## but not quite working, so do this:
             nnb = get_nnb(structure, i, options.tol)
             if (c2):
-                cs = coordination_shells(structure, 2, structure[i].pos, options.tol)
+#vladan                cs = coordination_shells(structure, 2, structure[i].pos, options.tol)
+                cs = get_2shells(structure,i,options.tol)
+
 #            print "cs = ", cs
 #            print "nb = ", nb
 #            row.append(len(nb))
             row.append(nnb)
             #row.append(len(cs[0])) # size of of 1st shell
             if (c2):
-                c2row.append([len(cs[0]),len(cs[0])]) # size of of 2nd shell
+#vladan                c2row.append([len(cs[0]),len(cs[0])]) # size of of 2nd shell
+                c2row.append([len(cs[0]),len(cs[1])]) # size of of 2nd shell
         sg = spglib.get_spacegroup(structure, symprec=1e-4, angle_tolerance=2.0)
         sgfull.append(sg)
         sg = sg.split("(")[1].split(")")[0]
