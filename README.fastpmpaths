@@ -1,0 +1,70 @@
+Felix Therrien
+Final Project
+Parallel Computing
+
+In order to be able to execute my code you fist need to make sure you have the following modules loaded by 
+doing:
+
+module purge
+module load StdEnv
+module load PrgEnv
+module load PrgEnv/intel/16.0
+module load PrgEnv/devtoolset-6
+module load PrgEnv/python/gcc/2.7.11
+pip install --user munkres
+
+Then to compile the Fortran module, you need to simply do:
+
+make
+
+The comilation will display warning but these are normal due to F2py.
+
+Running execpmpaths will call fastpmpaths.py with on job and 16 processors:
+
+sbatch execpmpaths
+
+You can uncomment the bloc of code in execpmpaths to obtain the necessary output to
+reproduce the result shown in the repport. The execution of execpmpaths will produce
+the following output:
+
+output.txt:				should be empty
+
+errlog:					Will conatin warnings about numerical precision (see report) and will
+					indicate which part of the code is currently running.
+
+POSCARnameA-POSCARnameB.owner.txt: 	Is the ouput file used to validate the code with
+				   	the old version.
+
+trajdir:				Is the directory containing all the intermediate structures. It is the main
+					output.				 
+
+Execution of fastpmpaths.py by itself is very simple:
+srun -n nproc python fastpmpaths --param
+
+It will read the file named PARAM in the working directory. PARAM is a list of parameter and must always
+have the same header as empty.PARAM 
+
+--------------------------------------------------------------------------------------------------------------
+
+The directory also contains:
+anim.py : dependency of pmpaths and fastpmapaths
+
+empty.PARAM : contains the right header for the PARAM file
+
+f90_pmpaths.f90: This is the FORTRAN module I have entierly written 
+
+makefile: uses F2py with mpif90 to compile f90_pmpaths.f90
+
+pmpaths.py: This is the old version of pmpaths. It can be called using:
+
+	    python pmpaths.py -A POSCAR_test_2 -B POSCAR_test_1 -v 0 -z traj_testing -n 101 -e 0.3 -b 3.6 -f
+
+	    This should print in the standard ouput the same result as POSCAR_test_2-POSCAR_test_1.owner.txt
+
+pmtest.py: This is simple program that demonstrate how much faster the FORTRAN module is
+
+POSCAR_test_*: These are the POSCAR file that are taken as arguments od pmpaths 
+
+pyspglib: dependency of pmpaths and fastpmapaths
+
+util.py: dependency of pmpaths and fastpmapaths

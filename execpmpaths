@@ -1,0 +1,43 @@
+#!/bin/bash -x
+##SBATCH -p mganesh
+#SBATCH --job-name="pmpaths"
+#SBATCH --nodes=4
+##SBATCH --ntasks-per-node=16
+#SBATCH --ntasks=64
+##SBATCH --exclusive
+#SBATCH --export=ALL
+#SBATCH --time=05:00:00
+#SBATCH -o output.txt
+#SBATCH -e errlog
+
+cd $SLURM_SUBMIT_DIR
+JOBID=‘echo $SLURM_JOBID’
+cat $0 > script.$JOBID
+printenv > env.$JOBID
+
+rm -f timefile
+
+cp empty.PARAM PARAM
+
+## This will reproduce the output used to create the plots in the report
+# for i in $(seq 3)
+# do
+#     for j in $(seq 3)
+#     do
+# 	if [ $i != $j ]; then
+# 	echo -e "POSCAR_test_${j},POSCAR_test_${i},,,,traj_testing${i}${j},,,3.6,101,,,,1,0.3" >> PARAM
+# 	srun -n 1 python fastpmpaths.py --param
+# 	srun -n 2 python fastpmpaths.py --param
+# 	srun -n 4 python fastpmpaths.py --param
+# 	srun -n 8 python fastpmpaths.py --param
+# 	srun -n 16 python fastpmpaths.py --param
+# 	srun -n 32 python fastpmpaths.py --param
+# 	srun -n 64 python fastpmpaths.py --param
+# 	fi
+#     done
+# done
+
+
+##This is a single call of fastpmpaths with one job and 16 processors
+echo -e "POSCAR_test_1,POSCAR_test_2,,,,traj_testing12,,,3.6,101,,,,1,0.3" >> PARAM
+srun -n 16 python fastpmpaths.py --param 

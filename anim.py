@@ -140,18 +140,20 @@ def make_anim(A,B,Tm,shift,pairs,options):
     from copy import deepcopy
     from util import write_struct, write_xyz, transform_cell, write_tcl
 
-    print "Exploring minimal path we have discovered..."
-    # the results come out a little convoluated b/c of all the steps, so here we gather the
-    # actual start and finish positions.
+    if options.verbose > 1:
+        print "Exploring minimal path we have discovered..."
+        # the results come out a little convoluated b/c of all the steps, so here we gather the
+        # actual start and finish positions.
 
-    details = False
+        details = False
 
-    print B.cell
-    print "maps to"
-    print A.cell
-    print "with internal atom shift"
-    print shift
-    print "and atom idx pairing"
+        print B.cell
+        print "maps to"
+        print A.cell
+        print "with internal atom shift"
+        print shift
+        print "and atom idx pairing"
+
     ppidx = pairs[0]
     ppos = pairs[1]
     ainv = npl.inv(A.cell)
@@ -160,11 +162,11 @@ def make_anim(A,B,Tm,shift,pairs,options):
     for i in range(len(ppidx)):
         p = ppidx[i]
         q = ppos[i]
-        print p, q  ##, into_cell(np.dot(B.cell, np.dot(ainv, q[4])), B.cell)
+#        print p, q  ##, into_cell(np.dot(B.cell, np.dot(ainv, q[4])), B.cell) FT TMP
         apos.append(q[3])  # target atom position
         bpos.append(q[4])  # src atom position
 
-    if (details):
+    if (options.verbose > 2):
         print "and A is just"
         print A.cell
         for a in A:
@@ -180,7 +182,8 @@ def make_anim(A,B,Tm,shift,pairs,options):
     savedir = os.getcwd()
     os.chdir(options.trajdir)
 
-    print "saving starting anim"
+    if (options.verbose > 1):
+        print "saving starting anim"
     Bpath = deepcopy(B)
     tag = "Bpath0" 
     write_xyz(options, Bpath, tag, options.output_tiles)
@@ -214,7 +217,7 @@ def make_anim(A,B,Tm,shift,pairs,options):
 
         if (iter == 0): ## testing/bug fixing
             Bstart = deepcopy(Bpath)
-            if (details):
+            if (options.verbose > 2):
                 from pylada.crystal import space_group, primitive
                 from pylada.math import gruber
                 Btest = primitive(Bpath)
@@ -229,11 +232,12 @@ def make_anim(A,B,Tm,shift,pairs,options):
 
         sg = spglib.get_spacegroup(Bpath, symprec=1e-4, angle_tolerance=2.0)
 #        sg = spglib.get_spacegroup(Bpath, symprec=1e-1, angle_tolerance=10.0) ### debugging
-        print t, sg, tag
+        if (options.verbose > 1):
+            print t, sg, tag
 
         if (iter == options.frames-1): ## testing/bug fixing
             Bend = deepcopy(Bpath)
-            if (details):
+            if (options.verbose > 2):
                 from pylada.crystal import space_group, primitive
                 from pylada.math import gruber
                 Btest = primitive(Bpath)
@@ -273,9 +277,11 @@ def make_anim(A,B,Tm,shift,pairs,options):
 #    sg = spglib.get_spacegroup(Bfinal, symprec=1e-4, angle_tolerance=2.0)  ## this is "B in A coords"
 #    print "spacegroup of final structure: ", sg
     sg = spglib.get_spacegroup(B, symprec=1e-4, angle_tolerance=2.0)
-    print "spacegroup of initial structure (B, [Bflip in code]) ", sg
+    if (options.verbose > 0):
+        print "spacegroup of initial structure (B, [Bflip in code]) ", sg
     sg = spglib.get_spacegroup(A, symprec=1e-4, angle_tolerance=2.0)
-    print "spacegroup of target structure (A) ", sg
+    if (options.verbose > 1):
+        print "spacegroup of target structure (A) ", sg
 
 
 
@@ -287,6 +293,8 @@ def get_anim_option_parser():
     parser.add_option("-B", "--B", dest="B",  type="string", default=None, help="poscar 2")
     parser.add_option("-e", "--tol", dest="tol",  type="float", default=1e-1, help="tolerance for coordination calcs")
     parser.add_option("-r", "--raw_anim", dest="raw_anim", help="interpolate B to A  ### this option is under development", action="store_true", default=False)
+    parser.add_option("-v", "--verbose", dest="verbose",  type="int", default=2, help="verbosity")
+
     return parser
 
 def get_options():
@@ -319,21 +327,71 @@ def test_shift(src):
         sg = spglib.get_spacegroup(src1, symprec=1e-5, angle_tolerance=-1.0)
         print "shift, sg", shift, sg
 
+'''
+Vldan
 def get_nnb(s,i,mytol):        
     ### this is a bit of a hack to get around a pylada bug; pylada crashes if tol is too high
     #nb = neighbors(s, 3, s[i].pos)
     maxshells = 4
-    cs = coordination_shells(s, maxshells, s[i].pos, 0.1)
+#    print s[i].pos
+    maxlen = max([npl.norm(s.cell[:,j]) for j in range(3)])
+    phystol = maxlen * mytol
+    pyladatol = phystol / 5.0
+#    print maxlen, mytol, phystol, pyladatol
+    cs = coordination_shells(s, maxshells, s[i].pos, pyladatol)
     nnb = 0    
     closest = cs[0][0][2]
+#    print closest
     type = cs[0][0][0].type
     for k in range(maxshells):
         shell = cs[k]
         for i in range(len(shell)):
-            if shell[i][0].type == type and shell[i][2] - closest < mytol: # difference between k'th neighbor and 0'th (which is closest)
+            if shell[i][0].type == type and shell[i][2] - closest < phystol: # difference between k'th neighbor and 0'th (which is closest)
                 nnb += 1
     return nnb
-            
+'''
+
+def get_nnb(s,i,mytol):
+    
+    nghs=neighbors(s,20,s[i].pos,0.001)
+    shortest_dist=nghs[0][-1]
+    shortest_type=nghs[0][0].type
+
+    hlp=[]
+    for ng in nghs:
+        if ng[0].type!=shortest_type: break
+        if ng[-1] > shortest_dist*(1 + mytol):continue
+        hlp.append(ng)
+
+    return len(hlp)
+
+
+def get_2shells(s,i,mytol):
+    
+    nghs=neighbors(s,50,s[i].pos,0.001)
+    shortest_dist=nghs[0][-1]
+    shortest_type=nghs[0][0].type
+
+    hlp=[]
+    for ii in range(len(nghs)):
+        ng=nghs[ii]
+        if ng[0].type!=shortest_type: break
+        if ng[-1] > shortest_dist*(1 + mytol):continue
+        hlp.append(ng)
+
+    shortest_dist=nghs[ii][-1]
+    shortest_type=nghs[ii][0].type
+
+    hlphlp=[]
+    for jj in range(ii,len(nghs)):
+        ng=nghs[jj]
+        if ng[0].type!=shortest_type: break
+        if ng[-1] > shortest_dist*(1 + mytol):continue
+        hlphlp.append(ng)
+
+    return [hlp,hlphlp]
+
+
 def anim_main(options):
     sgnum = []
     sgfull = []
@@ -353,14 +411,17 @@ def anim_main(options):
             ## but not quite working, so do this:
             nnb = get_nnb(structure, i, options.tol)
             if (c2):
-                cs = coordination_shells(structure, 2, structure[i].pos, options.tol)
+#vladan                cs = coordination_shells(structure, 2, structure[i].pos, options.tol)
+                cs = get_2shells(structure,i,options.tol)
+
 #            print "cs = ", cs
 #            print "nb = ", nb
 #            row.append(len(nb))
             row.append(nnb)
             #row.append(len(cs[0])) # size of of 1st shell
             if (c2):
-                c2row.append([len(cs[0]),len(cs[0])]) # size of of 2nd shell
+#vladan                c2row.append([len(cs[0]),len(cs[0])]) # size of of 2nd shell
+                c2row.append([len(cs[0]),len(cs[1])]) # size of of 2nd shell
         sg = spglib.get_spacegroup(structure, symprec=1e-4, angle_tolerance=2.0)
         sgfull.append(sg)
         sg = sg.split("(")[1].split(")")[0]
@@ -373,11 +434,13 @@ def anim_main(options):
     tot_coord_lost = 0
     tot_coord_gained = 0
     natoms = len(structure)
-    print "#coordination for %s to %s transition:" % (options.B, options.A)
-    s = "#frame spacegroup : "
-    for i in range(len(structure)):
-        s += "atom%d " % i
-    print s
+    if options.verbose > 0:
+        print "#coordination for %s to %s transition:" % (options.B, options.A)
+        if (options.verbose > 1):
+            s = "#frame spacegroup : "
+            for i in range(len(structure)):
+                s += "atom%d " % i
+            print s
     for i in range(len(dat)):
         s = "%d   %s %d :  " % (i, sgfull[i], sgnum[i])
         row = dat[i]        
@@ -391,13 +454,15 @@ def anim_main(options):
                 s += "%d/%d,%d   " % ( row[j], c2row[j][0], c2row[j][1] )
             else:
                 s += "%d   " % ( row[j])
-        print s
+        if (options.verbose > 1):
+            print s
         last_row = row
-    print "#Total of %.2f (%.2f) bonds per atom broken (resp.,made) in %s to %s transition." % (tot_coord_lost/float(natoms), tot_coord_gained/float(natoms),options.B, options.A)
     speed = "FAST" if (tot_coord_lost == 0 or tot_coord_gained == 0) else "SLOW"
-    print "This transition is likely to be ", speed
+    if (options.verbose > 0):
+        print "#Total of %.2f (%.2f) bonds per atom broken (resp.,made) in %s to %s transition." % (tot_coord_lost/float(natoms), tot_coord_gained/float(natoms),options.B, options.A)
+#    print "This transition is likely to be ", speed  #FT TMP
 
-    if (options.A != None):
+    if (options.A != None and options.verbose > 1):
         structure = pcread.poscar(options.A)
         sg = spglib.get_spacegroup(structure, symprec=1e-5, angle_tolerance=-1.0)
 #        sg = sg.split("(")[1].split(")")[0]
@@ -409,7 +474,7 @@ def anim_main(options):
 
 #        test_shift(structure)
 
-    if (options.B != None):
+    if (options.B != None and options.verbose > 1):
         structure = pcread.poscar(options.B)
         sg = spglib.get_spacegroup(structure, symprec=1e-5, angle_tolerance=-1.0)
 #        sg = sg.split("(")[1].split(")")[0]
