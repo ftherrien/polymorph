@@ -52,7 +52,7 @@ def rot_euler(thx, thy, thz):
 #mol addrep top 
 
 tcl_str1 = """
-mol new %s type xyz
+mol new %s type %s
 mol delrep 0 top
 mol rep CPK 0.9 0 150 0
 mol addrep top 
@@ -84,7 +84,7 @@ graphics top line {%f %f %f} {%f %f %f} width 3 style dashed
 
 """
 
-def write_struct(fout, A, Aname, col,center=False,bonds=False, bond_len=0):
+def write_struct(fout, A, Aname, col,center=False,bonds=False, bond_len=0, type ="xyz"):
     """ write tcl for viz in VMD for one structure """
     a = A.scale * A.cell
     a1 = a[:,0]
@@ -112,7 +112,7 @@ def write_struct(fout, A, Aname, col,center=False,bonds=False, bond_len=0):
         a23 = a23 + a0
         a123 = a123 + a0
 
-    fout.write(tcl_str1 % Aname)
+    fout.write(tcl_str1 % (Aname, type))
     if (bonds):
         fout.write(tcl_str2 % bond_len)
     fout.write(tcl_str3 % 

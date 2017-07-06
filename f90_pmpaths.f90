@@ -22,20 +22,32 @@ module pmpaths
        
   contains
 
-  subroutine final_fix_gruber(A_out,B_out,dmin,A,B,verbose,comm)
+  subroutine final_fix_gruber(Amin_list,Bmin_list,dmin_list,A,B,dthresh,verbose,comm)
 
     double precision, intent(in), dimension(3,3) :: &
          A, B         ! Cell structure
-    
-    double precision, intent(out), dimension(3,3) :: &
-         A_out, B_out ! Resulting cell structure
+
+    double precision, intent(in) :: &
+         dthresh      ! Threshold mismatch factor
     
     integer, intent(in) :: &
          verbose, &   ! verbosity
          comm         ! mpi communication world
 
-    double precision, intent(out) :: &
-         dmin         ! Minimal mismatch factor
+    double precision, intent(out),allocatable, dimension(:) :: &
+         dmin_list         ! Minimal mismatch factor
+
+    double precision, intent(out), allocatable, dimension(:,:,:) :: &
+         Amin_list, Bmin_list ! Resulting cell structure
+
+    type cell_list
+       double precision, :: dist
+       double precision, dimension(3,3) :: acell
+       double precision, dimension(3,3) :: bcell
+       TYPE(cell_list), POINTER :: next_elem
+    end type cell_list
+
+    type(cell_list), pointer :: first_elem, cell_list
 
     double precision :: &
          asa,bsa, &   ! Unit cell surface
@@ -56,13 +68,16 @@ module pmpaths
          n_proc, &    ! Number of processors
          rank, &      ! Rank of current proc
          i1,i2,i3, &  ! Iterators
-         j1,j2,j3     ! Iterators
+         j1,j2,j3, &  ! Iterators
+         num_elem, &  ! number of min cell 
+         alloc_stat   ! Allocation Status
+    
 
     call mpi_comm_size(comm, n_proc, ierror)
     call mpi_comm_rank(comm, rank, ierror)
 
     ! B and A are both canonincal, which means that "a3" are along z-axis,
-    ! "a1" are in x-z plane within 45 degrees of z axis, 
+    ! "a1" are in x-z plane within 45 degrees of x axis, 
     ! and "a2" is pointing up in a 45 degree "cone" around y axis.
     ! But this doesn't mean they are as close to EACH OTHER as they could be.
     ! so here we do one last step:
@@ -79,6 +94,8 @@ module pmpaths
     if (verbose > 1) then
        write(*,*) "final fix gruber, starting dmin", dmin
     endif
+
+    num_elem = 0
 
     do i1=-1,1
        do i2=-1,1
@@ -99,10 +116,22 @@ module pmpaths
                       !if (d < 100) then
                       !   write(*,*) "new stats", d, aa, ba, aang, bang, asa, bsa
                       !end if
-                      if (d < (dmin-eps) .and. rough_eq_latt(Ap, Bp)) then
-                         Pmin = P
-                         Qmin = Q
-                         dmin = d                            
+                      if (d < dthresh) then
+!                      if (d < (dmin - eps) .and. rough_eq_latt(Ap, Bp)) then
+                         num_elem = num_elem + 1
+                         if (num_elem == 1) then
+                            allocate( first_elem, stat=alloc_stat )
+                            first_elem%dist = d
+                            first_elem%acell = Ap
+                            first_elem%bcell = Bp
+                            cell_list => firstElem
+                         else
+                            allocate( cell_list%next_elem)
+                            cell_list%next_elem%dist = d
+                            cell_list%next_elem%Acell = Ap
+                            cell_list%next_elem%Bcell = Bp
+                            cell_list => cell_list%next_elem
+                            
                          if (verbose > 1) then
                             write(*,*) "new best stats",d, aa, ba, aang, bang, asa, bsa
                          endif
@@ -114,19 +143,22 @@ module pmpaths
        enddo
     enddo
 
+    nullify(cell_list%next_elem)
+
+    allocate(dmin_list(num_elem),Amin_list(3,3,num_elem),Bmin_list(3,3,num_elem))
+
+    cell_list=>firstElement
+    do i1=1,num_elem
+       dmin_list(i1) = cell_list%dist
+       Amin_list(:,:,i1) = cell_list%Acell
+       Bmin_list(:,:,i1) = cell_list%Bcell
+       cell_list => cell_list%next_elem
+    
     if (verbose > 1) then
-       write(*,*) "final_fix_gruber: P,Q = "
+       write(*,*) "ffg.dmins:",dmin_list
        write(*,*) int(Pmin)
        write(*,*) int(Qmin)
     endif
-
-    A_out = matmul(A, Qmin)
-    B_out = matmul(B, Pmin)
-    !write(*,*) newB
-
-    !-FT supercell operation performed with pylada must be done outside of the subroutine
-    !A = supercell(A, newA)
-    !B = supercell(B, newB)
 
   end subroutine final_fix_gruber
 
