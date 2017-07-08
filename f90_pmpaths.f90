@@ -19,10 +19,10 @@ module pmpaths
        cross, &
        det, &
        norm
-       
+
   contains
 
-  subroutine final_fix_gruber(Amin_list,Bmin_list,dmin_list,A,B,dthresh,verbose,comm)
+  subroutine final_fix_gruber(Amin_list,Bmin_list,dmin_list,num_elem,A,B,dthresh,verbose,comm)
 
     double precision, intent(in), dimension(3,3) :: &
          A, B         ! Cell structure
@@ -34,25 +34,28 @@ module pmpaths
          verbose, &   ! verbosity
          comm         ! mpi communication world
 
-    double precision, intent(out),allocatable, dimension(:) :: &
-         dmin_list         ! Minimal mismatch factor
+    double precision, intent(out), dimension(3**6) :: &
+         dmin_list    ! Minimal mismatch factor
 
-    double precision, intent(out), allocatable, dimension(:,:,:) :: &
+    integer, intent(out) :: &
+         num_elem     ! number of min cell
+
+    double precision, intent(out), dimension(3,3,3**6) :: &
          Amin_list, Bmin_list ! Resulting cell structure
 
-    type cell_list
-       double precision, :: dist
-       double precision, dimension(3,3) :: acell
-       double precision, dimension(3,3) :: bcell
-       TYPE(cell_list), POINTER :: next_elem
-    end type cell_list
+    ! type cell_obj
+    !    double precision :: dist
+    !    double precision, dimension(3,3) :: acell
+    !    double precision, dimension(3,3) :: bcell
+    !    TYPE(cell_obj), POINTER :: next_elem
+    ! end type cell_obj
 
-    type(cell_list), pointer :: first_elem, cell_list
+    ! type(cell_obj), pointer :: first_elem, cell_list
 
     double precision :: &
          asa,bsa, &   ! Unit cell surface
          eps, &       ! Mismatch factor difference tolerance (epsilon)
-         d            ! Mismatch factor
+         d, dmin      ! Mismatch factor
 
     double precision, dimension(3) :: &
          aa,ba, &     ! Lengths of vectors 
@@ -68,9 +71,8 @@ module pmpaths
          n_proc, &    ! Number of processors
          rank, &      ! Rank of current proc
          i1,i2,i3, &  ! Iterators
-         j1,j2,j3, &  ! Iterators
-         num_elem, &  ! number of min cell 
-         alloc_stat   ! Allocation Status
+         j1,j2,j3     ! Iterators 
+!         alloc_stat   ! Allocation Status
     
 
     call mpi_comm_size(comm, n_proc, ierror)
@@ -87,8 +89,6 @@ module pmpaths
     call vec2alpha(A,aa,aang)
     call vec2alpha(B,ba,bang)
     call stats_to_value(dmin, aa, aang, ba, bang, asa, bsa)
-    Pmin = eye()
-    Qmin = eye()
     eps = 1e-2 !this is just to slightly favor the good match we already found
 
     if (verbose > 1) then
@@ -119,19 +119,23 @@ module pmpaths
                       if (d < dthresh) then
 !                      if (d < (dmin - eps) .and. rough_eq_latt(Ap, Bp)) then
                          num_elem = num_elem + 1
-                         if (num_elem == 1) then
-                            allocate( first_elem, stat=alloc_stat )
-                            first_elem%dist = d
-                            first_elem%acell = Ap
-                            first_elem%bcell = Bp
-                            cell_list => firstElem
-                         else
-                            allocate( cell_list%next_elem)
-                            cell_list%next_elem%dist = d
-                            cell_list%next_elem%Acell = Ap
-                            cell_list%next_elem%Bcell = Bp
-                            cell_list => cell_list%next_elem
-                            
+                         ! if (num_elem == 1) then
+                         !    allocate( first_elem, stat=alloc_stat )
+                         !    first_elem%dist = d
+                         !    first_elem%acell = Ap
+                         !    first_elem%bcell = Bp
+                         !    cell_list => first_elem
+                         ! else
+                         !    allocate( cell_list%next_elem)
+                         !    cell_list%next_elem%dist = d
+                         !    cell_list%next_elem%Acell = Ap
+                         !    cell_list%next_elem%Bcell = Bp
+                         !    cell_list => cell_list%next_elem
+                         ! endif
+                         Amin_list(:,:,num_elem)=Ap
+                         Bmin_list(:,:,num_elem)=Bp
+                         dmin_list(num_elem)=d
+
                          if (verbose > 1) then
                             write(*,*) "new best stats",d, aa, ba, aang, bang, asa, bsa
                          endif
@@ -143,21 +147,20 @@ module pmpaths
        enddo
     enddo
 
-    nullify(cell_list%next_elem)
+    ! nullify(cell_list%next_elem)
 
-    allocate(dmin_list(num_elem),Amin_list(3,3,num_elem),Bmin_list(3,3,num_elem))
+    ! allocate(dmin_list(num_elem),Amin_list(3,3,num_elem),Bmin_list(3,3,num_elem))
 
-    cell_list=>firstElement
-    do i1=1,num_elem
-       dmin_list(i1) = cell_list%dist
-       Amin_list(:,:,i1) = cell_list%Acell
-       Bmin_list(:,:,i1) = cell_list%Bcell
-       cell_list => cell_list%next_elem
+    ! cell_list=>first_elem
+    ! do i1=1,num_elem
+    !    dmin_list(i1) = cell_list%dist
+    !    Amin_list(:,:,i1) = cell_list%Acell
+    !    Bmin_list(:,:,i1) = cell_list%Bcell
+    !    cell_list => cell_list%next_elem
+    ! enddo
     
     if (verbose > 1) then
        write(*,*) "ffg.dmins:",dmin_list
-       write(*,*) int(Pmin)
-       write(*,*) int(Qmin)
     endif
 
   end subroutine final_fix_gruber

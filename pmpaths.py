@@ -1,18 +1,3 @@
-#FT 04/2017 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is the parallelized version of pmpaths to be used with the f90_pmpaths fortran module.
-# all modifications are marked with FT (Felix Therrien).
-#
-# All functions between FT >> and FT << were implemented or modified by me 
-#
-# Version of the function ending with _p are used when the --param glag is used
-# this avoids to interfer with the module mode.
-#
-# The flowing functions have been removed and replaced by f90 functions:
-# final_fix_gruber, ucell_surface, vec2alpha, stats_to_value
-#
-# The functions rough_eq_latt and abs_cap  have been removed. (they are  used only by
-# functions of the f90 module) 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import os,sys
 from copy import deepcopy
 from math import cos, sin, acos, pi
@@ -23,7 +8,6 @@ import numpy as np
 import numpy.linalg as npl
 
 from pylada import enum
-
 import pylada.crystal.read as pcread
 import pylada.crystal.write as pcwrite
 from pylada.crystal import supercell, space_group, into_cell, Structure, primitive
@@ -32,105 +16,8 @@ from util import write_tcl, write_tcl_one, transform_cell, lcm, gcd, write_struc
 from anim import closest_to, make_anim
 from util import rot_euler
 
-from f90_pmpaths import pmpaths as f90 #+FT
-
-import time #+FT
-import sys #+FT
-import shutil #+FT
-
-from mpi4py import MPI #+FT
-
-#+FT >>
-class emul_parser:
-    # This class emulates the class created by the parser, the attributes are the same.
-    def __init__(self,row=None):
-
-        self.A='A'
-        self.B='B'
-        self.output_tiles=1
-        self.do_hlst=False
-        self.verbose=1
-        self.trajdir='trajdir'
-        self.min_cluster_size=2
-        self.shifting=1
-        self.bond_len=2.0
-        self.frames=1
-        self.nocheck_syms=False
-        self.nocheck_ucells=False
-        self.no_ucell_dist=False
-        self.get_fast=False
-        self.tol=5e-1
-        self.param=False
-        self.use_given_ucells=False
-
-        if (row!=None):
-
-            self.param=True
-            self.verbose=0
-            
-            if (row['A'] != ''):
-                self.A=row['A']
-
-            if (row['B'] != ''):
-                self.B=row['B']
-
-            if (row['t'] != ''):
-                self.output_tiles=int(row['t'])
-
-            if (row['H'] != ''):
-                self.do_hlst=True
-
-#            if (row['v'] != ''):
-#                self.verbose=int(row['v'])
-
-            if (row['z'] != ''):
-                self.trajdir=row['z']
-            
-            if (row['c'] != ''):
-                self.min_cluster_size=int(row['c'])
-
-            if (row['s'] != ''):
-                self.shifting=int(row['s'])
-            
-            if (row['b'] != ''):
-                self.bond_len=float(row['b'])
-
-            if (row['n'] != ''):
-                self.frames=int(row['n'])
-            
-            if (row['y'] != ''):
-                self.nocheck_syms=True
-            
-            if (row['u'] != ''):
-                self.nocheck_ucells=True
-
-            if (row['d'] != ''):
-                self.nocheck_ucells=True
-
-            if (row['f'] != ''):
-                self.get_fast=True
-
-            if (row['e'] != ''):
-                self.tol=float(row['e'])
-
-            if (row['w'] != ''):
-                self.use_given_ucells=True
-#+FT <<
-
-# These variables are global and accessible to all functions including when
-# fastpmpaths is called as a module 
-f90comm = MPI.COMM_WORLD.py2f()
-comm = MPI.COMM_WORLD
-master = 0
-n_proc = comm.Get_size()
-rank = comm.Get_rank()
-
-options = emul_parser() 
-    
-
 def get_option_parser():
-    parser = OptionParser()
-    parser.add_option("--param", dest="param", action="store_true", default=False, help="Parameter file name")    
+    parser = OptionParser()    
     parser.add_option("-A", "--A", dest="A",  type="string", default="A", help="poscar 1")
     parser.add_option("-B", "--B", dest="B",  type="string", default="B", help="poscar 2")
 #    parser.add_option("-e", "--equal_blocks_ok", dest="equal_blocks_ok", help="generate DiADi cases, etc", action="store_true", default=False)
@@ -158,143 +45,6 @@ def get_options():
     (options, args) = parser.parse_args()
     return options, args
 
-#+FT >>
-def read_param_file():
-# This subroutine goes through the PARAM file and reads all the parameters of the jobs as if they 
-# were argument(options) of a single job and stores them in to a list of emul_parser.
-# The emul_parser objects have the same properties as the option object created by the parser.
-
-    import csv
-    
-    with open('PARAM','rb') as param:
-        reader = csv.DictReader(param)
-        all_options=[]
-        for i,row in enumerate(reader):
-            all_options.append(emul_parser(row))
-    
-    return all_options
-#+FT <<
-
-#+FT >>
-def load_balance(n_tasks):
-    n_jobs = n_tasks/n_proc
-    balance = n_tasks%n_proc
-
-    if (rank < balance):
-        i_init = rank*(n_jobs+1)+1
-        i_fin = (rank+1)*(n_jobs+1)
-    else:
-        i_init = balance*(n_jobs+1) + (rank-balance)*(n_jobs)+1
-        i_fin = balance*(n_jobs+1) + (rank-balance+1)*(n_jobs)
-    
-    return range(i_init-1, i_fin)
-#+FT <<
-
-#+FT >>
-def gather_vec(n_tasks):
-    n_jobs = n_tasks/n_proc
-    balance = n_tasks%n_proc
-
-    v_count = np.ones(n_proc,np.int32)*n_jobs
-    v_count[np.arange(n_proc)<balance]=(n_jobs+1)
-
-    v_position = range(0,balance*(n_jobs+1),n_jobs+1)
-    if (n_jobs!=0):
-        v_position.extend(range(balance*(n_jobs+1),n_tasks,n_jobs))
-    else:
-        v_position.extend([0]*(n_proc-balance))
-
-    return tuple(v_count), tuple(v_position)
-#+FT <<
-#+FT >>
-def allgatherv(A):
-    Alist = comm.allgather(A)
-    A=[]
-    for Asublist in Alist:
-        for element in Asublist:
-            A.append(element)
-    return A
-#+FT <<
-#+FT >>
-def gatherv(A):
-    Alist = comm.gather(A,master)
-    if(rank==master):
-        A=[]
-        for Asublist in Alist:
-            for element in Asublist:
-                A.append(element)
-                return A
-    else:
-        return None
-#+FT >>
-def distribute(size_local,n_jobs):
-
-    size_local = np.array(size_local,np.int32)
-
-    if (rank == master):
-        sizes=np.zeros(n_jobs,np.int32)
-    else:
-        sizes=None
-
-    original_v_count, original_v_position = gather_vec(n_jobs)
-
-    comm.Gatherv(size_local,[sizes, original_v_count, original_v_position, MPI.INT])
- 
-    if (rank == master):
-        n_total_tasks=sum(sizes)
-        ntasks_per_proc = np.ones(n_proc,np.int32)*n_total_tasks/n_proc
-        ntasks_per_proc[np.arange(n_proc)<(n_total_tasks%n_proc)] = n_total_tasks/n_proc+1
-        v_count=[0]
-        v_position=[0,0]
-        ntasks_in_proc=np.zeros(n_proc,np.int32)
-        job_to_do=[]
-        ntasks_added = 0       
-        proc=0
-        for i in range(len(sizes)):
-            remaining_tasks = sizes[i]
-            while (remaining_tasks > 0):               
-                remaining_space = ntasks_per_proc[proc]-ntasks_in_proc[proc]
-                if (remaining_space > 0):
-                    ntasks_added = min(remaining_space,remaining_tasks)
-                    job_to_do.extend([i,
-                                      sizes[i]-remaining_tasks,
-                                      sizes[i]-remaining_tasks+ntasks_added-1])
-                    ntasks_in_proc[proc]=ntasks_in_proc[proc]+ntasks_added
-                    v_count[-1]=v_count[-1]+3
-                    v_position[-1]=v_position[-1]+3
-                else:
-                    ntasks_added=0
-                    proc+=1
-                    v_count.append(0)
-                    v_position.append(v_position[-1])
-
-                remaining_tasks = (remaining_tasks-ntasks_added)
-        
-        v_position=v_position[:-1]
-        if (n_total_tasks<n_proc):
-            print >> sys.stderr, "!!!! WARNING !!!!"
-            print >> sys.stderr, "%d inactive cores; reduce number of cores." %(n_proc-n_total_tasks)
-            v_count.extend([0]*(n_proc-n_total_tasks))
-            v_position.extend([v_position[-1]]*(n_proc-n_total_tasks))
-                       
-        job_to_do=np.array(job_to_do,np.int32)
-        v_count=tuple(v_count)
-        v_position=tuple(v_position)
-        # print >> sys.stderr, "v_position",v_position
-        # print >> sys.stderr, "job_to_do",type(job_to_do[0])
-    else:
-        job_to_do=None
-        v_count=None
-        v_position=None
-    
-    local_count=comm.scatter(v_count)
-    
-    job_to_do_local = np.zeros(local_count,np.int32) 
-
-    comm.Scatterv([job_to_do, v_count, v_position, MPI.INT],job_to_do_local)
-    
-    return job_to_do_local, job_to_do,original_v_position,original_v_count
-#+FT <<
 
 def distance(p, pcell, ipcell, q, qcell, iqcell):
     """
@@ -545,6 +295,34 @@ def test_one_shifted_pair(A,B, options):
             ### would be nice is this were a structure, hard to deconstruct the lists (TODO)
 
     return dmin, [pairmin, ppmin], [dofmin, partitionmin,  bigAmin]
+
+
+def rough_eq_latt(A,B):
+    ## sort of like eq_latt, except no permutation and no sign changes,
+    ## but much looser tolerance
+    ## This fn is called in final_fix_gruber, where we might have found better cell params (a,b,c,etc), but
+    ## we may have ruined the overlap of the cells in doing so, so we need to check they're at least still close to matching.
+    mind = 1e10
+    eps_costheta = 5e-1 
+    eps_dist = .4   ## relative to length
+    pairs = []
+    signs = []
+    for i in range(3):
+        a = A[:,i]
+        b = B[:,i]
+        d = npl.norm(b-a)/ max(npl.norm(b),npl.norm(a))
+        c = abs(np.dot(a,b)/(npl.norm(b)*npl.norm(a)))
+#            print i,j, d, c, a, b
+        if d > eps_dist or 1-c > eps_costheta:  ## pair unit cell vectors that are close in both length and direction.
+            return False
+
+#    print "accepting that "
+#    print A
+#    print "and"
+#    print B
+#    print "are roughly equal"
+
+    return True
     
 
 def eq_latt(A,B):
@@ -582,9 +360,6 @@ def find_sym(s, symset):
 def approx_space_group(s, options=None):
     use_fcc = True
     use_given = True
-
-    if (options == None): #+FT
-        options = emul_parser() #+FT
 
     if (options != None and options.verbose > 0):
         print "building test syms:",
@@ -833,280 +608,45 @@ def analyze_commensurized(src, dst, options):
 #    return dmin, pairsmin, hlstmin, shiftmin
     return dmin, pairsmin, Amin, Bmin,  shiftmin
 
-# +FT >>
-def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
 
-    # given matrices to get commensurate cells,
-    # prepare (including symmetries) possible ways they could
-    # best overlap
-    ## returns a list of pairs of cells to be submitted to
-    # analyze_one_cell_mapping()
-    
-    # FT+ Parallelized the new process
-    best_dmins = [None]*len(pos_k)
-    best_AminStructs = [None]*len(pos_k)
-    best_BminStructs = [None]*len(pos_k)
-    best_gminSyms = [None]*len(pos_k)
-    for i in pos_k:
-        ## PG adding short circuit here to just use input unit cells AS GIVEN (different than nocheck_ucells, which does gruberization)
-        if (all_options[i].use_given_ucells):
-            asa = f90.ucell_surface(A[i].cell)  ## get cell stats
-            aa,aang = f90.vec2alpha(A[i].cell)
-            bsa = f90.ucell_surface(B[i].cell)  ## get cell stats
-            ba,bang = f90.vec2alpha(B[i].cell)
-            d[i] = f90.stats_to_value(aa, aang, ba, bang, asa, bsa)
-            # if (options[i].verbose > 0):
-                # print "using given unit cells as is, d = ", d
-                # print "abc's for A,B are:", aa,aang, ba,bang
-                # print A[i].cell
-                # print B[i].cell
-            best_dmins[i]=[d]
-            best_AminStructs[i]=[A]
-            best_BminStructs[i]=[B]
-            best_gminSyms[i]=[np.identity(3)]
-    
-    
-    # figure out multipliers needed to make supercells with the same number of atoms
 
-    Acells = []
-    Bcells = []
-    size_local = []
+def ucell_surface(A):
+    ## must be a better way, but here I am
+    # constructing a series of 3 cells whose VOLUMES are the SURFACE AREAS of
+    # each of the 3 unique faces of the unit cell
+    s = 0
+    for i in range(3):
+        i1 = i
+        i2 = (i+1)%3
+        a = A[:,i1]
+        b = A[:,i2]
+        n = np.cross(a,b)
+        n = n/npl.norm(n)
+        B = np.array([a,b,n])
+#        print "a", a
+#        print "B",B
+        s0 = abs(npl.det(B))
+        s += s0
+    return 2*s
 
-    # looping over owned jobs FT
-    for i in pos_k:
-        if (not all_options[i].use_given_ucells):
-            n1 = len(A[i])
-            n2 = len(B[i])
-            N = lcm(n1, n2)
-            m1 = N/n1
-            m2 = N/n2
 
-            # find all inequivalent matrix multipliers s.t. supercells match number of atoms
-            Acells_dict = enum.supercells(A[i],[m1]); Acells.append(Acells_dict[m1])
-            Bcells_dict = enum.supercells(B[i],[m2]); Bcells.append(Bcells_dict[m2])
+def stats_to_value(aa, aang, ba, bang, asa, bsa):
+    # combine cell stats into one measure of similarity.
+    # roughly...:
+    m1 = 1.0  # 1 is a big distance
+    m2 = 10.0  # 10 is a big angle
+    m3 = 10.0 # 10 is a big surface area
+    maxangle = 150
+    minangle = 30
+    d1 = sum([abs(ba[i]-aa[i]) for i in range(3)]) / m1
+    d2 = sum([abs(bang[i]-aang[i]) for i in range(3)]) / m2
+    d3 = abs(asa-bsa) / m3
 
-        size_local.append(len(Acells[-1])*len(Bcells[-1]))
-
-    
-    Acells=allgatherv(Acells)
-    Bcells=allgatherv(Bcells)
-
-    # Redistribution of the tasks FT
-    job_to_do_local, job_to_do,original_v_position,original_v_count  = distribute(size_local,len(all_options))
-    
-    result=[]
-
-    # Each cell computes its part FT
-    for i in range(len(job_to_do_local)/3):
-        job=list(job_to_do_local[i*3:(i+1)*3])
-
-        result.append(compute_closest_cell(Acells[job[0]],Bcells[job[0]],A[job[0]],B[job[0]],all_options[job[0]],job[1:3]))
-
-    # The master gathers all the result and scatters them back FT
-    result_list = comm.gather(result,master)
-    if(rank==master):
-        BminStructs = [[[]]]
-        AminStructs = [[[]]] 
-        gminSyms = [[[]]]
-        dmins = [[[]]]
-        task=0
-        job=0
-        proc=0
-        for result_sublist in result_list:
-            for result in result_sublist:
-                if (job_to_do[3*task]<original_v_position[proc]+original_v_count[proc]):
-                    if (job_to_do[3*task]==job):
-                        BminStructs[-1][-1].extend(result[0])
-                        AminStructs[-1][-1].extend(result[1])
-                        gminSyms[-1][-1].extend(result[2])
-                        dmins[-1][-1].extend(result[3])
-                    else:
-                        skipped_jobs = [[]]*(job_to_do[3*task] - job - 1)
-                        BminStructs[-1].extend(skipped_jobs)
-                        AminStructs[-1].extend(skipped_jobs)
-                        gminSyms[-1].extend(skipped_jobs)
-                        dmins[-1].extend(skipped_jobs)
-                        
-                        BminStructs[-1].append(result[0])
-                        AminStructs[-1].append(result[1])
-                        gminSyms[-1].append(result[2])
-                        dmins[-1].append(result[3])
-                        job = job_to_do[3*task]
-                else:
-                    skipped_jobs = [[]]*((original_v_position[proc]+original_v_count[proc]-1) - job)
-                    BminStructs[-1].extend(skipped_jobs)
-                    AminStructs[-1].extend(skipped_jobs)
-                    gminSyms[-1].extend(skipped_jobs)
-                    dmins[-1].extend(skipped_jobs)
-                    
-                    skipped_jobs = [[]]*(job_to_do[3*task] - (original_v_position[proc]+original_v_count[proc]))
-                    BminStructs.append(skipped_jobs)
-                    AminStructs.append(skipped_jobs)
-                    gminSyms.append(skipped_jobs)
-                    dmins.append(skipped_jobs)
-                    
-                    BminStructs[-1].append(result[0])
-                    AminStructs[-1].append(result[1])
-                    gminSyms[-1].append(result[2])
-                    dmins[-1].append(result[3])
-                    proc+=1
-                    job = job_to_do[3*task]
-                task+=1    
-        # Completes the list if there is to many cores FT
-        if (len(BminStructs)<n_proc):
-            BminStructs.extend([None]*(n_proc-len(BminStructs)))
-            AminStructs.extend([None]*(n_proc-len(AminStructs)))
-            gminSyms.extend([None]*(n_proc-len(gminSyms)))
-            dmins.extend([None]*(n_proc-len(dmins)))
-            
+    if (max(bang) > maxangle or min(bang)<minangle or max(aang) > maxangle or min(aang)<minangle):
+        return 1e10
     else:
-        BminStructs = None
-        AminStructs = None 
-        gminSyms = None
-        dmins = None
-       
+        return d1+d2+d3
 
-    BminStructs = comm.scatter(BminStructs)
-    AminStructs = comm.scatter(AminStructs)
-    gminSyms = comm.scatter(gminSyms)
-    dmins = comm.scatter(dmins)
-
-    dmin = [None]*len(pos_k)
-    
-    max_diff = 3 #TODO Could be better placed
-
-    # Using the scattered result for each job finds the best candidate FT
-    for i in range(len(pos_k)):
-        if (not all_options[i].use_given_ucells):
-            #TODO: Could be better placed too
-            max_cells = 1000  ## max number of "similarly good" cell pairs to return
-            if (all_options[pos_k[i]].nocheck_ucells):
-                max_cells = 1
-
-        # now grab only the best ones
-            idx = [j[0] for j in sorted(enumerate(dmins[i]), key=lambda x:x[1])]
-            if (min(abs(np.array(dmins[i])[idx[1:-1]]-np.array(dmins[i])[idx[0:-2]]))<=2*np.finfo(float).eps):
-                print >> sys.stderr, "!!!Warning for job %d!!! difference between sorted values of dmin are close to eps machine\n results may vary."%pos_k[i]
-            best_dmins[i] = []
-            best_AminStructs[i] = []
-            best_BminStructs[i] = []
-            best_gminSyms[i] = []
-            dmin[i] = dmins[i][idx[0]]
-            for j in range(min(max_cells,len(dmins[i]))):
-                dval = dmins[i][idx[j]]
-                if (dval - dmin[i] < max_diff):     ### this was for debugging a special case: or abs(dval-3.456)<1e-2):
-                    best_dmins[i].append (dval)
-                    best_AminStructs[i].append(AminStructs[i][idx[j]])
-                    best_BminStructs[i].append(BminStructs[i][idx[j]])
-                    best_gminSyms[i].append(gminSyms[i][idx[j]])
-        
-    return  best_dmins, best_AminStructs, best_BminStructs, best_gminSyms
-##+FT <<
-##+FT >>
-def compute_closest_cell(Acells,Bcells,A,B,options,task_range): 
-    
-    Amincells = []  ## these lists all correspond.  the cells are final matrices
-    Bmincells = []
-    dmins = []  ## B is "near-symmetric", which seems to mean that a,b,and/or c are similar, and corresponding alpha, beta,
-    dmin = 1e10 ## gamma is near 90.  I think inversion symmetry will handle 180 degrees (?).
-
-    AminStructs = []
-    BminStructs = []
-    gminSyms = []
-
-    dthresh = 15  ## don't really need this now, just prevents a litle copying
-    dthresh_fix_gruber = 5
-    if (options.nocheck_ucells):
-        max_cells = 1
-#    small_angle = 10 ## angle for alpha that triggers an extra rotated version being added
-#    small_distance = 2 ## distance for a that triggers ..
-
-    #Using the absolute range given by distribute computes the range in A
-    A_range = [task_range[0]/len(Bcells),task_range[1]/len(Bcells)+1] 
-
-    for i in range(A_range[0], A_range[1]):
-        acell = np.dot(A.cell,Acells[i])
-        Ap = supercell(A,acell)
-        # make canonical versions:
-        Ap = canonicalize(Ap)
-        Acan = super_canon(Ap, options)
-        asa = f90.ucell_surface(Ap.cell) #+FT
-        aa,aang = f90.vec2alpha(Ap.cell) #+FT
-        
-        # Using the absolute range given by distribute computes the range in B
-        if (i == A_range[0]):
-            B_range = [ task_range[0]%len(Bcells), len(Bcells) ]
-        elif (i == A_range[1]-1):
-            B_range = [0, task_range[1]%len(Bcells)+1]
-        else:
-            B_range = [0, len(Bcells)]
-
-        for j in range(B_range[0], B_range[1]):
-            bcell = np.dot(B.cell,Bcells[j])   ## a candidate commensurate (# atoms) cell
-            Bp = supercell(B,bcell)
-            # make canonical versions:
-            Bp = canonicalize(Bp)   ## make it blocky with gruber()
-            bsa = f90.ucell_surface(Bp.cell)  ## get cell stats #+FT
-            ba,bang = f90.vec2alpha(Bp.cell) #+FT
-
-                # key point: un-anchored cells judged only by a..,alpha...
-            d = f90.stats_to_value(aa, aang, ba, bang, asa, bsa) #+FT
-            #..independent of symmetry or decoration..
-            if (d<dmin or (max_cells > 1 and d < dthresh)):   # means cells same shape, but atoms not nec lined up.
-                ## first thing, make gruberized cell in first quadrant.
-                Bcan = super_canon(Bp, options) 
-    
-                # now consider syms.    
-                if (options.nocheck_syms or options.nocheck_ucells):
-                    grp = [np.identity(3)]
-                    cells = [Bcan.cell]
-                else:
-                    s3 =  Structure(Bcan.cell)
-                    s3.add_atom(0,0,0, 'Au')
-
-                    grp,cells = approx_space_group(s3, options)
-
-                shorted = False
-                for isym in range(len(grp)):
-                    g = grp[isym]
-                    c = cells[isym]
-
-                    Btest = deepcopy(Bcan)
-                    Btest.cell = c
-    
-                    for a in Btest:
-                        a.pos = into_cell(np.dot(g[0:3,0:3], a.pos), Btest.cell)
-                    
-                    # Note we are rotating the atoms but trying to not change the unit cell. 
-                    # cell is unchanged by an exact symmetry transform.  But here we are also allowing
-                    # "near symmetries" to be applied.  This does change the unit cell, but the idea is
-                    # the new unit cell is "close" to the old one
-
-                    # Using gruber, still one last fix ("flip"), (see comment in final_fix_gruber)
-                    fix_gruber = True
-                    short_circuit_fix_gruber = True
-                    if (fix_gruber and not shorted):
-                        # this may give us a list
-                        Afixed,Bflip,ds,gs = final_fix_gruber(Acan,Btest,g,dthresh_fix_gruber,options.verbose)
-                        if len(ds) == 0 and short_circuit_fix_gruber:
-                            shorted = True
-                    else:
-                        Afixed =[Acan]
-                        Bflip = [Btest]
-                        gs = [g]
-                        ds = [d]
-                        # if (options.verbose > 1):
-                            # print "skipped gruber, d = ", d
-
-                    # Add each symmetric config of B to those to be considered
-                    for istruct in range(len(ds)):
-                        BminStructs.append(Bflip[istruct])
-                        AminStructs.append(deepcopy(Afixed[istruct]))
-                        gminSyms.append(gs[istruct])
-                        dmins.append(ds[istruct])
-                        #dmin = min(min(ds),dmin) #This seems unused FT
-    return BminStructs, AminStructs, gminSyms, dmins
-##+FT <<
 
 def find_and_prepare_closest_cells(A, B, options):
     # given matrices to get commensurate cells,
@@ -1137,7 +677,7 @@ def find_and_prepare_closest_cells(A, B, options):
     m2 = N/n2
 
     # find all inequivalent matrix multipliers s.t. supercells match number of atoms
-    Acells = enum.supercells(A,[m1]);Acells = Acells[m1]
+    Acells = enum.supercells(A,[m1]); Acells = Acells[m1]
     Bcells = enum.supercells(B,[m2]); Bcells = Bcells[m2]
 
     if (options.verbose > 0):
@@ -1165,21 +705,21 @@ def find_and_prepare_closest_cells(A, B, options):
         # make canonical versions:
         Ap = canonicalize(Ap)
         Acan = super_canon(Ap, options)
-        asa = f90.ucell_surface(Ap.cell) #+FT
-        aa,aang = f90.vec2alpha(Ap.cell) #+FT
+        asa = ucell_surface(Ap.cell)
+        aa,aang = vec2alpha(Ap.cell)
 
         for j in range(len(Bcells)):
             bcell = np.dot(B.cell,Bcells[j])   ## a candidate commensurate (# atoms) cell
             Bp = supercell(B,bcell)
             # make canonical versions:
             Bp = canonicalize(Bp)   ## make it blocky with gruber()
-            bsa = f90.ucell_surface(Bp.cell)  ## get cell stats #+FT
-            ba,bang = f90.vec2alpha(Bp.cell) #+FT
+            bsa = ucell_surface(Bp.cell)  ## get cell stats
+            ba,bang = vec2alpha(Bp.cell)
 
             if (options.verbose > 0):
                 print "A %d B %d " % (i,j)
             # key point: un-anchored cells judged only by a..,alpha...
-            d = f90.stats_to_value(aa, aang, ba, bang, asa, bsa) #+FT
+            d = stats_to_value(aa, aang, ba, bang, asa, bsa)
             #..independent of symmetry or decoration..
             if (d<dmin or (max_cells > 1 and d < dthresh)):   # means cells same shape, but atoms not nec lined up.
                 ## first thing, make gruberized cell in first quadrant.
@@ -1192,9 +732,8 @@ def find_and_prepare_closest_cells(A, B, options):
                 else:
                     s3 =  Structure(Bcan.cell)
                     s3.add_atom(0,0,0, 'Au')
-
                     grp,cells = approx_space_group(s3, options)
-
+    
                 shorted = False
                 for isym in range(len(grp)):
                     g = grp[isym]
@@ -1263,6 +802,10 @@ def find_and_prepare_closest_cells(A, B, options):
         print "best dmins = ", best_dmins
     return  best_dmins, best_AminStructs, best_BminStructs, best_gminSyms
 
+    
+def abs_cap(x):
+    return max(-1,min(x,1))
+
 def radians(theta):
     return theta * np.pi / 180.0
 
@@ -1282,6 +825,18 @@ def ang2vec(a,b,c,alpha, beta, gamma):
     vector_c = [0.0, 0.0, float(c)]
     return np.transpose(np.array([vector_a, vector_b, vector_c]))
 
+def vec2alpha(A):
+    m = np.transpose(A)
+    lengths = np.sqrt(np.sum(m ** 2, axis=1))
+    angles = np.zeros(3)
+    for i in range(3):
+        j = (i + 1) % 3
+        k = (i + 2) % 3
+        angles[i] = abs_cap(np.dot(m[j], m[k]) / (lengths[j] * lengths[k]))
+        
+    angles = np.arccos(angles) * 180. / pi
+    return lengths, angles
+
 def basic_tform_cell(M, A):
     # transform cell by a left multiplication
     from copy import deepcopy
@@ -1293,44 +848,37 @@ def basic_tform_cell(M, A):
 
 
 def super_canon(A, options=None):
-#FT 04/2017 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Modified verbose options to truly handle the default None options when
-# called as a module
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    if (options==None): #+FT
-        options = emul_parser() #+FT
-        
     from pylada.math import gruber
     g = gruber(A.cell)
     # gruber gets us almost there (makes the cell "boxy"). 
     # but the boxy rep returned by gruber is not unique.
     # going from cell to a,b,c..., then back again makes
     # equal cells actually equal.
-    a,v = f90.vec2alpha(g) #+FT
+    a,v = vec2alpha(g)
     A2 = ang2vec(a[0],a[1],a[2],v[0],v[1],v[2])
     # going back and forth likes this makes A2 have the following properties:
     # "a3" along z-axis,
     # "a1" in x-z plane within 45 degrees of z axis, 
     # "a2" is pointing up in a 45 degree "cone" around y axis.
 
-    
-    if (options.verbose > 1):
-        print "super_canon: A"
-        print A.cell
-        print "g"
-        print g
-        print "A2"
-        print A2
+    # if (options.verbose > 1):
+    #     print "super_canon: A"
+    #     print A.cell
+    #     print "g"
+    #     print g
+    #     print "A2"
+    #     print A2
 
     ## g is actually a supercell of A, in the desired "blocky" shape.
     ## A2 is actually not a supercell of A (or g), it is a rotated version.
     ## so to make A, we go A->g->A2, first by supercell, then by transform.
     ## [ A <- A2 * g^-1 * g  = A2 ]
     A = supercell(A,g)
+######## PG hacked this out for debugging
     Tfinal = np.dot(A2, npl.inv(g))
     A = basic_tform_cell(Tfinal, A)
-            
+#######
+    
     for i in range(len(A)):
         A[i].pos = into_cell(A[i].pos, A.cell)
 
@@ -1344,19 +892,56 @@ def canonicalize(A):
     A = supercell(A,g)
     return A
 
-#+FT >>
-def final_fix_gruber(Acan,Bcan,g,dthresh,verbose):
-    Afixed = []
-    Bflip = []
-    grp=[]
-    Atmp,Btmp,d,num_elem = f90.final_fix_gruber(Acan.cell, Bcan.cell,dthresh,verbose, f90comm) #+FT
-    d=list(d[:num_elem])
-    g=[g]*num_elem
-    for i in range(num_elem):
-        Afixed.append(supercell(Acan, Atmp[:,:,i]))
-        Bflip.append(supercell(Bcan, Btmp[:,:,i]))
-    return Afixed, Bflip,d,g
-#+FT << 
+def final_fix_gruber(A,B,g, dthresh):
+    # B and A are both canonincal, which means that "a3" are along z-axis,
+    # "a1" are in x-z plane within 45 degrees of x axis, 
+    # and "a2" is pointing up in a 45 degree "cone" around y axis.
+    # But this doesn't mean they are as close to EACH OTHER as they could be.
+    # so here we do one last step:
+
+    asa = ucell_surface(A.cell)
+    bsa = ucell_surface(B.cell)
+    aa,aang = vec2alpha(A.cell)
+    ba,bang = vec2alpha(B.cell)
+    dmin = stats_to_value(aa, aang, ba, bang, asa, bsa)
+    Amins = []
+    Bmins = []
+    dmins = []
+    gmins = []
+    eps = 1e-2### this is just to slightly favor the good match we already found
+#    if options.verbose > 1:
+#        print "final fix gruber, starting dmin", dmin  
+    for i1 in range(-1,2):
+        for i2 in range(-1,2):
+            for i3 in range(-1,2):
+                for j1 in range(-1,2):
+                    for j2 in range(-1,2):
+                        for j3 in range(-1,2):
+                            P = np.array([[1,i3,0],[0,1,0],[i1,i2,1]])
+                            Q = np.array([[1,j3,0],[0,1,0],[j1,j2,1]])
+                            Bp = np.dot(B.cell, P)
+                            Ap = np.dot(A.cell, Q)
+                            asa = ucell_surface(Ap)
+                            bsa = ucell_surface(Bp)
+                            aa,aang = vec2alpha(Ap)
+                            ba,bang = vec2alpha(Bp)
+                            d = stats_to_value(aa, aang, ba, bang, asa, bsa)
+#                            if d < 100:
+#                                print "new stats", d, aa, ba, aang, bang, asa, bsa
+                            if (d < dthresh):  # and rough_eq_latt(Ap, Bp)):
+#                            if (d < dmin-eps and rough_eq_latt(Ap, Bp)):
+                                newA = np.dot(A.cell, Q)
+                                newB = np.dot(B.cell, P)
+#    print newB
+                                Amins.append(supercell(A, newA))
+                                Bmins.append(supercell(B, newB))
+                                dmins.append(d)
+                                gmins.append(g)
+                            
+#    if (options.verbose > 1):
+#        print "ffg dmins:", dmins 
+    return Amins, Bmins, dmins, gmins
+
 
 class OneCellPairingResult(object):
     def __init__(self,dmin, A, Bflip, Tmatch, shiftmin, pairsmin):
@@ -1447,168 +1032,6 @@ def analyze_one_cell_mapping(A,B, options, idx):
 
     one_res = OneCellPairingResult(dmin, A, B, Tmatch, shiftmin, pairsmin)
     return one_res
-
-##+FT >>
-def test_enum_p(A,B, all_options, pos_k):
-    
-    fast_one_found = False
-
-   # get primitive cells
-
-    # Loop on the owned jobs FT
-    for i in range(len(pos_k)):
-        if (not all_options[i].use_given_ucells):
-            A[i] = primitive(A[i])
-            B[i] = primitive(B[i])
-#        A[i] = primitive_no_gruber(A[i])
-#        B[i] = primitive_no_gruber(B[i])
-
-    # Gathers the necessary info for find_and_prepare_closest_cells FT
-    A = allgatherv(A)
-    B = allgatherv(B)
-    
-    print >> sys.stderr,"%d CLOSEST CELL" %rank
-    # find which ones have the most potential overlap (using gruber())
-    dmin, Amincells, Bmincells, minSyms = find_and_prepare_closest_cells_p(A,  B,  all_options, pos_k)
-
-    dmin = 1e10 #TODO: This is fishy, also in original version FT
-    
-    size_local=[]
-
-    for i in range(len(pos_k)):
-        size_local.append(len(Amincells[i]))
-    
-    # Gathers all the necessary info for the loop FT
-    Amincells=allgatherv(Amincells)
-    Bmincells=allgatherv(Bmincells)
-    
-    # Distributes the task evenly between the cores FT
-    job_to_do_local, job_to_do,original_v_position,original_v_count  = distribute(size_local,len(all_options))
-
-    result=[]
-    
-    print >> sys.stderr,"%d ANIM LOOP: %f" %(rank,len(job_to_do_local)/3)
-    
-    for i in range(len(job_to_do_local)/3):
-        job=list(job_to_do_local[i*3:(i+1)*3])
-
-        one_res_list=[]
-        fast_one_list=[] 
-        
-        # Creates a temporary filename containing the rank because other cores may be working on the same task at the same time FT
-        tmpopt=deepcopy(all_options[job[0]])
-        tmpopt.trajdir = 'tmpdir%d' % rank
-
-
-        for imin in range(job[1],job[2]+1):
-            # make desired "closest" supercells
-            #        Atest, Btest = prepare_final_cells(A, B, Amincells[imin],Bmincells[imin], Bflags[imin], all_options, imin)
-            # run analyzis on this cell mapping
-            one_res = analyze_one_cell_mapping(Amincells[job[0]][imin],Bmincells[job[0]][imin], tmpopt, imin)
-
-            if tmpopt.get_fast:
-                from anim import make_anim, anim_main
-                make_anim(one_res.A, one_res.Bflip, one_res.Tmatch, one_res.shiftmin, one_res.pairsmin, tmpopt)
-
-                fast_one = anim_main(tmpopt)
-            else:
-                fast_one = false
-
-            one_res_list.append(one_res)
-            fast_one_list.append(fast_one)
-        result.append((one_res_list,fast_one_list))
-        shutil.rmtree(tmpopt.trajdir,True) #erases the temporary file FT
-
-    print >> sys.stderr,"%d GATHERING" %rank
-
-    result_list = comm.gather(result,master)
-
-    # Gathers and then scatters the computed transformations FT
-    if(rank==master):
-        one_res = [[[]]]
-        fast_one = [[[]]]
-        task=0
-        job=0
-        proc=0
-        for result_sublist in result_list:
-            for result in result_sublist:
-                if (job_to_do[3*task]<original_v_position[proc]+original_v_count[proc]):
-                    if (job_to_do[3*task]==job):
-                        one_res[-1][-1].extend(result[0])
-                        fast_one[-1][-1].extend(result[1])
-                    else:
-                        one_res[-1].append(result[0])
-                        fast_one[-1].append(result[1])
-                        job = job_to_do[3*task]    
-                else:
-                    one_res.append([result[0]])
-                    fast_one.append([result[1]])
-                    proc+=1
-                    job = job_to_do[3*task]
-                task+=1
-        
-        if (len(one_res)<n_proc):
-            one_res.extend([None]*(n_proc-len(one_res)))
-            fast_one.extend([None]*(n_proc-len(fast_one)))
-
-    else:
-        one_res = None
-        fast_one = None 
-
-    one_res = comm.scatter(one_res)
-    fast_one = comm.scatter(fast_one)
-
-    print >> sys.stderr,"%d CONDITIONS" %rank 
-    
-    # For each owned job, checks the against the condition to find the best candidate FT
-    for i in range(len(pos_k)):
-        close_to_best=[]
-        f = open('output_%s-%s.%d.txt'%(all_options[pos_k[i]].A,all_options[pos_k[i]].B,pos_k[i]),'w')  
-        for j in range(len(one_res[i])):
-            
-            print >> f, "fast_one = ", fast_one[i][j]
-            
-            conditions = (not all_options[pos_k[i]].get_fast and one_res[i][j].dmin < dmin) or (all_options[pos_k[i]].get_fast and fast_one[i][j] and not fast_one_found) or (all_options[pos_k[i]].get_fast and (((fast_one_found and fast_one[i][j]) or (not fast_one_found and not fast_one[i][j])) and  one_res[i][j].dmin < dmin))
-
-            if (conditions):
-                # Saves the result that are as good as the chosen one at machine eps
-                if (abs(one_res[i][j].dmin - dmin) <= 2*np.finfo(float).eps):
-                    print >> f, "!!! Warning !!! (dmin new) - (dmin old) is close to epsmachine!"
-                    close_to_best.append(best_res)
-                else:
-                    close_to_best=[]
-                best_res = deepcopy(one_res[i][j])
-                dmin = one_res[i][j].dmin
-                fast_one_found = fast_one_found or fast_one[i][j]
-
-            if (not all_options[pos_k[i]].get_fast and not fast_one[i][j] and one_res[i][j].dmin < dmin):
-                print >> f,"Found a shorter but SLOW transition", one_res[i][j].dmin, dmin
- 
-        print >> f,"polymorph pathfinder search DONE, dmin = ", best_res.dmin
-        print >> f,"best_res.A",best_res.A
-        print >> f,"best_res.Bflip",best_res.Bflip
-        print >> f,"best_res.Tmatch",best_res.Tmatch
-        print >> f,"best_res.shiftmin",best_res.shiftmin
-        print >> f,"best_res.pairsmin",best_res.pairsmin
-
-        if (close_to_best!=[]):
-            print >> f,"-----------------------------------------------------------------------------"
-            print >> f,"Displaying other close possibilities"
-            for k in range(len(close_to_best)):
-                print >> f,"close_call%d.dmin"%(k+1),close_to_best[k].dmin
-                print >> f,"close_call%d.A"%(k+1),close_to_best[k].A
-                print >> f,"close_call%d.Bflip"%(k+1),close_to_best[k].Bflip
-                print >> f,"close_call%d.Tmatch"%(k+1),close_to_best[k].Tmatch
-                print >> f,"close_call%d.shiftmin"%(k+1),close_to_best[k].shiftmin
-                print >> f,"close_call%d.pairsmin"%(k+1),close_to_best[k].pairsmin
-
-    
-        from anim import make_anim, anim_main
-        make_anim(best_res.A, best_res.Bflip, best_res.Tmatch, best_res.shiftmin, best_res.pairsmin, all_options[pos_k[i]]) 
-        fast_one_final = anim_main(all_options[pos_k[i]])
-        print >> f, "This is likely a %s transition" % ("FAST" if fast_one_final else "SLOW")
-        f.close()
-        # saving_time = time.time()-saving_time
 
 
 
@@ -1732,7 +1155,7 @@ def test_enum(A,B, options):
     if (options.verbose > 0):
         print "incoming structures are %s and %s" % (options.A, options.B)
         print "incoming cells have %d and %d atoms, resp." % ( len(A), len(B) )
-        print "incoming ucell surface areas:", f90.ucell_surface(A.cell), f90.ucell_surface(B.cell) #+FT
+        print "incoming ucell surface areas:", ucell_surface(A.cell), ucell_surface(B.cell)
         if (options.verbose > 2):
             write_tcl(options, A, B, [], "start")
 
@@ -1808,30 +1231,6 @@ def test_enum(A,B, options):
     make_anim(best_res.A, best_res.Bflip, best_res.Tmatch, best_res.shiftmin, best_res.pairsmin, options) 
     fast_one = anim_main(options)
     print "This is likely a %s transition" % ("FAST" if fast_one else "SLOW")
-    saving_time = time.time()-saving_time
-    
-## FT >>    
-def main_p(all_options):
-
-   #global test_enum_time
-
-    np.set_printoptions(precision=3)
-    np.set_printoptions(suppress=True)    
-
-    pos_k = load_balance(len(all_options))
-
-    A=[]
-    B=[]
-    for i in pos_k:
-        A.append(pcread.poscar(all_options[i].A))
-        B.append(pcread.poscar(all_options[i].B))
-        # print "A",i,"proc",rank,":",A[-1]
-        # print "B",i,"proc",rank,":",B[-1]
-
-    test_enum_p(A,B,all_options,pos_k)
-
-    print >> sys.stderr,"%d DONE." %rank
-#FT <<
 
 def main(options):
     np.set_printoptions(precision=3)
@@ -1856,46 +1255,10 @@ def pathfinder_run(option_dict):
 #        options.setattr(key, options_dict[key])
     main(options)
 
-#+FT>>    
 if __name__=="__main__":
+    options, arg = get_options()
+    main(options)
 
-    all_options = None
-    init_time=time.time()
-    if (rank == master):
-        options_args, arg = get_options()
-
-        if(options_args.param):
-            all_options=read_param_file()
-        else:
-            all_options=[options_args]
-
-    all_options = comm.bcast(all_options,master)
-
-    if (all_options[0].param):
-        main_p(all_options)
-    else:
-        main(all_options[0])
-
-    partial_time=time.time()-init_time
-
-    total_time=comm.reduce(partial_time,op=MPI.SUM)
-
-    comm.barrier()
-    if (rank == master):
-        slowest_time=time.time()-init_time
-        f = open('timefile', 'a')
-        print >>f,len(all_options),slowest_time,total_time/n_proc,(total_time/n_proc)/slowest_time,n_proc
-        f.close
-#+FT<<
-
-# #-FT >> old_main
-# if __name__=="__main__":
-
-#     input_read_time=time.time()
-#     options, arg = get_options()
-#     main(options)
-#     timing_disp()
-# # -FT <<
 
 
 ######## redo these: 
