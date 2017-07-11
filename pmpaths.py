@@ -1211,20 +1211,24 @@ def test_enum(A,B, options):
 #    import sys; sys.exit()  ## to bail after unit-cell-pair candidate set generation
 
     dmin = 1e10
+
     for imin in range(len(Amincells)):
         # make desired "closest" supercells
 #        Atest, Btest = prepare_final_cells(A, B, Amincells[imin],Bmincells[imin], Bflags[imin], options, imin)
         # run analyzis on this cell mapping
+        
         one_res = analyze_one_cell_mapping(Amincells[imin],Bmincells[imin], options, imin)
 
+        t_test=time.time()
         if options.get_fast:
             from anim import make_anim, anim_main
             make_anim(one_res.A, one_res.Bflip, one_res.Tmatch, one_res.shiftmin, one_res.pairsmin, options) 
             fast_one = anim_main(options)
-            if (options.verbose > 1):
-                print "fast_one = ", fast_one
+            if (1==1): #(options.verbose > 1):
+                print "fast_one = ", fast_one           
         else:
             fast_one = False
+        t_test=time.time()-t_test
 
         if (not options.get_fast and one_res.dmin < dmin) or (options.get_fast and fast_one and not fast_one_found) or (options.get_fast and (((fast_one_found and fast_one) or (not fast_one_found and not fast_one)) and  one_res.dmin < dmin)):
             best_res = deepcopy(one_res)
@@ -1239,6 +1243,11 @@ def test_enum(A,B, options):
     if (options.verbose > 0):
         print "-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     print "polymorph pathfinder search DONE, dmin = ", best_res.dmin
+    print "best_res.A",best_res.A #TMP
+    print "best_res.Bflip",best_res.Bflip #TMP
+    print "best_res.Tmatch",best_res.Tmatch #TMP
+    print "best_res.shiftmin",best_res.shiftmin #TMP
+    print "best_res.pairsmin",best_res.pairsmin #TMP
 
     # save trajectory of best found
     from anim import make_anim, anim_main

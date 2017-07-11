@@ -276,9 +276,9 @@ def distribute(size_local,n_jobs):
         v_position=v_position[:-1]
         if (n_total_tasks<n_proc):
             print >> sys.stderr, "!!!! WARNING !!!!"
-            print >> sys.stderr, "%d inactive cores; reduce number of cores." %(n_proc-n_total_tasks)
-            v_count.extend([0]*(n_proc-n_total_tasks))
-            v_position.extend([v_position[-1]]*(n_proc-n_total_tasks))
+            print >> sys.stderr, "%d inactive cores; reduce number of cores." %(n_proc-len(v_count))
+            v_count.extend([0]*(n_proc-len(v_count)))
+            v_position.extend([v_position[-1]]*(n_proc-len(v_position)))
                        
         job_to_do=np.array(job_to_do,np.int32)
         v_count=tuple(v_count)
@@ -850,24 +850,23 @@ def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
     best_AminStructs = [None]*len(pos_k)
     best_BminStructs = [None]*len(pos_k)
     best_gminSyms = [None]*len(pos_k)
-    for i in pos_k:
+    for i,pos in enumerate(pos_k):
         ## PG adding short circuit here to just use input unit cells AS GIVEN (different than nocheck_ucells, which does gruberization)
-        if (all_options[i].use_given_ucells):
-            asa = f90.ucell_surface(A[i].cell)  ## get cell stats
-            aa,aang = f90.vec2alpha(A[i].cell)
-            bsa = f90.ucell_surface(B[i].cell)  ## get cell stats
-            ba,bang = f90.vec2alpha(B[i].cell)
-            d[i] = f90.stats_to_value(aa, aang, ba, bang, asa, bsa)
+        if (all_options[pos].use_given_ucells):
+            asa = f90.ucell_surface(A[pos].cell)  ## get cell stats
+            aa,aang = f90.vec2alpha(A[pos].cell)
+            bsa = f90.ucell_surface(B[pos].cell)  ## get cell stats
+            ba,bang = f90.vec2alpha(B[pos].cell)
+            d = f90.stats_to_value(aa, aang, ba, bang, asa, bsa)
             # if (options[i].verbose > 0):
                 # print "using given unit cells as is, d = ", d
                 # print "abc's for A,B are:", aa,aang, ba,bang
                 # print A[i].cell
                 # print B[i].cell
             best_dmins[i]=[d]
-            best_AminStructs[i]=[A]
-            best_BminStructs[i]=[B]
+            best_AminStructs[i]=[A[pos]]
+            best_BminStructs[i]=[B[pos]]
             best_gminSyms[i]=[np.identity(3)]
-    
     
     # figure out multipliers needed to make supercells with the same number of atoms
 
@@ -888,7 +887,9 @@ def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
             Acells_dict = enum.supercells(A[i],[m1]); Acells.append(Acells_dict[m1])
             Bcells_dict = enum.supercells(B[i],[m2]); Bcells.append(Bcells_dict[m2])
 
-        size_local.append(len(Acells[-1])*len(Bcells[-1]))
+            size_local.append(len(Acells[-1])*len(Bcells[-1]))
+        else:
+            size_local.append(0)
 
     
     Acells=allgatherv(Acells)
@@ -980,7 +981,7 @@ def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
 
     # Using the scattered result for each job finds the best candidate FT
     for i in range(len(pos_k)):
-        if (not all_options[i].use_given_ucells):
+        if (not all_options[pos_k[i]].use_given_ucells):
             #TODO: Could be better placed too
             max_cells = 1000  ## max number of "similarly good" cell pairs to return
             if (all_options[pos_k[i]].nocheck_ucells):
@@ -1466,8 +1467,8 @@ def test_enum_p(A,B, all_options, pos_k):
    # get primitive cells
 
     # Loop on the owned jobs FT
-    for i in range(len(pos_k)):
-        if (not all_options[i].use_given_ucells):
+    for i,pos in enumerate(pos_k):
+        if (not all_options[pos].use_given_ucells):
             A[i] = primitive(A[i])
             B[i] = primitive(B[i])
 #        A[i] = primitive_no_gruber(A[i])
@@ -1497,7 +1498,7 @@ def test_enum_p(A,B, all_options, pos_k):
 
     result=[]
 
-    print >> sys.stderr,"%d ANIM LOOP: %d" %(rank,sum(job_to_do_local[2:3:]-job_to_do_local[1:3:]))
+    print >> sys.stderr,"%d ANIM LOOP: %d" %(rank,sum(job_to_do_local[2:3:]-job_to_do_local[1:3:])+1)
     
     for i in range(len(job_to_do_local)/3):
         job=list(job_to_do_local[i*3:(i+1)*3])
@@ -1514,16 +1515,19 @@ def test_enum_p(A,B, all_options, pos_k):
             # make desired "closest" supercells
             #        Atest, Btest = prepare_final_cells(A, B, Amincells[imin],Bmincells[imin], Bflags[imin], all_options, imin)
             # run analyzis on this cell mapping
+
             one_res = analyze_one_cell_mapping(Amincells[job[0]][imin],Bmincells[job[0]][imin], tmpopt, imin)
 
+
+            t_test=time.time()
             if tmpopt.get_fast:
                 from anim import make_anim, anim_main
                 make_anim(one_res.A, one_res.Bflip, one_res.Tmatch, one_res.shiftmin, one_res.pairsmin, tmpopt)
-
                 fast_one = anim_main(tmpopt)
             else:
                 fast_one = false
-
+            t_test=time.time()-t_test
+            
             one_res_list.append(one_res)
             fast_one_list.append(fast_one)
         result.append((one_res_list,fast_one_list))
@@ -1577,8 +1581,8 @@ def test_enum_p(A,B, all_options, pos_k):
         for j in range(len(one_res[i])):
             
             print >> f, "fast_one = ", fast_one[i][j]
-            
-            conditions = (not all_options[pos_k[i]].get_fast and one_res[i][j].dmin < dmin) or (all_options[pos_k[i]].get_fast and fast_one[i][j] and not fast_one_found) or (all_options[pos_k[i]].get_fast and (((fast_one_found and fast_one[i][j]) or (not fast_one_found and not fast_one[i][j])) and  one_res[i][j].dmin < dmin))
+
+            conditions = (not all_options[pos_k[i]].get_fast and one_res[i][j].dmin < dmin) or (all_options[pos_k[i]].get_fast and fast_one[i][j] and not fast_one_found) or (all_options[pos_k[i]].get_fast and (((fast_one_found and fast_one[i][j]) or (not fast_one_found and not fast_one[i][j])) and  (one_res[i][j].dmin - dmin)<=2*np.finfo(float).eps))
 
             if (conditions):
                 # Saves the result that are as good as the chosen one at machine eps
