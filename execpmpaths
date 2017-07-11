@@ -1,21 +1,16 @@
-#!/bin/bash -x
-##SBATCH -p mganesh
-#SBATCH --job-name="pmpaths"
-#SBATCH --nodes=4
-##SBATCH --ntasks-per-node=16
-#SBATCH --ntasks=64
-##SBATCH --exclusive
-#SBATCH --export=ALL
-#SBATCH --time=05:00:00
-#SBATCH -o output.txt
-#SBATCH -e errlog
-
-cd $SLURM_SUBMIT_DIR
-JOBID=‘echo $SLURM_JOBID’
-cat $0 > script.$JOBID
-printenv > env.$JOBID
+#!/bin/bash
+#PBS -N pmpaths
+#PBS -e errlog
+#PBS -o output
+##PBS -l feature=haswell
+#PBS -l ncpus=72
+#PBS -q short
+#PBS -A NRELMatDB
+#PBS -l walltime=00:40:00
 
 rm -f timefile
+
+cp PARAM $(mktemp -u PARAM.old.XXXXX)
 
 cp empty.PARAM PARAM
 
@@ -40,4 +35,4 @@ cp empty.PARAM PARAM
 
 ##This is a single call of fastpmpaths with one job and 16 processors
 echo -e "POSCAR_test_1,POSCAR_test_2,,,,traj_testing12,,,3.6,101,,,,1,0.3" >> PARAM
-srun -n 16 python fastpmpaths.py --param 
+srun -n 72  python fastpmpaths.py --param
