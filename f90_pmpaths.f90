@@ -62,7 +62,7 @@ module pmpaths
          aang,bang    ! Angles of vectors
 
     double precision, dimension(3,3) :: &
-         Pmin, Qmin, & ! Minimal masmatch transformation matrix
+!         Pmin, Qmin, & ! Minimal masmatch transformation matrix
          P,Q, &        ! Transformation matrices
          Ap,Bp         ! Transformed matrices
 

@@ -11,5 +11,5 @@ f90_pmpaths: $(mod_files)
 	$(COMP) -c $(flags) $^ -m $@ only: final_fix_gruber ucell_surface vec2alpha stats_to_value
 
 clean:
-	rm *.mod
+	rm -f *.mod *.so
 

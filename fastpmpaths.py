@@ -22,7 +22,10 @@ from optparse import OptionParser
 import numpy as np
 import numpy.linalg as npl
 
-from pylada import enum
+try:
+    from pylada import enum
+except:
+    from pylada import decorations as enum
 
 import pylada.crystal.read as pcread
 import pylada.crystal.write as pcwrite
@@ -1300,8 +1303,12 @@ def super_canon(A, options=None):
 
     if (options==None): #+FT
         options = emul_parser() #+FT
+
+    try:
+        from pylada.math import gruber
+    except:
+        from pylada.crystal.cutilities import gruber
         
-    from pylada.math import gruber
     g = gruber(A.cell)
     # gruber gets us almost there (makes the cell "boxy"). 
     # but the boxy rep returned by gruber is not unique.
@@ -1339,7 +1346,10 @@ def super_canon(A, options=None):
 def canonicalize(A):
     # gruber gets us almost there (makes the cell "boxy"). 
     # but the boxy rep returned by gruber is not unique.
-    from pylada.math import gruber
+    try:
+        from pylada.math import gruber
+    except:
+        from pylada.crystal.cutilities import gruber
     g = gruber(A.cell)
     A = supercell(A,g)
     return A
@@ -1616,7 +1626,10 @@ def __translations(structure, tolerance):
     """ Looks for internal translations """
     from numpy.linalg import inv
     from numpy import all, abs, allclose
-    from pylada.math import gruber
+    try:
+        from pylada.math import gruber
+    except:
+        from pylada.crystal.cutilities import gruber
     from pylada.crystal import into_cell, into_voronoi
 
 #    cell = gruber(structure.cell)
@@ -1650,7 +1663,10 @@ def __translations(structure, tolerance):
 def primitive_no_gruber(structure, tolerance=1e-8):
     from numpy.linalg import inv, det
     from numpy import all, abs, array, dot, allclose, round
-    from pylada.math import gruber
+    try:
+        from pylada.math import gruber
+    except:
+        from pylada.crystal.cutilities import gruber
     from pylada.crystal import into_cell, into_voronoi, into_cell
     from pylada import error
 
