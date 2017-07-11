@@ -52,7 +52,7 @@ class emul_parser:
         self.B='B'
         self.output_tiles=1
         self.do_hlst=False
-        self.verbose=1
+        self.verbose=0
         self.trajdir='trajdir'
         self.min_cluster_size=2
         self.shifting=1
@@ -1496,8 +1496,8 @@ def test_enum_p(A,B, all_options, pos_k):
     job_to_do_local, job_to_do,original_v_position,original_v_count  = distribute(size_local,len(all_options))
 
     result=[]
-    
-    print >> sys.stderr,"%d ANIM LOOP: %f" %(rank,len(job_to_do_local)/3)
+
+    print >> sys.stderr,"%d ANIM LOOP: %d" %(rank,sum(job_to_do_local[2:3:]-job_to_do_local[1:3:]))
     
     for i in range(len(job_to_do_local)/3):
         job=list(job_to_do_local[i*3:(i+1)*3])
