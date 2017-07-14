@@ -2,11 +2,17 @@
 #PBS -N pmpaths
 #PBS -e errlog
 #PBS -o output
-##PBS -l feature=haswell
-#PBS -l ncpus=72
+#PBS -l feature=16core
+#PBS -l nodes=4:ppn=16
 #PBS -q short
 #PBS -A NRELMatDB
 #PBS -l walltime=00:40:00
+
+deactivate
+
+source /projects/NRELMatDB/pylada-light/pylada-light/peregrine-env.sh
+
+module unload mpi/impi-intel/4.1.0.024
 
 rm -f timefile
 
@@ -34,5 +40,5 @@ cp empty.PARAM PARAM
 
 
 ##This is a single call of fastpmpaths with one job and 16 processors
-echo -e "POSCAR_test_1,POSCAR_test_2,,,,traj_testing12,,,3.6,101,,,,1,0.3" >> PARAM
-srun -n 72  python fastpmpaths.py --param
+echo -e "POSCAR_test_1,POSCAR_test_2,,,,traj_testing12,,,3.6,101,,,,1,0.3," >> PARAM
+mpirun -n 64  python fastpmpaths.py --param

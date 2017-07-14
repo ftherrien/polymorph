@@ -1498,7 +1498,10 @@ def test_enum_p(A,B, all_options, pos_k):
 
     result=[]
 
-    print >> sys.stderr,"%d ANIM LOOP: %d" %(rank,sum(job_to_do_local[2:3:]-job_to_do_local[1:3:])+1)
+    if len(job_to_do_local)>=3:
+        print >> sys.stderr,"%d/%d ANIM LOOP: %d" %(rank,n_proc,sum(job_to_do_local[2:3:]-job_to_do_local[1:3:])+1)
+    else:
+        print >> sys.stderr,"%d/%d ANIM LOOP: %d" %(rank,n_proc,0)
     
     for i in range(len(job_to_do_local)/3):
         job=list(job_to_do_local[i*3:(i+1)*3])
