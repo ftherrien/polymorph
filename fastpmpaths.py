@@ -990,7 +990,7 @@ def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
 
         # now grab only the best ones
             idx = [j[0] for j in sorted(enumerate(dmins[i]), key=lambda x:x[1])]
-            if (min(abs(np.array(dmins[i])[idx[1:-1]]-np.array(dmins[i])[idx[0:-2]]))<=2*np.finfo(float).eps):
+            if (min(abs(np.array(dmins[i])[idx[1:]]-np.array(dmins[i])[idx[0:-1]]))<=2*np.finfo(float).eps):
                 print >> sys.stderr, "!!!Warning for job %d!!! difference between sorted values of dmin are close to eps machine\n results may vary."%pos_k[i]
             best_dmins[i] = []
             best_AminStructs[i] = []
