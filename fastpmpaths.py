@@ -40,6 +40,7 @@ from f90_pmpaths import pmpaths as f90 #+FT
 import time #+FT
 import sys #+FT
 import shutil #+FT
+import re #+FT
 
 from mpi4py import MPI #+FT
 
@@ -1498,7 +1499,10 @@ def test_enum_p(A,B, all_options, pos_k):
 
     result=[]
 
-    print >> sys.stderr,"%d ANIM LOOP: %d" %(rank,sum(job_to_do_local[2:3:]-job_to_do_local[1:3:])+1)
+    if len(job_to_do_local)>=3:
+        print >> sys.stderr,"%d/%d ANIM LOOP: %d" %(rank,n_proc,sum(job_to_do_local[2:3:]-job_to_do_local[1:3:])+1)
+    else:
+        print >> sys.stderr,"%d/%d ANIM LOOP: %d" %(rank,n_proc,0)
     
     for i in range(len(job_to_do_local)/3):
         job=list(job_to_do_local[i*3:(i+1)*3])
@@ -1577,7 +1581,7 @@ def test_enum_p(A,B, all_options, pos_k):
     # For each owned job, checks the against the condition to find the best candidate FT
     for i in range(len(pos_k)):
         close_to_best=[]
-        f = open('output_%s-%s.%d.txt'%(all_options[pos_k[i]].A,all_options[pos_k[i]].B,pos_k[i]),'w')  
+        f = open('%s/out.txt'%all_options[pos_k[i]].trajdir,'w')  
         for j in range(len(one_res[i])):
             
             print >> f, "fast_one = ", fast_one[i][j]
