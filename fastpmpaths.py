@@ -1580,7 +1580,7 @@ def test_enum_p(A,B, all_options, pos_k):
     # For each owned job, checks the against the condition to find the best candidate FT
     for i in range(len(pos_k)):
         close_to_best=[]
-        f = open('output_%s-%s.%d.txt'%(all_options[pos_k[i]].A,all_options[pos_k[i]].B,pos_k[i]),'w')  
+        f = open('%s/output_%s-%s.%d.txt'%(all_options[pos_k[i]].trajdir,all_options[pos_k[i]].A,all_options[pos_k[i]].B,pos_k[i]),'w')  
         for j in range(len(one_res[i])):
             
             print >> f, "fast_one = ", fast_one[i][j]
