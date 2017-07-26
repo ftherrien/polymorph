@@ -226,7 +226,7 @@ def gatherv(A):
         for Asublist in Alist:
             for element in Asublist:
                 A.append(element)
-                return A
+        return A
     else:
         return None
 #+FT >>
