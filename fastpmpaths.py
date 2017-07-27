@@ -109,7 +109,7 @@ class emul_parser:
                 self.nocheck_ucells=True
 
             if (row['d'] != ''):
-                self.nocheck_ucells=True
+                self.no_ucell_dist=True
 
             if (row['f'] != ''):
                 self.get_fast=True
@@ -990,7 +990,7 @@ def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
 
         # now grab only the best ones
             idx = [j[0] for j in sorted(enumerate(dmins[i]), key=lambda x:x[1])]
-            if (min(abs(np.array(dmins[i])[idx[1:]]-np.array(dmins[i])[idx[0:-1]]))<=2*np.finfo(float).eps):
+            if (len(dmins[i])>1) and (min(abs(np.array(dmins[i])[idx[1:]]-np.array(dmins[i])[idx[0:-1]]))<=2*np.finfo(float).eps):
                 print >> sys.stderr, "!!!Warning for job %d!!! difference between sorted values of dmin are close to eps machine\n results may vary."%pos_k[i]
             best_dmins[i] = []
             best_AminStructs[i] = []
@@ -1521,7 +1521,6 @@ def test_enum_p(A,B, all_options, pos_k):
             # run analyzis on this cell mapping
 
             one_res = analyze_one_cell_mapping(Amincells[job[0]][imin],Bmincells[job[0]][imin], tmpopt, imin)
-
 
             t_test=time.time()
             if tmpopt.get_fast:
