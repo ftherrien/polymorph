@@ -927,10 +927,10 @@ def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
                         dmins[-1][-1].extend(result[3])
                     else:
                         skipped_jobs = [[]]*(job_to_do[3*task] - job - 1)
-                        BminStructs[-1].extend(skipped_jobs)
-                        AminStructs[-1].extend(skipped_jobs)
-                        gminSyms[-1].extend(skipped_jobs)
-                        dmins[-1].extend(skipped_jobs)
+                        BminStructs[-1].extend(list(skipped_jobs))
+                        AminStructs[-1].extend(list(skipped_jobs))
+                        gminSyms[-1].extend(list(skipped_jobs))
+                        dmins[-1].extend(list(skipped_jobs))
                         
                         BminStructs[-1].append(result[0])
                         AminStructs[-1].append(result[1])
@@ -939,16 +939,16 @@ def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
                         job = job_to_do[3*task]
                 else:
                     skipped_jobs = [[]]*((original_v_position[proc]+original_v_count[proc]-1) - job)
-                    BminStructs[-1].extend(skipped_jobs)
-                    AminStructs[-1].extend(skipped_jobs)
-                    gminSyms[-1].extend(skipped_jobs)
-                    dmins[-1].extend(skipped_jobs)
+                    BminStructs[-1].extend(list(skipped_jobs))
+                    AminStructs[-1].extend(list(skipped_jobs))
+                    gminSyms[-1].extend(list(skipped_jobs))
+                    dmins[-1].extend(list(skipped_jobs))
                     
                     skipped_jobs = [[]]*(job_to_do[3*task] - (original_v_position[proc]+original_v_count[proc]))
-                    BminStructs.append(skipped_jobs)
-                    AminStructs.append(skipped_jobs)
-                    gminSyms.append(skipped_jobs)
-                    dmins.append(skipped_jobs)
+                    BminStructs.append(list(skipped_jobs))
+                    AminStructs.append(list(skipped_jobs))
+                    gminSyms.append(list(skipped_jobs))
+                    dmins.append(list(skipped_jobs))
                     
                     BminStructs[-1].append(result[0])
                     AminStructs[-1].append(result[1])
@@ -1581,7 +1581,9 @@ def test_enum_p(A,B, all_options, pos_k):
     # For each owned job, checks the against the condition to find the best candidate FT
     for i in range(len(pos_k)):
         close_to_best=[]
-        f = open('%s/out.txt'%all_options[pos_k[i]].trajdir,'w')  
+        if (not os.path.exists(all_options[pos_k[i]].trajdir)):
+            os.mkdir(all_options[pos_k[i]].trajdir)
+        f = open('%s/out.txt'%all_options[pos_k[i]].trajdir,'w+')  
         for j in range(len(one_res[i])):
             
             print >> f, "fast_one = ", fast_one[i][j]
