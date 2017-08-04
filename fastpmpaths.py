@@ -1639,7 +1639,7 @@ def test_enum_p(A,B, all_options, pos_k):
                 
                 # Creating subdirectory
                 tmpopt=deepcopy(all_options[pos_k[i]])
-                tmpopt.trajdir = tmpopt.trajdir + "/best%d"%()
+                tmpopt.trajdir = tmpopt.trajdir + "/best%d"%(k+1)
                 
                 make_anim(close_to_best[k].A, close_to_best[k].Bflip, close_to_best[k].Tmatch, close_to_best[k].shiftmin, close_to_best[k].pairsmin, tmpopt)
 
