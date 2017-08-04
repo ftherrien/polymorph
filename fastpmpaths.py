@@ -41,6 +41,7 @@ import time #+FT
 import sys #+FT
 import shutil #+FT
 import re #+FT
+import pickle #+FT
 
 from mpi4py import MPI #+FT
 
@@ -1462,7 +1463,9 @@ def analyze_one_cell_mapping(A,B, options, idx):
 
 ##+FT >>
 def test_enum_p(A,B, all_options, pos_k):
-    
+
+    from anim import make_anim, anim_main
+
     fast_one_found = False
 
    # get primitive cells
@@ -1525,7 +1528,6 @@ def test_enum_p(A,B, all_options, pos_k):
 
             t_test=time.time()
             if tmpopt.get_fast:
-                from anim import make_anim, anim_main
                 make_anim(one_res.A, one_res.Bflip, one_res.Tmatch, one_res.shiftmin, one_res.pairsmin, tmpopt)
                 fast_one = anim_main(tmpopt)
             else:
@@ -1603,7 +1605,10 @@ def test_enum_p(A,B, all_options, pos_k):
 
             if (not all_options[pos_k[i]].get_fast and not fast_one[i][j] and one_res[i][j].dmin < dmin):
                 print >> f,"Found a shorter but SLOW transition", one_res[i][j].dmin, dmin
- 
+        # Saving raw result in pickle file
+        pickle.dump(best_res, open('%s/best_res0.dat'%(all_options[pos_k[i]].trajdir),'wb'))
+
+        # Printing result in text file
         print >> f,"polymorph pathfinder search DONE, dmin = ", best_res.dmin
         print >> f,"best_res.A",best_res.A
         print >> f,"best_res.Bflip",best_res.Bflip
@@ -1611,20 +1616,34 @@ def test_enum_p(A,B, all_options, pos_k):
         print >> f,"best_res.shiftmin",best_res.shiftmin
         print >> f,"best_res.pairsmin",best_res.pairsmin
 
+        # Creating sub directory for each valid result 
+        tmpopt=deepcopy(all_options[pos_k[i]])
+        tmpopt.trajdir = tmpopt.trajdir + "/best0"
+
+        make_anim(best_res.A, best_res.Bflip, best_res.Tmatch, best_res.shiftmin, best_res.pairsmin, tmpopt) 
+        
+        # Looping through valid results
         if (close_to_best!=[]):
             print >> f,"-----------------------------------------------------------------------------"
             print >> f,"Displaying other close possibilities"
             for k in range(len(close_to_best)):
+                # Saving raw result in pickle file
+                pickle.dump(close_to_best[k], open('%s/best_res%d.dat'%(all_options[pos_k[i]].trajdir,k+1),'wb'))
+
+                # Printing result in text file
                 print >> f,"close_call%d.dmin"%(k+1),close_to_best[k].dmin
                 print >> f,"close_call%d.A"%(k+1),close_to_best[k].A
                 print >> f,"close_call%d.Bflip"%(k+1),close_to_best[k].Bflip
                 print >> f,"close_call%d.Tmatch"%(k+1),close_to_best[k].Tmatch
                 print >> f,"close_call%d.shiftmin"%(k+1),close_to_best[k].shiftmin
                 print >> f,"close_call%d.pairsmin"%(k+1),close_to_best[k].pairsmin
+                
+                # Creating subdirectory
+                tmpopt=deepcopy(all_options[pos_k[i]])
+                tmpopt.trajdir = tmpopt.trajdir + "/best%d"%()
+                
+                make_anim(close_to_best[k].A, close_to_best[k].Bflip, close_to_best[k].Tmatch, close_to_best[k].shiftmin, close_to_best[k].pairsmin, tmpopt)
 
-    
-        from anim import make_anim, anim_main
-        make_anim(best_res.A, best_res.Bflip, best_res.Tmatch, best_res.shiftmin, best_res.pairsmin, all_options[pos_k[i]]) 
         fast_one_final = anim_main(all_options[pos_k[i]])
         print >> f, "This is likely a %s transition" % ("FAST" if fast_one_final else "SLOW")
         f.close()
