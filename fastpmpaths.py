@@ -1643,7 +1643,7 @@ def test_enum_p(A,B, all_options, pos_k):
                 
                 make_anim(close_to_best[k].A, close_to_best[k].Bflip, close_to_best[k].Tmatch, close_to_best[k].shiftmin, close_to_best[k].pairsmin, tmpopt)
 
-        fast_one_final = anim_main(all_options[pos_k[i]])
+        fast_one_final = anim_main(tmpopt)
         print >> f, "This is likely a %s transition" % ("FAST" if fast_one_final else "SLOW")
         f.close()
         # saving_time = time.time()-saving_time
