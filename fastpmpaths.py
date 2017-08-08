@@ -897,6 +897,7 @@ def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
     Acells=allgatherv(Acells)
     Bcells=allgatherv(Bcells)
 
+
     # Redistribution of the tasks FT
     job_to_do_local, job_to_do,original_v_position,original_v_count  = distribute(size_local,len(all_options))
     
@@ -905,7 +906,6 @@ def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
     # Each cell computes its part FT
     for i in range(len(job_to_do_local)/3):
         job=list(job_to_do_local[i*3:(i+1)*3])
-
         result.append(compute_closest_cell(Acells[job[0]],Bcells[job[0]],A[job[0]],B[job[0]],all_options[job[0]],job[1:3]))
 
     # The master gathers all the result and scatters them back FT
@@ -1040,7 +1040,9 @@ def compute_closest_cell(Acells,Bcells,A,B,options,task_range):
         aa,aang = f90.vec2alpha(Ap.cell) #+FT
         
         # Using the absolute range given by distribute computes the range in B
-        if (i == A_range[0]):
+        if (A_range[0] == A_range[1]-1):
+            B_range = [ task_range[0]%len(Bcells), task_range[1]%len(Bcells)+1 ]
+        elif (i == A_range[0]):
             B_range = [ task_range[0]%len(Bcells), len(Bcells) ]
         elif (i == A_range[1]-1):
             B_range = [0, task_range[1]%len(Bcells)+1]
@@ -1092,7 +1094,7 @@ def compute_closest_cell(Acells,Bcells,A,B,options,task_range):
                     fix_gruber = True
                     short_circuit_fix_gruber = True
                     if (fix_gruber and not shorted):
-                        # this may give us a list
+                         # this may give us a list
                         Afixed,Bflip,ds,gs = final_fix_gruber(Acan,Btest,g,dthresh_fix_gruber,options.verbose)
                         if len(ds) == 0 and short_circuit_fix_gruber:
                             shorted = True
@@ -1503,7 +1505,7 @@ def test_enum_p(A,B, all_options, pos_k):
     result=[]
 
     if len(job_to_do_local)>=3:
-        print >> sys.stderr,"%d/%d ANIM LOOP: %d" %(rank,n_proc,sum(job_to_do_local[2:3:]-job_to_do_local[1:3:])+1)
+        print >> sys.stderr,"%d/%d ANIM LOOP: %d" %(rank,n_proc,sum(job_to_do_local[2:3:]-job_to_do_local[1:3:])+len(job_to_do_local)/3)
     else:
         print >> sys.stderr,"%d/%d ANIM LOOP: %d" %(rank,n_proc,0)
     
