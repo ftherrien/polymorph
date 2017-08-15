@@ -42,6 +42,7 @@ import sys #+FT
 import shutil #+FT
 import re #+FT
 import pickle #+FT
+import uuid #+FT
 
 from mpi4py import MPI #+FT
 
@@ -247,6 +248,7 @@ def distribute(size_local,n_jobs):
  
     if (rank == master):
         n_total_tasks=sum(sizes)
+        print >> sys.stderr, "TOTAL SYSTEM SIZE: %d"%(n_total_tasks)
         ntasks_per_proc = np.ones(n_proc,np.int32)*n_total_tasks/n_proc
         ntasks_per_proc[np.arange(n_proc)<(n_total_tasks%n_proc)] = n_total_tasks/n_proc+1
         v_count=[0]
@@ -998,6 +1000,7 @@ def find_and_prepare_closest_cells_p(A, B, all_options, pos_k):
             best_BminStructs[i] = []
             best_gminSyms[i] = []
             dmin[i] = dmins[i][idx[0]]
+            print >> sys.stderr, "%d dmins %d: %s"%(rank,len(dmins[i]),all_options[pos_k[i]].trajdir)
             for j in range(min(max_cells,len(dmins[i]))):
                 dval = dmins[i][idx[j]]
                 if (dval - dmin[i] < max_diff):     ### this was for debugging a special case: or abs(dval-3.456)<1e-2):
@@ -1113,6 +1116,7 @@ def compute_closest_cell(Acells,Bcells,A,B,options,task_range):
                         gminSyms.append(gs[istruct])
                         dmins.append(ds[istruct])
                         #dmin = min(min(ds),dmin) #This seems unused FT
+    print >> sys.stderr, "dmins in compute: %d"%(len(dmins))
     return BminStructs, AminStructs, gminSyms, dmins
 ##+FT <<
 
@@ -1517,10 +1521,11 @@ def test_enum_p(A,B, all_options, pos_k):
         
         # Creates a temporary filename containing the rank because other cores may be working on the same task at the same time FT
         tmpopt=deepcopy(all_options[job[0]])
-        tmpopt.trajdir = 'tmpdir%d' % rank
+        tmpopt.trajdir = 'tmpdir.%s.%d'%(str(uuid.uuid4()),rank)
 
 
-        for imin in range(job[1],job[2]+1):
+        for iteration, imin in enumerate(range(job[1],job[2]+1)):
+            print >> sys.stderr,"%d ITERATION: %d of job %d" %(rank,iteration,i)
             # make desired "closest" supercells
             #        Atest, Btest = prepare_final_cells(A, B, Amincells[imin],Bmincells[imin], Bflags[imin], all_options, imin)
             # run analyzis on this cell mapping
@@ -1618,10 +1623,10 @@ def test_enum_p(A,B, all_options, pos_k):
         print >> f,"best_res.pairsmin",best_res.pairsmin
 
         # Creating sub directory for each valid result 
-        tmpopt=deepcopy(all_options[pos_k[i]])
-        tmpopt.trajdir = tmpopt.trajdir + "/best0"
+        tmpopt0=deepcopy(all_options[pos_k[i]])
+        tmpopt0.trajdir = tmpopt0.trajdir + "/best0"
 
-        make_anim(best_res.A, best_res.Bflip, best_res.Tmatch, best_res.shiftmin, best_res.pairsmin, tmpopt) 
+        make_anim(best_res.A, best_res.Bflip, best_res.Tmatch, best_res.shiftmin, best_res.pairsmin, tmpopt0) 
         
         # Looping through valid results
         if (close_to_best!=[]):
@@ -1645,7 +1650,7 @@ def test_enum_p(A,B, all_options, pos_k):
                 
                 make_anim(close_to_best[k].A, close_to_best[k].Bflip, close_to_best[k].Tmatch, close_to_best[k].shiftmin, close_to_best[k].pairsmin, tmpopt)
 
-        fast_one_final = anim_main(all_options[pos_k[i]])
+        fast_one_final = anim_main(tmpopt0)
         print >> f, "This is likely a %s transition" % ("FAST" if fast_one_final else "SLOW")
         f.close()
         # saving_time = time.time()-saving_time
