@@ -1,0 +1,53 @@
+from fastpmpaths import *
+import pickle
+import os
+
+all_options = read_param_file()
+eps = np.finfo(float).eps
+tol = 100*eps
+
+for oi,options in  enumerate(all_options):
+    try:
+        best_res_serial = pickle.load(open(options.trajdir+"/../A2B/traj_testing_2/best_res.dat","rb"))
+    except:
+        best_res_serial = []
+        print "serial file not available"
+    
+    if best_res_serial != []:
+        filenum = 0
+        while os.path.isfile(options.trajdir+"/best_res%d.dat"%filenum):
+            best_res_par = pickle.load(open(options.trajdir+"/best_res%d.dat"%filenum,"rb"))
+            # DMIN
+            diff_dmin = best_res_par.dmin-best_res_serial.dmin
+            cond_dmin = abs(diff_dmin) < tol 
+            
+            # A
+            cond_A = [(abs(best_res_serial.A.cell-best_res_par.A.cell) < tol).all()]
+            for i,a in enumerate(best_res_serial.A):
+                cond_A.append(all(abs(a.pos - best_res_par.A[i].pos) < tol))
+                cond_A.append(a.type == best_res_par.A[i].type)
+            cond_A = all(cond_A)
+        
+            # B
+            cond_B = [(abs(best_res_serial.Bflip.cell-best_res_par.Bflip.cell) < tol).all()]
+            for i,b in enumerate(best_res_serial.Bflip):
+                cond_B.append(all(abs(b.pos - best_res_par.Bflip[i].pos) < tol))
+                cond_B.append(b.type == best_res_par.Bflip[i].type)
+            cond_B = all(cond_B)
+        
+            # Tmatch
+            cond_Tmatch = (abs(np.array(best_res_serial.Tmatch)-np.array(best_res_par.Tmatch)) < tol).all()
+        
+            #SHIFTMIN
+            cond_shiftmin = (abs(np.array(best_res_serial.shiftmin)-np.array(best_res_par.shiftmin)) < tol).all()
+        
+            #PAIRSMIN
+            cond_pairsmin = [(abs(np.array(best_res_par.pairsmin[0])-np.array(best_res_serial.pairsmin[0])) < tol).all()]
+            for i,par in enumerate(best_res_par.pairsmin[1]):
+                cond_pairsmin.append((abs(np.array(par[3:5])-np.array(best_res_serial.pairsmin[1][i][3:5])) < tol).all())
+            cond_pairsmin = all(cond_pairsmin)
+        
+        
+            print "Solution %d of pair %s (%d):"%(filenum,"",oi), cond_dmin, cond_A, cond_B, cond_Tmatch, cond_shiftmin, cond_pairsmin
+        
+            filenum += 1

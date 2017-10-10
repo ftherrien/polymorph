@@ -1,0 +1,1606 @@
+incoming structures are TestDir/examples/BCC2HCP/POSCAR_A and TestDir/examples/BCC2HCP/POSCAR_B
+incoming cells have 1 and 2 atoms, resp.
+incoming ucell surface areas: 44.8641333052 69.2301472332
+finding closest match among 2 A cells and 1 B cells
+A 0 B 0 
+building test syms:   added  0 unrepresented of 4 total syms from given structure found 4 symmetries or near symmetries
+A 0 B 0 sym 0
+A 0 B 0 sym 1
+A 0 B 0 sym 2
+A 0 B 0 sym 3
+A 1 B 0 
+building test syms:   added  0 unrepresented of 4 total syms from given structure found 4 symmetries or near symmetries
+A 1 B 0 sym 0
+A 1 B 0 sym 1
+A 1 B 0 sym 2
+A 1 B 0 sym 3
+overall dmin =  0.778642088455
+best dmins =  [0.77864208845459559, 0.77864208845459559, 0.77864208845459559, 0.77864208845459559, 0.77864208845459704, 0.77864208845459704, 0.77864208845459704, 0.77864208845459704, 1.0176436921747396, 1.0176436921747396, 1.0176436921747396, 1.0176436921747396, 1.0176436921747412, 1.0176436921747412, 1.0176436921747412, 1.0176436921747412, 1.1111729106448291, 1.1111729106448291, 1.1111729106448294, 1.1111729106448294, 1.1111729106448305, 1.1111729106448305, 1.1111729106448309, 1.1111729106448309, 1.1368204309183123, 1.1368204309183123, 1.136820430918315, 1.136820430918315, 1.2305146619278926, 1.2305146619278926, 1.230514661927893, 1.230514661927893, 1.2305146619278942, 1.2305146619278942, 1.2305146619278944, 1.2305146619278944, 1.2305146657035508, 1.2305146657035508, 1.2305146657035522, 1.2305146657035522, 1.2305146657035526, 1.2305146657035526, 1.2305146657035539, 1.2305146657035539, 1.3532391026516259, 1.3532391026516259, 1.3532391026516259, 1.3532391026516259, 1.3532391026516277, 1.3532391026516277, 1.3532391026516277, 1.3532391026516277, 1.5633700752600168, 1.5633700752600168, 1.5633700752600168, 1.5633700752600168, 1.563370075260019, 1.563370075260019, 1.563370075260019, 1.563370075260019, 1.5636851368054372, 1.5636851368054372, 1.5636851368054401, 1.5636851368054401, 1.752367155254545, 1.752367155254545, 1.7523671552545463, 1.7523671552545463, 1.9513416217448589, 1.9513416217448589, 1.9513416217448596, 1.9513416217448596, 1.9513416217448603, 1.9513416217448603, 1.9513416217448638, 1.9513416217448638, 1.975950635868714, 1.975950635868714, 1.975950635868714, 1.975950635868714, 1.9759506358687158, 1.9759506358687158, 1.9759506358687158, 1.9759506358687158, 2.5518607679075895, 2.5518607679075895, 2.5518607679075895, 2.5518607679075895, 2.5518607679075895, 2.5518607679075895, 2.5518607679075895, 2.5518607679075895, 3.2355230914366597, 3.2355230914366597, 3.2355230914366602, 3.2355230914366602, 3.2355230914366611, 3.2355230914366611, 3.2355230914366615, 3.2355230914366615, 3.2355231023649202, 3.2355231023649202, 3.2355231023649216, 3.2355231023649216, 3.235523102364922, 3.235523102364922, 3.2355231023649234, 3.2355231023649234, 3.4543014230229772, 3.4543014230229772, 3.4543014230229772, 3.4543014230229772, 3.4543014230229789, 3.4543014230229789, 3.4543014230229789, 3.4543014230229789]
+There are 116 close enough cells
+starting analysis of cell pairing 0
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+new winner w.r.t. cell pairing, dmin =  0.505482757925
+starting analysis of cell pairing 1
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 2
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 3
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+new winner w.r.t. cell pairing, dmin =  0.505482757925
+starting analysis of cell pairing 4
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 5
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+new winner w.r.t. cell pairing, dmin =  0.505482757925
+starting analysis of cell pairing 6
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 7
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 8
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328 -2.299]
+shifting to extra position 2: [ 0.939  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328 -2.299]
+shifting to extra position 6: [ 2.347  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 9
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  2.299]
+shifting to extra position 2: [ 0.939  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328  2.299]
+shifting to extra position 6: [ 2.347  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 10
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328 -2.299]
+shifting to extra position 2: [ 0.939  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328 -2.299]
+shifting to extra position 6: [ 2.347  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 11
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  2.299]
+shifting to extra position 2: [ 0.939  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328  2.299]
+shifting to extra position 6: [ 2.347  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 12
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328 -2.299]
+shifting to extra position 2: [ 0.939  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328 -2.299]
+shifting to extra position 6: [ 2.347  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 13
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  2.299]
+shifting to extra position 2: [ 0.939  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328  2.299]
+shifting to extra position 6: [ 2.347  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 14
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328 -2.299]
+shifting to extra position 2: [ 0.939  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328 -2.299]
+shifting to extra position 6: [ 2.347  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 15
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  2.299]
+shifting to extra position 2: [ 0.939  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328  2.299]
+shifting to extra position 6: [ 2.347  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 16
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 2.347  1.328  2.299]
+shifting to extra position 6: [ 2.347  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 17
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 2.347  1.328  2.299]
+shifting to extra position 6: [ 2.347  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 18
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 2.347  1.328 -2.299]
+shifting to extra position 6: [ 2.347  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 19
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 2.347  1.328 -2.299]
+shifting to extra position 6: [ 2.347  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 20
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 2.347  1.328  2.299]
+shifting to extra position 6: [ 2.347  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 21
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 2.347  1.328  2.299]
+shifting to extra position 6: [ 2.347  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 22
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 2.347  1.328 -2.299]
+shifting to extra position 6: [ 2.347  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 23
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 2.347  1.328 -2.299]
+shifting to extra position 6: [ 2.347  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 24
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 25
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 26
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 27
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  0.   ]
+shifting to extra position 2: [ 0.939  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 28
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.2136426173 1.56528170582 1.56528170582
+done: found dmin, shiftmin= 1.56528170582 [-0.469  1.328  2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 29
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.2136426173 1.56528170582 1.56528170582
+done: found dmin, shiftmin= 1.56528170582 [-0.469  1.328  2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 30
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.2136426173 1.56528170582 1.56528170582
+done: found dmin, shiftmin= 1.56528170582 [-0.469  1.328 -2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 31
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.2136426173 1.56528170582 1.56528170582
+done: found dmin, shiftmin= 1.56528170582 [-0.469  1.328 -2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 32
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.2136426173 1.56528170582 1.56528170582
+done: found dmin, shiftmin= 1.56528170582 [-0.469  1.328  2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 33
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.2136426173 1.56528170582 1.56528170582
+done: found dmin, shiftmin= 1.56528170582 [-0.469  1.328  2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 34
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.2136426173 1.56528170582 1.56528170582
+done: found dmin, shiftmin= 1.56528170582 [-0.469  1.328 -2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 35
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+new winner w.r.t shift 1.58012355276
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23463215854 1.58012355276 2.2136426173 1.56528170582 1.56528170582
+done: found dmin, shiftmin= 1.56528170582 [-0.469  1.328 -2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 36
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 37
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 38
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 39
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 40
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 41
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 42
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 43
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 44
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328 -2.299]
+shifting to extra position 2: [ 0.939  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 45
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328 -2.299]
+shifting to extra position 2: [ 0.939  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 46
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328 -2.299]
+shifting to extra position 2: [ 0.939  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 47
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328 -2.299]
+shifting to extra position 2: [ 0.939  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 48
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  2.299]
+shifting to extra position 2: [ 0.939  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 49
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  2.299]
+shifting to extra position 2: [ 0.939  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 50
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  2.299]
+shifting to extra position 2: [ 0.939  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 51
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.58011889386
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [ 0.939  1.328  2.299]
+shifting to extra position 2: [ 0.939  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 2.347  1.328  0.   ]
+shifting to extra position 6: [ 2.347  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.23462556985 1.58011889386 2.45481313219 1.73581501232 1.73581501232
+done: found dmin, shiftmin= 1.73581501232 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 52
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  4.599]
+shifting to extra position 6: [ 0.939  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 53
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  4.599]
+shifting to extra position 6: [ 0.939  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 54
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  4.599]
+shifting to extra position 6: [ 0.939  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 55
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  4.599]
+shifting to extra position 6: [ 0.939  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 56
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -4.599]
+shifting to extra position 6: [ 0.939  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 57
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -4.599]
+shifting to extra position 6: [ 0.939  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 58
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -4.599]
+shifting to extra position 6: [ 0.939  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 59
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -4.599]
+shifting to extra position 6: [ 0.939  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 60
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 61
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 62
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 63
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  0.   ]
+shifting to extra position 6: [ 0.939  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.714860571803 0.505482757925 0.505482757925
+done: found dmin, shiftmin= 0.505482757925 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 64
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328  0.   ]
+shifting to extra position 6: [-0.469  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+new winner w.r.t. cell pairing, dmin =  0.445609402962
+starting analysis of cell pairing 65
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328  0.   ]
+shifting to extra position 6: [-0.469  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 66
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328  0.   ]
+shifting to extra position 6: [-0.469  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 67
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328  0.   ]
+shifting to extra position 6: [-0.469  1.328  2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 68
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328 -2.299]
+shifting to extra position 2: [-1.877  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328 -2.299]
+shifting to extra position 6: [-0.469  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096047759 2.36241580938 3.46175040375 2.44782718527 2.44782718527
+done: found dmin, shiftmin= 2.44782718527 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 69
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328 -2.299]
+shifting to extra position 2: [-1.877  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328 -2.299]
+shifting to extra position 6: [-0.469  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096047759 2.36241580938 3.46175040375 2.44782718527 2.44782718527
+done: found dmin, shiftmin= 2.44782718527 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 70
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  2.299]
+shifting to extra position 2: [-1.877  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328  2.299]
+shifting to extra position 6: [-0.469  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096047759 2.36241580938 3.46175040375 2.44782718527 2.44782718527
+done: found dmin, shiftmin= 2.44782718527 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 71
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  2.299]
+shifting to extra position 2: [-1.877  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328  2.299]
+shifting to extra position 6: [-0.469  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096047759 2.36241580938 3.20133966972 2.2711659375 2.2711659375
+done: found dmin, shiftmin= 2.2711659375 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 72
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328 -2.299]
+shifting to extra position 2: [-1.877  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328 -2.299]
+shifting to extra position 6: [-0.469  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096047759 2.36241580938 3.46175040375 2.44782718527 2.44782718527
+done: found dmin, shiftmin= 2.44782718527 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 73
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328 -2.299]
+shifting to extra position 2: [-1.877  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328 -2.299]
+shifting to extra position 6: [-0.469  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096047759 2.36241580938 2.94092893568 2.07955079341 2.07955079341
+done: found dmin, shiftmin= 2.07955079341 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 74
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  2.299]
+shifting to extra position 2: [-1.877  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328  2.299]
+shifting to extra position 6: [-0.469  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096047759 2.36241580938 3.46175040375 2.44782718527 2.44782718527
+done: found dmin, shiftmin= 2.44782718527 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 75
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  2.299]
+shifting to extra position 2: [-1.877  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [-0.469  1.328  2.299]
+shifting to extra position 6: [-0.469  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096047759 2.36241580938 3.46175040375 2.44782718527 2.44782718527
+done: found dmin, shiftmin= 2.44782718527 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 76
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [-0.469  1.328  2.299]
+shifting to extra position 6: [-0.469  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 77
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [-0.469  1.328  2.299]
+shifting to extra position 6: [-0.469  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 78
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [-0.469  1.328  2.299]
+shifting to extra position 6: [-0.469  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 79
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36241580938
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [-0.469  1.328  2.299]
+shifting to extra position 6: [-0.469  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.     0.     2.299]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 80
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [-0.469  1.328 -2.299]
+shifting to extra position 6: [-0.469  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 81
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [-0.469  1.328 -2.299]
+shifting to extra position 6: [-0.469  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 82
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [-0.469  1.328 -2.299]
+shifting to extra position 6: [-0.469  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 83
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 0.541972660136
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  0.   ]
+shifting to extra position 2: [-1.877  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [-0.469  1.328 -2.299]
+shifting to extra position 6: [-0.469  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.7664650864 0.541972660136 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 84
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36242204167
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328 -2.299]
+shifting to extra position 2: [-1.877  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [-0.469  1.328 -4.599]
+shifting to extra position 6: [-0.469  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096929138 2.36242204167 3.15590087988 2.23155891291 2.23155891291
+done: found dmin, shiftmin= 2.23155891291 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 85
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36242204167
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  2.299]
+shifting to extra position 2: [-1.877  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [-0.469  1.328  4.599]
+shifting to extra position 6: [-0.469  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096929138 2.36242204167 3.33587393496 2.35881908059 2.35881908059
+done: found dmin, shiftmin= 2.35881908059 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 86
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36242204167
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328 -2.299]
+shifting to extra position 2: [-1.877  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [-0.469  1.328 -4.599]
+shifting to extra position 6: [-0.469  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096929138 2.36242204167 3.24588740742 2.2960708435 2.2960708435
+done: found dmin, shiftmin= 2.2960708435 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 87
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36242204167
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  2.299]
+shifting to extra position 2: [-1.877  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [-0.469  1.328  4.599]
+shifting to extra position 6: [-0.469  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096929138 2.36242204167 3.24588740742 2.2960708435 2.2960708435
+done: found dmin, shiftmin= 2.2960708435 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 88
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36242204167
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328 -2.299]
+shifting to extra position 2: [-1.877  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [-0.469  1.328 -4.599]
+shifting to extra position 6: [-0.469  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096929138 2.36242204167 3.33587393496 2.35881908059 2.35881908059
+done: found dmin, shiftmin= 2.35881908059 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 89
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36242204167
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  2.299]
+shifting to extra position 2: [-1.877  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [-0.469  1.328  4.599]
+shifting to extra position 6: [-0.469  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096929138 2.36242204167 3.33587393496 2.35881908059 2.35881908059
+done: found dmin, shiftmin= 2.35881908059 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 90
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36242204167
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328 -2.299]
+shifting to extra position 2: [-1.877  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [-0.469  1.328 -4.599]
+shifting to extra position 6: [-0.469  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096929138 2.36242204167 3.33587393496 2.35881908059 2.35881908059
+done: found dmin, shiftmin= 2.35881908059 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 91
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 2.36242204167
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-1.877  1.328  2.299]
+shifting to extra position 2: [-1.877  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [-0.469  1.328  4.599]
+shifting to extra position 6: [-0.469  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.34096929138 2.36242204167 3.33587393496 2.35881908059 2.35881908059
+done: found dmin, shiftmin= 2.35881908059 [ 0.  0.  0.]    |Tmatch-I| =  0.194104440187
+starting analysis of cell pairing 92
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.5421039991 1.79753897625 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 93
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.5421039991 1.79753897625 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 94
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.5421039991 1.79753897625 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 95
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.5421039991 1.79753897625 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 96
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.5421039991 1.79753897625 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 97
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.5421039991 1.79753897625 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 98
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.5421039991 1.79753897625 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 99
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     0.   ]
+shifting to extra position 4: [ 1.408  0.     2.299]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.5421039991 1.79753897625 2.23921967811 1.58336741896 1.58336741896
+done: found dmin, shiftmin= 1.58336741896 [ 0.  0.  0.]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 100
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+new winner w.r.t. cell pairing, dmin =  0.445609402962
+starting analysis of cell pairing 101
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 102
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 103
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  2.299]
+shifting to extra position 6: [ 0.939  1.328  4.599]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+new winner w.r.t. cell pairing, dmin =  0.445609402962
+starting analysis of cell pairing 104
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 105
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 106
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 107
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  2.299]
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -2.299]
+shifting to extra position 6: [ 0.939  1.328  0.   ]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 108
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79752510942
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  4.599]
+shifting to extra position 6: [ 0.939  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  2.299]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 109
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79752510942
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  4.599]
+shifting to extra position 6: [ 0.939  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  2.299]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 110
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79752510942
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  4.599]
+shifting to extra position 6: [ 0.939  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  2.299]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 111
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79752510942
+shifting to extra position 0: [ 0.     0.     2.299]
+shifting to extra position 1: [-0.469  1.328  2.299]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 2: [-0.469  1.328  4.599]
+shifting to extra position 3: [ 1.408  0.     2.299]
+shifting to extra position 4: [ 1.408  0.     4.599]
+shifting to extra position 5: [ 0.939  1.328  4.599]
+shifting to extra position 6: [ 0.939  1.328  6.898]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  2.299]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 112
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 1.79752510942
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -4.599]
+shifting to extra position 6: [ 0.939  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 113
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 1.79752510942
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -4.599]
+shifting to extra position 6: [ 0.939  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 114
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 1.79752510942
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -4.599]
+shifting to extra position 6: [ 0.939  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+starting analysis of cell pairing 115
+groups of equiv atom indices in src: [[0, 1]]
+shifting to position 0: 0 [ 0.  0.  0.]
+new winner w.r.t shift 1.79753897625
+shifting to extra position 0: [ 0.     0.     2.299]
+new winner w.r.t shift 1.79752510942
+shifting to extra position 1: [-0.469  1.328 -2.299]
+shifting to extra position 2: [-0.469  1.328  0.   ]
+new winner w.r.t shift 0.383234761838
+shifting to extra position 3: [ 1.408  0.    -2.299]
+shifting to extra position 4: [ 1.408  0.     0.   ]
+shifting to extra position 5: [ 0.939  1.328 -4.599]
+shifting to extra position 6: [ 0.939  1.328 -2.299]
+unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 0.541975797764 0.383234761838 0.63018686119 0.445609402962 0.445609402962
+done: found dmin, shiftmin= 0.445609402962 [-0.469  1.328  0.   ]    |Tmatch-I| =  0.924476501172
+-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+polymorph pathfinder search DONE, dmin =  0.445609402962
+best_res.A Structure( 2.81619, -0.93873, 0,
+           0, 2.65513, 0,
+           4.59882, 1.72442e-16, 4.59882,
+           scale=1, name='supercell of supercell of supercell of supercell of unknown system' )\
+  .add_atom(0, 0, 0, 'Ti', site=0)\
+  .add_atom(0.93873, 1.32757, 2.29941, 'Ti', site=1)
+best_res.Bflip Structure( 2.93752, 1.46876, 0,
+           0, 2.54397, 0,
+           4.61991, -3.59742e-16, 4.61991,
+           scale=1, name='supercell of supercell of supercell of supercell of unknown system' )\
+  .add_atom(2.93752, 5.30036e-06, 4.61991, 'Ti', site=0)\
+  .add_atom(1.46876, 0.848, 2.30995, 'Ti', site=1)
+best_res.Tmatch [[ 0.959 -0.923  0.   ]
+ [ 0.     1.044  0.   ]
+ [ 0.     0.     0.995]]
+best_res.shiftmin [-0.469  1.328  0.   ]
+best_res.pairsmin [[[1, 0], [0, 1]], [[1, 1, 0.27098789888206193, array([ 0.939, -0.664,  1.15 ]), array([ 1.095, -0.443,  1.15 ])], [0, 0, 0.27098789888206176, array([-0.939,  0.664, -1.15 ]), array([-1.095,  0.443, -1.15 ])]]]
+spacegroup of initial structure (B, [Bflip in code])  P6_3/mmc (194)
+#coordination for TestDir/examples/BCC2HCP/POSCAR_B to TestDir/examples/BCC2HCP/POSCAR_A transition:
+#Total of 2.00 (4.00) bonds per atom broken (resp.,made) in TestDir/examples/BCC2HCP/POSCAR_B to TestDir/examples/BCC2HCP/POSCAR_A transition.
+This is likely a SLOW transition
