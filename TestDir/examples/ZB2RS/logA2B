@@ -25,6 +25,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729319457 1.73049761343 3.14495783159 2.22382100926 2.22382100926
 done: found dmin, shiftmin= 2.22382100926 [ 0.  0.  0.]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 1.2236465972832562, array([-0.894,  0.316,  1.548]), array([-1.117,  0.632,  0.387])]
+[1, 1] [1, 1, 1.2236465972832564, array([ 0.894, -0.316, -1.548]), array([ 1.117, -0.632, -0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 new winner w.r.t. cell pairing, dmin =  2.22382100926
 starting analysis of cell pairing 1
 groups of equiv atom indices in src: [[0], [1]]
@@ -41,6 +47,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729282146 1.7304973496 2.49565499801 1.76469457259 1.76469457259
 done: found dmin, shiftmin= 1.76469457259 [ 1.34  -0.     0.774]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 1.2236464107279175, array([ 0.447,  0.316, -0.774]), array([ 1.117, -0.632, -0.387])]
+[1, 1] [1, 1, 1.2236464107279172, array([-0.447, -0.316,  0.774]), array([-1.117,  0.632,  0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 new winner w.r.t. cell pairing, dmin =  1.76469457259
 starting analysis of cell pairing 2
 groups of equiv atom indices in src: [[0], [1]]
@@ -57,6 +69,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729283351 1.73049735812 2.11189642445 1.49333628289 1.49333628289
 done: found dmin, shiftmin= 1.49333628289 [ 1.34  -0.     0.774]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 1.2236464167549357, array([-2.234,  0.316, -2.322]), array([-1.564, -0.632, -1.935])]
+[1, 1] [1, 1, 1.2236464167549352, array([ 2.234, -0.316,  2.322]), array([ 1.564,  0.632,  1.935])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 new winner w.r.t. cell pairing, dmin =  1.49333628289
 starting analysis of cell pairing 3
 groups of equiv atom indices in src: [[0], [1]]
@@ -72,6 +90,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729319457 1.73049761343 2.89972288124 2.05041371289 2.05041371289
 done: found dmin, shiftmin= 2.05041371289 [ 0.  0.  0.]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 1.2236465972832544, array([-0.894,  0.316, -1.548]), array([-1.117,  0.632, -2.709])]
+[1, 1] [1, 1, 1.2236465972832549, array([ 0.894, -0.316,  1.548]), array([ 1.117, -0.632,  2.709])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 4
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -86,6 +110,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.554948748622 0.392408023361 0.392408023361
 done: found dmin, shiftmin= 0.392408023361 [ 0.  0.  0.]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 0.54723140652157953, array([ 0.447,  0.316, -0.774]), array([ 0.894,  0.632, -0.774])]
+[1, 1] [1, 1, 0.54723140652157987, array([-0.447, -0.316,  0.774]), array([-0.894, -0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 new winner w.r.t. cell pairing, dmin =  0.392408023361
 starting analysis of cell pairing 5
 groups of equiv atom indices in src: [[0], [1]]
@@ -102,6 +132,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729314206 1.7304975763 1.80779675638 1.27830534545 1.27830534545
 done: found dmin, shiftmin= 1.27830534545 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.2236465710307987, array([-0.   , -0.948,  0.   ]), array([-0.894, -0.632,  0.774])]
+[1, 1] [1, 1, 1.2236465710307982, array([ 0.   ,  0.948, -0.   ]), array([ 0.894,  0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 6
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -117,6 +153,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729313603 1.73049757204 2.13743927233 1.51139780384 1.51139780384
 done: found dmin, shiftmin= 1.51139780384 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236465680172899, array([-0.   , -0.948,  0.   ]), array([-0.894, -0.632,  0.774])]
+[1, 1] [1, 1, 1.2236465680172899, array([ 0.   ,  0.948, -0.   ]), array([ 0.894,  0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 7
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -131,6 +173,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.35833507428 0.25338116096 0.25338116096
 done: found dmin, shiftmin= 0.25338116096 [ 0.  0.  0.]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 0.54723140652157998, array([ 0.447,  0.316, -0.774]), array([ 0.894,  0.632, -0.774])]
+[1, 1] [1, 1, 0.54723140652158031, array([-0.447, -0.316,  0.774]), array([-0.894, -0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 new winner w.r.t. cell pairing, dmin =  0.25338116096
 starting analysis of cell pairing 8
 groups of equiv atom indices in src: [[0], [1]]
@@ -147,6 +195,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729297886 1.7304974609 2.63260244826 1.86153104333 1.86153104333
 done: found dmin, shiftmin= 1.86153104333 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.2236464894292884, array([ 0.894,  1.58 , -0.   ]), array([ 0.894,  0.632,  0.774])]
+[1, 1] [1, 1, 1.2236464894292884, array([-0.894, -1.58 ,  0.   ]), array([-0.894, -0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 9
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -162,6 +216,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729314206 1.7304975763 1.99259351288 1.4089763851 1.4089763851
 done: found dmin, shiftmin= 1.4089763851 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.2236465710307975, array([-0.   , -0.948, -1.548]), array([-0.894, -0.632, -0.774])]
+[1, 1] [1, 1, 1.2236465710307973, array([ 0.   ,  0.948,  1.548]), array([ 0.894,  0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 10
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -177,6 +237,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729313603 1.73049757204 2.29585418485 1.62341406272 1.62341406272
 done: found dmin, shiftmin= 1.62341406272 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236465680172888, array([-0.   , -0.948, -1.548]), array([-0.894, -0.632, -0.774])]
+[1, 1] [1, 1, 1.2236465680172888, array([ 0.   ,  0.948,  1.548]), array([ 0.894,  0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 11
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -192,6 +258,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729297283 1.73049745664 2.80570579442 1.98393359325 1.98393359325
 done: found dmin, shiftmin= 1.98393359325 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236464864157797, array([ 0.894,  1.58 , -0.   ]), array([ 0.894,  0.632,  0.774])]
+[1, 1] [1, 1, 1.2236464864157799, array([-0.894, -1.58 ,  0.   ]), array([-0.894, -0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 12
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -207,6 +279,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446271699 0.773902008941 2.14408052958 1.51988758791 1.51988758791
 done: found dmin, shiftmin= 1.51988758791 [-0.894 -0.632  1.548]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 0.54723135849620641, array([-0.   , -0.948, -1.548]), array([-0.223, -0.632, -1.161])]
+[1, 1] [1, 1, 0.54723135849620619, array([ 0.   ,  0.948, -1.548]), array([ 0.223,  0.632, -1.935])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 13
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -221,6 +299,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729319457 1.73049761343 2.7761899629 1.96306274863 1.96306274863
 done: found dmin, shiftmin= 1.96306274863 [ 0.  0.  0.]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 1.2236465972832546, array([ 0.447,  0.316, -0.774]), array([ 0.223,  0.632, -1.935])]
+[1, 1] [1, 1, 1.2236465972832542, array([-0.447, -0.316,  0.774]), array([-0.223, -0.632,  1.935])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 14
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -235,6 +319,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729319457 1.73049761343 2.80834378206 1.9857989322 1.9857989322
 done: found dmin, shiftmin= 1.9857989322 [ 0.  0.  0.]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 1.223646597283256, array([ 0.447,  0.316, -0.774]), array([ 0.223,  0.632, -1.935])]
+[1, 1] [1, 1, 1.223646597283256, array([-0.447, -0.316,  0.774]), array([-0.223, -0.632,  1.935])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 15
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -250,6 +340,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446273047 0.773902018471 1.99259351288 1.4089763851 1.4089763851
 done: found dmin, shiftmin= 1.4089763851 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 0.54723136523461768, array([-0.   , -0.948, -1.548]), array([-0.223, -0.632, -1.161])]
+[1, 1] [1, 1, 0.54723136523461791, array([ 0.   ,  0.948,  1.548]), array([ 0.223,  0.632,  1.161])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 16
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -264,6 +360,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.554948748622 0.392408023361 0.392408023361
 done: found dmin, shiftmin= 0.392408023361 [ 0.  0.  0.]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 0.54723140652157953, array([ 0.447,  0.316, -0.774]), array([ 0.894,  0.632, -0.774])]
+[1, 1] [1, 1, 0.54723140652157976, array([-0.447, -0.316,  0.774]), array([-0.894, -0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 17
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -279,6 +381,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729314206 1.7304975763 1.80779675638 1.27830534545 1.27830534545
 done: found dmin, shiftmin= 1.27830534545 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.223646571030798, array([-0.   , -0.948,  0.   ]), array([-0.894, -0.632,  0.774])]
+[1, 1] [1, 1, 1.2236465710307982, array([ 0.   ,  0.948, -0.   ]), array([ 0.894,  0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 18
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -294,6 +402,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729292553 1.7304974232 2.13744009164 1.51139838318 1.51139838318
 done: found dmin, shiftmin= 1.51139838318 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236464627673285, array([-0.   , -0.948,  0.   ]), array([-0.894, -0.632, -0.774])]
+[1, 1] [1, 1, 1.2236464627673287, array([ 0.   ,  0.948, -0.   ]), array([ 0.894,  0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 19
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -309,6 +423,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729291246 1.73049741395 2.92818714767 2.0705409887 2.0705409887
 done: found dmin, shiftmin= 2.0705409887 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236464562302458, array([ 0.894,  1.58 ,  1.548]), array([ 0.894,  0.632,  0.774])]
+[1, 1] [1, 1, 1.223646456230246, array([-0.894, -1.58 , -1.548]), array([-0.894, -0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 20
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -325,6 +445,12 @@ shifting to extra position 5: [ 0.447  1.264  2.322]
 shifting to extra position 6: [ 0.447  1.264  3.87 ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.55494855757 0.392407888267 0.392407888267
 done: found dmin, shiftmin= 0.392407888267 [-0.     0.     1.548]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 0.54723140652157864, array([ 0.447,  0.316,  0.774]), array([ 0.894,  0.632,  0.774])]
+[1, 1] [1, 1, 0.54723140652157876, array([-0.447, -0.316, -0.774]), array([-0.894, -0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 21
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -340,6 +466,12 @@ shifting to extra position 5: [ 0.447  1.264  2.322]
 shifting to extra position 6: [ 0.447  1.264  3.87 ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729314206 1.7304975763 1.99259351288 1.4089763851 1.4089763851
 done: found dmin, shiftmin= 1.4089763851 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.2236465710307975, array([-0.   , -0.948, -1.548]), array([-0.894, -0.632, -0.774])]
+[1, 1] [1, 1, 1.2236465710307971, array([ 0.   ,  0.948,  1.548]), array([ 0.894,  0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 22
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -355,6 +487,12 @@ shifting to extra position 5: [ 0.447  1.264  2.322]
 shifting to extra position 6: [ 0.447  1.264  3.87 ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729313603 1.73049757204 2.29585418485 1.62341406272 1.62341406272
 done: found dmin, shiftmin= 1.62341406272 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236465680172894, array([-0.   , -0.948, -1.548]), array([-0.894, -0.632, -0.774])]
+[1, 1] [1, 1, 1.2236465680172897, array([ 0.   ,  0.948,  1.548]), array([ 0.894,  0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 23
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -371,6 +509,12 @@ shifting to extra position 5: [ 0.447  1.264  2.322]
 shifting to extra position 6: [ 0.447  1.264  3.87 ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.3583347784 0.253380951742 0.253380951742
 done: found dmin, shiftmin= 0.253380951742 [-0.     0.     1.548]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 0.54723140652157887, array([ 0.447,  0.316,  0.774]), array([ 0.894,  0.632,  0.774])]
+[1, 1] [1, 1, 0.54723140652157898, array([-0.447, -0.316, -0.774]), array([-0.894, -0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 new winner w.r.t. cell pairing, dmin =  0.253380951742
 starting analysis of cell pairing 24
 groups of equiv atom indices in src: [[0], [1]]
@@ -388,6 +532,12 @@ shifting to extra position 5: [ 0.447  1.264 -2.322]
 shifting to extra position 6: [ 0.447  1.264 -0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.554948748622 0.392408023361 0.392408023361
 done: found dmin, shiftmin= 0.392408023361 [-0.     0.     1.548]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 0.54723140652157976, array([ 0.447,  0.316, -0.774]), array([ 0.894,  0.632, -0.774])]
+[1, 1] [1, 1, 0.54723140652157987, array([-0.447, -0.316,  0.774]), array([-0.894, -0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 25
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -403,6 +553,12 @@ shifting to extra position 5: [ 0.447  1.264 -2.322]
 shifting to extra position 6: [ 0.447  1.264 -0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729293156 1.73049742746 1.99259453074 1.40897710484 1.40897710484
 done: found dmin, shiftmin= 1.40897710484 [-0.894 -0.632 -1.548]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.2236464657808368, array([-0.   , -0.948,  1.548]), array([-0.894, -0.632,  0.774])]
+[1, 1] [1, 1, 1.223646465780837, array([ 0.   ,  0.948, -1.548]), array([ 0.894,  0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 26
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -418,6 +574,12 @@ shifting to extra position 5: [ 0.447  1.264 -2.322]
 shifting to extra position 6: [ 0.447  1.264 -0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729292553 1.7304974232 2.29585506826 1.62341468739 1.62341468739
 done: found dmin, shiftmin= 1.62341468739 [-0.894 -0.632 -1.548]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236464627673287, array([-0.   , -0.948,  1.548]), array([-0.894, -0.632,  0.774])]
+[1, 1] [1, 1, 1.2236464627673285, array([ 0.   ,  0.948, -1.548]), array([ 0.894,  0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 27
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -434,6 +596,12 @@ shifting to extra position 5: [ 0.447  1.264 -2.322]
 shifting to extra position 6: [ 0.447  1.264 -0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.35833507428 0.25338116096 0.25338116096
 done: found dmin, shiftmin= 0.25338116096 [-0.     0.     1.548]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 0.54723140652157876, array([ 0.447,  0.316, -0.774]), array([ 0.894,  0.632, -0.774])]
+[1, 1] [1, 1, 0.54723140652157909, array([-0.447, -0.316,  0.774]), array([-0.894, -0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 28
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -450,6 +618,12 @@ shifting to extra position 5: [ 1.787  1.264  1.548]
 shifting to extra position 6: [ 1.787  1.264  3.096]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446269572 0.773901993898 0.554948665777 0.392407964781 0.392407964781
 done: found dmin, shiftmin= 0.392407964781 [-0.     0.     1.548]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 0.54723134785905581, array([-0.894,  0.316,  0.   ]), array([-1.117,  0.632,  0.387])]
+[1, 1] [1, 1, 0.54723134785905614, array([ 0.894, -0.316, -0.   ]), array([ 1.117, -0.632, -0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 29
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -465,6 +639,12 @@ shifting to extra position 5: [ 1.787  1.264  1.548]
 shifting to extra position 6: [ 1.787  1.264  3.096]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729282146 1.7304973496 2.49565499801 1.76469457259 1.76469457259
 done: found dmin, shiftmin= 1.76469457259 [ 1.34  -0.     0.774]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 1.2236464107279175, array([ 0.447,  0.316, -0.774]), array([ 1.117, -0.632, -0.387])]
+[1, 1] [1, 1, 1.2236464107279184, array([-0.447, -0.316,  0.774]), array([-1.117,  0.632,  0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 30
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -482,6 +662,12 @@ shifting to extra position 5: [ 1.787  1.264  1.548]
 shifting to extra position 6: [ 1.787  1.264  3.096]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729283351 1.73049735812 1.92518498973 1.36131136128 1.36131136128
 done: found dmin, shiftmin= 1.36131136128 [ 1.34   0.     2.322]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 1.2236464167549357, array([-2.234,  0.316, -0.774]), array([-1.564, -0.632, -0.387])]
+[1, 1] [1, 1, 1.2236464167549357, array([ 2.234, -0.316,  0.774]), array([ 1.564,  0.632,  0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 31
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -496,6 +682,12 @@ shifting to extra position 5: [ 1.787  1.264  1.548]
 shifting to extra position 6: [ 1.787  1.264  3.096]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446270919 0.773902003428 0.634828327386 0.448891415184 0.448891415184
 done: found dmin, shiftmin= 0.448891415184 [ 0.  0.  0.]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 0.54723135459746819, array([ 1.787,  0.316, -0.   ]), array([ 1.564,  0.632,  0.387])]
+[1, 1] [1, 1, 0.5472313545974683, array([-1.787, -0.316,  0.   ]), array([-1.564, -0.632, -0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 32
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -511,6 +703,12 @@ shifting to extra position 5: [ 1.787  1.264  1.548]
 shifting to extra position 6: [ 1.787  1.264  3.096]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.554948748622 0.392408023361 0.392408023361
 done: found dmin, shiftmin= 0.392408023361 [ 1.34  -0.     0.774]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 0.54723140652157953, array([ 0.447,  0.316, -0.774]), array([ 0.894,  0.632, -0.774])]
+[1, 1] [1, 1, 0.5472314065215792, array([-0.447, -0.316,  0.774]), array([-0.894, -0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 33
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -525,6 +723,12 @@ shifting to extra position 5: [ 1.787  1.264  1.548]
 shifting to extra position 6: [ 1.787  1.264  3.096]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729289343 1.7304974005 2.50257012279 1.77197145137 1.77197145137
 done: found dmin, shiftmin= 1.77197145137 [ 0.  0.  0.]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.223646446716093, array([-0.894,  0.316,  1.548]), array([-0.894, -0.632,  0.774])]
+[1, 1] [1, 1, 1.2236464467160928, array([ 0.894, -0.316,  1.548]), array([ 0.894,  0.632,  2.322])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 34
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -539,6 +743,12 @@ shifting to extra position 5: [ 1.787  1.264  1.548]
 shifting to extra position 6: [ 1.787  1.264  3.096]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729289946 1.73049740476 1.99230762275 1.40877423026 1.40877423026
 done: found dmin, shiftmin= 1.40877423026 [ 0.  0.  0.]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236464497296016, array([-0.894,  0.316, -1.548]), array([-0.894, -0.632, -2.322])]
+[1, 1] [1, 1, 1.2236464497296009, array([ 0.894, -0.316,  1.548]), array([ 0.894,  0.632,  2.322])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 35
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -554,6 +764,12 @@ shifting to extra position 5: [ 1.787  1.264  1.548]
 shifting to extra position 6: [ 1.787  1.264  3.096]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.35833507428 0.25338116096 0.25338116096
 done: found dmin, shiftmin= 0.25338116096 [ 1.34  -0.     0.774]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 0.54723140652157998, array([ 0.447,  0.316, -0.774]), array([ 0.894,  0.632, -0.774])]
+[1, 1] [1, 1, 0.54723140652157931, array([-0.447, -0.316,  0.774]), array([-0.894, -0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 36
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -568,6 +784,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729289946 1.73049740476 2.13744011152 1.51139839724 1.51139839724
 done: found dmin, shiftmin= 1.51139839724 [ 0.  0.  0.]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236464497296016, array([-0.894,  0.316,  0.   ]), array([-0.894, -0.632, -0.774])]
+[1, 1] [1, 1, 1.2236464497296016, array([ 0.894, -0.316, -0.   ]), array([ 0.894,  0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 37
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -582,6 +804,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729295059 1.73049744091 2.92818721584 2.0705410369 2.0705410369
 done: found dmin, shiftmin= 2.0705410369 [ 0.  0.  0.]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236464752949907, array([ 1.787,  0.316,  1.548]), array([ 0.894,  0.632,  0.774])]
+[1, 1] [1, 1, 1.2236464752949909, array([-1.787, -0.316, -1.548]), array([-0.894, -0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 38
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -596,6 +824,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729294456 1.73049743665 3.03152084342 2.14940995658 2.14940995658
 done: found dmin, shiftmin= 2.14940995658 [ 0.  0.  0.]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.2236464722814813, array([-0.894,  0.316,  0.   ]), array([-1.787,  0.632, -0.774])]
+[1, 1] [1, 1, 1.2236464722814813, array([-1.787, -0.316, -1.548]), array([-0.894, -0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 39
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -610,6 +844,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729289343 1.7304974005 2.49565537127 1.76469483653 1.76469483653
 done: found dmin, shiftmin= 1.76469483653 [ 0.  0.  0.]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.2236464467160932, array([-0.894,  0.316,  0.   ]), array([-0.894, -0.632, -0.774])]
+[1, 1] [1, 1, 1.2236464467160932, array([ 0.894, -0.316, -0.   ]), array([ 0.894,  0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 40
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -626,6 +866,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729294822 1.73049743924 2.65660390087 1.87850263323 1.87850263323
 done: found dmin, shiftmin= 1.87850263323 [ 1.34  -0.    -0.774]    |Tmatch-I| =  1.04984336903
+[0, 0] [0, 0, 1.2236464741100537, array([ 0.447,  0.316, -0.774]), array([ 1.117, -0.632, -1.161])]
+[1, 1] [1, 1, 1.2236464741100537, array([-0.447, -0.316,  0.774]), array([-1.117,  0.632,  1.161])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 41
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -641,6 +887,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729294568 1.73049743744 3.60026578999 2.54577235417 2.54577235417
 done: found dmin, shiftmin= 2.54577235417 [ 1.787 -0.632 -0.   ]    |Tmatch-I| =  1.04984336903
+[0, 0] [0, 0, 1.2236464728401129, array([ 0.894,  1.58 , -0.   ]), array([ 1.564,  0.632, -0.387])]
+[1, 1] [1, 1, 1.2236464728401131, array([-0.894, -1.58 ,  0.   ]), array([-1.564, -0.632,  0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 42
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -655,6 +907,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.0944628011 0.773902068411 0.554948665777 0.392407964781 0.392407964781
 done: found dmin, shiftmin= 0.392407964781 [ 0.  0.  0.]    |Tmatch-I| =  0.775224784051
+[0, 0] [0, 0, 0.5472314005475778, array([-0.894,  0.316,  0.   ]), array([-1.117,  0.632, -0.387])]
+[1, 1] [1, 1, 0.54723140054757768, array([ 0.894, -0.316, -0.   ]), array([ 1.117, -0.632,  0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 43
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -669,6 +927,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 3.28338792359 2.32170586603 3.71579451913 2.62746350197 2.62746350197
 done: found dmin, shiftmin= 2.62746350197 [ 0.  0.  0.]    |Tmatch-I| =  0.775224784051
+[0, 0] [0, 0, 1.6416939617936483, array([-0.894,  0.316,  0.   ]), array([-1.564, -0.632, -1.161])]
+[1, 1] [1, 1, 1.6416939617936483, array([ 0.894, -0.316, -0.   ]), array([ 1.564,  0.632,  1.161])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 44
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -685,6 +949,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446269572 0.773901993898 0.55494855757 0.392407888267 0.392407888267
 done: found dmin, shiftmin= 0.392407888267 [-0.     0.     1.548]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 0.54723134785905703, array([ 0.447,  0.316,  0.774]), array([ 0.223,  0.632,  1.161])]
+[1, 1] [1, 1, 0.54723134785905736, array([-0.447, -0.316, -0.774]), array([-0.223, -0.632, -1.161])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 45
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -699,6 +969,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729283573 1.73049735969 2.49565492404 1.76469452029 1.76469452029
 done: found dmin, shiftmin= 1.76469452029 [ 0.  0.  0.]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 1.2236464178628226, array([ 0.447,  0.316, -0.774]), array([-0.223, -0.632, -1.161])]
+[1, 1] [1, 1, 1.2236464178628224, array([-0.447, -0.316,  0.774]), array([ 0.223,  0.632,  1.161])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 46
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -714,6 +990,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446271699 0.773902008941 2.13743927233 1.51139780384 1.51139780384
 done: found dmin, shiftmin= 1.51139780384 [-0.894 -0.632  1.548]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 0.54723135849620752, array([-0.   , -0.948,  0.   ]), array([-0.223, -0.632,  0.387])]
+[1, 1] [1, 1, 0.5472313584962073, array([ 0.   ,  0.948, -0.   ]), array([ 0.223,  0.632, -0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 47
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -728,6 +1010,12 @@ shifting to extra position 5: [ 0.447  1.264  0.774]
 shifting to extra position 6: [ 0.447  1.264  2.322]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446270919 0.773902003428 0.35833507428 0.25338116096 0.25338116096
 done: found dmin, shiftmin= 0.25338116096 [ 0.  0.  0.]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 0.54723135459746752, array([ 0.447,  0.316, -0.774]), array([ 0.223,  0.632, -0.387])]
+[1, 1] [1, 1, 0.54723135459746786, array([-0.447, -0.316,  0.774]), array([-0.223, -0.632,  0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 48
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -742,6 +1030,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.0944628011 0.773902068411 0.554948748622 0.392408023361 0.392408023361
 done: found dmin, shiftmin= 0.392408023361 [ 0.  0.  0.]    |Tmatch-I| =  0.775224784051
+[0, 0] [0, 0, 0.54723140054757724, array([ 0.447,  0.316, -0.774]), array([ 0.223,  0.632, -1.161])]
+[1, 1] [1, 1, 0.54723140054757768, array([-0.447, -0.316,  0.774]), array([-0.223, -0.632,  1.161])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 49
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -757,6 +1051,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446282748 0.77390208707 1.99259453074 1.40897710484 1.40897710484
 done: found dmin, shiftmin= 1.40897710484 [-0.894 -0.632  1.548]    |Tmatch-I| =  0.775224784051
+[0, 0] [0, 0, 0.54723141374154938, array([-0.   , -0.948,  1.548]), array([-0.223, -0.632,  1.161])]
+[1, 1] [1, 1, 0.54723141374154927, array([ 0.   ,  0.948, -1.548]), array([ 0.223,  0.632, -1.161])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 50
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -771,6 +1071,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729301829 1.73049748878 2.53137464395 1.78995217646 1.78995217646
 done: found dmin, shiftmin= 1.78995217646 [ 0.  0.  0.]    |Tmatch-I| =  1.04984336903
+[0, 0] [0, 0, 1.2236465091435962, array([ 0.447,  0.316, -0.774]), array([-0.223, -0.632, -0.387])]
+[1, 1] [1, 1, 1.2236465091435957, array([-0.447, -0.316,  0.774]), array([ 0.223,  0.632,  0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 51
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -786,6 +1092,12 @@ shifting to extra position 5: [ 0.447  1.264 -0.774]
 shifting to extra position 6: [ 0.447  1.264  0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729303935 1.73049750367 2.80570579442 1.98393359325 1.98393359325
 done: found dmin, shiftmin= 1.98393359325 [-0.894 -0.632  1.548]    |Tmatch-I| =  1.04984336903
+[0, 0] [0, 0, 1.2236465196747042, array([ 0.894,  1.58 , -0.   ]), array([ 0.223,  0.632,  0.387])]
+[1, 1] [1, 1, 1.2236465196747039, array([-0.894, -1.58 ,  0.   ]), array([-0.223, -0.632, -0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 52
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -802,6 +1114,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.554948748622 0.392408023361 0.392408023361
 done: found dmin, shiftmin= 0.392408023361 [ 1.34  -0.    -0.774]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 0.54723140652158042, array([ 0.447,  0.316, -0.774]), array([ 0.894,  0.632, -0.774])]
+[1, 1] [1, 1, 0.54723140652158064, array([-0.447, -0.316,  0.774]), array([-0.894, -0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 53
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -816,6 +1134,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729296128 1.73049744847 2.49565453993 1.76469424868 1.76469424868
 done: found dmin, shiftmin= 1.76469424868 [ 0.  0.  0.]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.2236464806417486, array([-0.894,  0.316,  0.   ]), array([-0.894, -0.632,  0.774])]
+[1, 1] [1, 1, 1.2236464806417486, array([ 0.894, -0.316, -0.   ]), array([ 0.894,  0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 54
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -830,6 +1154,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729289946 1.73049740476 1.99230762275 1.40877423026 1.40877423026
 done: found dmin, shiftmin= 1.40877423026 [ 0.  0.  0.]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236464497296011, array([-0.894,  0.316, -1.548]), array([-0.894, -0.632, -2.322])]
+[1, 1] [1, 1, 1.2236464497296018, array([ 0.894, -0.316,  1.548]), array([ 0.894,  0.632,  2.322])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 55
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -846,6 +1176,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446281304 0.773902076859 0.35833507428 0.25338116096 0.25338116096
 done: found dmin, shiftmin= 0.25338116096 [ 1.34  -0.     0.774]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 0.54723140652157942, array([ 0.447,  0.316, -0.774]), array([ 0.894,  0.632, -0.774])]
+[1, 1] [1, 1, 0.54723140652157964, array([-0.447, -0.316,  0.774]), array([-0.894, -0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 56
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -860,6 +1196,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729289946 1.73049740476 2.13744011152 1.51139839724 1.51139839724
 done: found dmin, shiftmin= 1.51139839724 [ 0.  0.  0.]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236464497296022, array([-0.894,  0.316,  0.   ]), array([-0.894, -0.632, -0.774])]
+[1, 1] [1, 1, 1.2236464497296022, array([ 0.894, -0.316, -0.   ]), array([ 0.894,  0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 57
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -875,6 +1217,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729291246 1.73049741395 2.92818714767 2.0705409887 2.0705409887
 done: found dmin, shiftmin= 2.0705409887 [ 1.787 -0.632 -0.   ]    |Tmatch-I| =  0.582360367431
+[0, 0] [0, 0, 1.2236464562302471, array([ 0.894,  1.58 ,  1.548]), array([ 0.894,  0.632,  0.774])]
+[1, 1] [1, 1, 1.2236464562302476, array([-0.894, -1.58 , -1.548]), array([-0.894, -0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 58
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -890,6 +1238,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729297886 1.7304974609 2.63260244826 1.86153104333 1.86153104333
 done: found dmin, shiftmin= 1.86153104333 [ 1.787 -0.632  3.096]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.2236464894292889, array([ 0.894,  1.58 , -0.   ]), array([ 0.894,  0.632,  0.774])]
+[1, 1] [1, 1, 1.2236464894292896, array([-0.894, -1.58 ,  0.   ]), array([-0.894, -0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 59
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -904,6 +1258,12 @@ shifting to extra position 5: [ 1.787  1.264 -0.   ]
 shifting to extra position 6: [ 1.787  1.264  1.548]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729296128 1.73049744847 2.63260162703 1.86153046264 1.86153046264
 done: found dmin, shiftmin= 1.86153046264 [ 0.  0.  0.]    |Tmatch-I| =  0.7752245877
+[0, 0] [0, 0, 1.2236464806417486, array([-0.894,  0.316, -1.548]), array([-0.894, -0.632, -0.774])]
+[1, 1] [1, 1, 1.2236464806417484, array([ 0.894, -0.316,  1.548]), array([ 0.894,  0.632,  0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 60
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -919,6 +1279,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729283928 1.73049736221 2.77206833367 1.96014831665 1.96014831665
 done: found dmin, shiftmin= 1.96014831665 [ 1.787 -0.632 -0.   ]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 1.2236464196419514, array([-1.787,  1.58 ,  1.548]), array([-1.117,  0.632,  1.935])]
+[1, 1] [1, 1, 1.2236464196419514, array([ 1.787, -1.58 , -1.548]), array([ 1.117, -0.632, -1.935])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 61
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -933,6 +1299,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729283573 1.73049735969 2.50201245 1.77197116196 1.77197116196
 done: found dmin, shiftmin= 1.77197116196 [ 0.  0.  0.]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 1.2236464178628232, array([-0.894,  0.316,  0.   ]), array([-1.564, -0.632, -0.387])]
+[1, 1] [1, 1, 1.223646417862823, array([-1.787, -0.316,  1.548]), array([-1.117,  0.632,  1.935])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 62
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -947,6 +1319,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729283573 1.73049735969 1.83824007873 1.29983202512 1.29983202512
 done: found dmin, shiftmin= 1.29983202512 [ 0.  0.  0.]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 1.2236464178628219, array([-0.894,  0.316,  0.   ]), array([-1.564, -0.632, -0.387])]
+[1, 1] [1, 1, 1.2236464178628219, array([ 0.894, -0.316, -0.   ]), array([ 1.564,  0.632,  0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 63
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -962,6 +1340,12 @@ shifting to extra position 5: [ 1.787  1.264 -1.548]
 shifting to extra position 6: [ 1.787  1.264 -0.   ]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729282723 1.73049735368 3.60026578999 2.54577235417 2.54577235417
 done: found dmin, shiftmin= 2.54577235417 [ 1.787 -0.632 -0.   ]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 1.2236464136149328, array([ 0.894,  1.58 , -0.   ]), array([ 1.564,  0.632,  0.387])]
+[1, 1] [1, 1, 1.2236464136149328, array([-0.894, -1.58 ,  0.   ]), array([-1.564, -0.632, -0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 64
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -978,6 +1362,12 @@ shifting to extra position 5: [ 0.447  1.264 -2.322]
 shifting to extra position 6: [ 0.447  1.264 -0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446269572 0.773901993898 0.554948748622 0.392408023361 0.392408023361
 done: found dmin, shiftmin= 0.392408023361 [-0.     0.     1.548]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 0.54723134785905603, array([ 0.447,  0.316, -0.774]), array([ 0.223,  0.632, -0.387])]
+[1, 1] [1, 1, 0.54723134785905603, array([-0.447, -0.316,  0.774]), array([-0.223, -0.632,  0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 starting analysis of cell pairing 65
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -992,6 +1382,12 @@ shifting to extra position 5: [ 0.447  1.264 -2.322]
 shifting to extra position 6: [ 0.447  1.264 -0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729283573 1.73049735969 2.49565494705 1.76469453656 1.76469453656
 done: found dmin, shiftmin= 1.76469453656 [ 0.  0.  0.]    |Tmatch-I| =  0.775224348963
+[0, 0] [0, 0, 1.2236464178628224, array([ 0.447,  0.316,  0.774]), array([-0.223, -0.632,  0.387])]
+[1, 1] [1, 1, 1.2236464178628228, array([-0.447, -0.316, -0.774]), array([ 0.223,  0.632, -0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 66
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -1006,6 +1402,12 @@ shifting to extra position 5: [ 0.447  1.264 -2.322]
 shifting to extra position 6: [ 0.447  1.264 -0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 2.44729283573 1.73049735969 2.53137466664 1.7899521925 1.7899521925
 done: found dmin, shiftmin= 1.7899521925 [ 0.  0.  0.]    |Tmatch-I| =  1.04984308172
+[0, 0] [0, 0, 1.2236464178628219, array([ 0.447,  0.316,  0.774]), array([-0.223, -0.632,  0.387])]
+[1, 1] [1, 1, 1.2236464178628224, array([-0.447, -0.316, -0.774]), array([ 0.223,  0.632, -0.387])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 5.00 (3.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  SLOW
 starting analysis of cell pairing 67
 groups of equiv atom indices in src: [[0], [1]]
 shifting to position 0: 0 [ 0.  0.  0.]
@@ -1022,26 +1424,18 @@ shifting to extra position 5: [ 0.447  1.264 -2.322]
 shifting to extra position 6: [ 0.447  1.264 -0.774]
 unmatch dist before (l1,l2) and after (l1, l2, l2+ucell) : 1.09446270919 0.773902003428 0.35833507428 0.25338116096 0.25338116096
 done: found dmin, shiftmin= 0.25338116096 [-0.     0.     1.548]    |Tmatch-I| =  1.04984308172
--=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-polymorph pathfinder search DONE, dmin =  0.253380951742
-best_res.A Structure( 2.68088, -1.78725, -4.44089e-16,
-           -2.22045e-16, 2.52755, 2.22045e-16,
-           1.5478, 3.09561, 3.09561,
-           scale=1, name='supercell of supercell of supercell of supercell of unknown system' )\
-  .add_atom(0.893625, 2.52755, 4.64341, 'Si', site=0)\
-  .add_atom(1.06193e-07, 1.89567, 6.19122, 'C', site=1)
-best_res.Bflip Structure( 2.34232, -2.34232, 2.22045e-16,
-           -0.828133, 3.31253, 4.44089e-16,
-           1.43437, 2.86874, 2.86874,
-           scale=1, name='supercell of supercell of supercell of supercell of unknown system' )\
-  .add_atom(-6.37527e-09, 2.4844, 4.30311, 'Si', site=0)\
-  .add_atom(-1.17116, 1.65627, 2.86874, 'C', site=1)
-best_res.Tmatch [[ 1.272  0.36  -0.   ]
- [ 0.36   1.017 -0.   ]
- [-0.    -0.     1.079]]
-best_res.shiftmin [-0.     0.     1.548]
-best_res.pairsmin [[[0, 0], [1, 1]], [[0, 0, 0.54723140652157887, array([ 0.447,  0.316,  0.774]), array([ 0.894,  0.632,  0.774])], [1, 1, 0.54723140652157898, array([-0.447, -0.316, -0.774]), array([-0.894, -0.632, -0.774])]]]
+[0, 0] [0, 0, 0.54723135459746763, array([ 0.447,  0.316, -0.774]), array([ 0.223,  0.632, -0.387])]
+[1, 1] [1, 1, 0.54723135459746775, array([-0.447, -0.316,  0.774]), array([-0.223, -0.632,  0.387])]
 spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
 #coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
 #Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
+-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+polymorph pathfinder search DONE, dmin =  0.253380951742
+[0, 0] [0, 0, 0.54723140652157887, array([ 0.447,  0.316,  0.774]), array([ 0.894,  0.632,  0.774])]
+[1, 1] [1, 1, 0.54723140652157898, array([-0.447, -0.316, -0.774]), array([-0.894, -0.632, -0.774])]
+spacegroup of initial structure (B, [Bflip in code])  Fm-3m (225)
+#coordination for TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition:
+#Total of 2.00 (0.00) bonds per atom broken (resp.,made) in TestDir/examples/ZB2RS/POSCAR_B to TestDir/examples/ZB2RS/POSCAR_A transition.
+This transition is likely to be  FAST
 This is likely a FAST transition
