@@ -1,14 +1,23 @@
 #!/bin/bash
 
+cp PARAM '#PARAM#'
+
+cp empty.PARAM PARAM
+
 while read transition || [[ -n "$transition" ]]; do
+    echo "TestDir/examples/$transition/POSCAR_A,TestDir/examples/$transition/POSCAR_B,3,,,TestDir/examples/$transition/A2B_test,,,3.6,101,,,1,1,0.3," >> PARAM
+    echo "TestDir/examples/$transition/POSCAR_B,TestDir/examples/$transition/POSCAR_A,3,,,TestDir/examples/$transition/B2A_test,,,3.6,101,,,1,1,0.3," >> PARAM
+done < TestDir/ExampleList
 
-      echo -n "Computing transition: ${transition}..."
+if [ "$1" = "" ]; then
+    n=2
+else
+    n=$1
+fi
 
-      python pmpaths.py -A TestDir/examples/${transition}/POSCAR_A -B TestDir/examples/${transition}/POSCAR_B -z TestDir/examples/${transition}/A2B_test -v 1 -n 101 -e 0.3 -b 3.6 -d -t 3 > TestDir/examples/${transition}/logA2B_test
+echo "Running fastpmpaths with $n processor(s)"
 
-      python pmpaths.py -A TestDir/examples/${transition}/POSCAR_B -B TestDir/examples/${transition}/POSCAR_A -z TestDir/examples/${transition}/B2A_test -v 1 -n 101 -e 0.3 -b 3.6 -d -t 3 > TestDir/examples/${transition}/logB2A_test
-
-      echo "DONE"
+mpirun -n $n python fastpmpaths.py --param
 
 done < TestDir/ExampleList
 
@@ -17,3 +26,5 @@ echo "Comparing with expected results"
 cd ./TestDir
 
 python compare.py
+
+cp empty.PARAM PARAM
