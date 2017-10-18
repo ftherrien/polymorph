@@ -718,7 +718,7 @@ def find_and_prepare_closest_cells(A, B, options):
     gminSyms = []
 
     dthresh = 15  ## don't really need this now, just prevents a litle copying
-    dthresh_fix_gruber = 5
+    dthresh_fix_gruber = 30 # Previously: 5
     max_cells = 1000  ## max number of "similarly good" cell pairs to return
     if (options.nocheck_ucells):
         max_cells = 1
@@ -812,7 +812,7 @@ def find_and_prepare_closest_cells(A, B, options):
     best_AminStructs = []
     best_BminStructs = []
     best_gminSyms = []
-    max_diff = 3 ## defines "similarly good", only cells within this "distance" of best will be kept, not matter value of max_cells
+    max_diff = 10 ## defines "similarly good", only cells within this "distance" of best will be kept, not matter value of max_cells. Previously: 3
     dmin = dmins[idx[0]]
     if (options.verbose > 0):
         print "overall dmin = ", dmin
