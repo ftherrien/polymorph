@@ -1046,7 +1046,7 @@ def compute_closest_cell(Acells,Bcells,A,B,options,task_range):
     gminSyms = []
 
     dthresh = 15  ## don't really need this now, just prevents a litle copying
-    dthresh_fix_gruber = 5
+    dthresh_fix_gruber = 30 
     if (options.nocheck_ucells):
         max_cells = 1
 #    small_angle = 10 ## angle for alpha that triggers an extra rotated version being added
@@ -1281,7 +1281,7 @@ def find_and_prepare_closest_cells(A, B, options):
     best_AminStructs = []
     best_BminStructs = []
     best_gminSyms = []
-    max_diff = 3 ## defines "similarly good", only cells within this "distance" of best will be kept, not matter value of max_cells
+    max_diff = 10 ## defines "similarly good", only cells within this "distance" of best will be kept, not matter value of max_cells
     dmin = dmins[idx[0]]
     if (options.verbose > 0):
         print "overall dmin = ", dmin
