@@ -8,20 +8,20 @@ mol rep DynamicBonds 3.600000 0.1 100
 mol addrep top 
 
 graphics top color 1
-graphics top line {0.000000 0.000000 0.000000} {2.867147 0.000000 0.000000} width 3 style solid 
+graphics top line {0.000000 0.000000 0.000000} {2.867147 0.000000 4.607678} width 3 style solid 
 graphics top color 2
-graphics top line {0.000000 0.000000 0.000000} {-4.028488 2.608441 0.000000} width 3 style solid
+graphics top line {0.000000 0.000000 0.000000} {0.072416 2.608441 -0.000000} width 3 style solid
 graphics top color 3
 graphics top line {0.000000 0.000000 0.000000} {0.000000 0.000000 4.607678} width 3 style solid
 graphics top color 0
-graphics top line {2.867147 0.000000 0.000000} {-1.161341 2.608441 0.000000} width 3 style dashed
-graphics top line {-4.028488 2.608441 0.000000} {-1.161341 2.608441 0.000000} width 3 style dashed
-graphics top line {-4.028488 2.608441 0.000000} {-4.028488 2.608441 4.607678} width 3 style dashed
-graphics top line {0.000000 0.000000 4.607678} {-4.028488 2.608441 4.607678} width 3 style dashed
-graphics top line {2.867147 0.000000 0.000000} {2.867147 0.000000 4.607678} width 3 style dashed
-graphics top line {0.000000 0.000000 4.607678} {2.867147 0.000000 4.607678} width 3 style dashed
-graphics top line {-1.161341 2.608441 0.000000} {-1.161341 2.608441 4.607678} width 3 style dashed
-graphics top line {-4.028488 2.608441 4.607678} {-1.161341 2.608441 4.607678} width 3 style dashed
-graphics top line {2.867147 0.000000 4.607678} {-1.161341 2.608441 4.607678} width 3 style dashed
+graphics top line {2.867147 0.000000 4.607678} {2.939563 2.608441 4.607678} width 3 style dashed
+graphics top line {0.072416 2.608441 -0.000000} {2.939563 2.608441 4.607678} width 3 style dashed
+graphics top line {0.072416 2.608441 -0.000000} {0.072416 2.608441 4.607678} width 3 style dashed
+graphics top line {0.000000 0.000000 4.607678} {0.072416 2.608441 4.607678} width 3 style dashed
+graphics top line {2.867147 0.000000 4.607678} {2.867147 0.000000 9.215357} width 3 style dashed
+graphics top line {0.000000 0.000000 4.607678} {2.867147 0.000000 9.215357} width 3 style dashed
+graphics top line {2.939563 2.608441 4.607678} {2.939563 2.608441 9.215357} width 3 style dashed
+graphics top line {0.072416 2.608441 4.607678} {2.939563 2.608441 9.215357} width 3 style dashed
+graphics top line {2.867147 0.000000 9.215357} {2.939563 2.608441 9.215357} width 3 style dashed
 
 

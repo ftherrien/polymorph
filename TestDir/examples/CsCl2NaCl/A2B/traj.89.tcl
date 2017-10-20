@@ -8,20 +8,20 @@ mol rep DynamicBonds 3.600000 0.1 100
 mol addrep top 
 
 graphics top color 1
-graphics top line {0.000000 0.000000 0.000000} {4.318956 -0.000000 -2.684631} width 3 style solid 
+graphics top line {0.000000 0.000000 0.000000} {4.318956 0.000000 2.232531} width 3 style solid 
 graphics top color 2
 graphics top line {0.000000 0.000000 0.000000} {-3.030004 4.097807 -4.917161} width 3 style solid
 graphics top color 3
 graphics top line {0.000000 0.000000 0.000000} {-0.000000 0.000000 4.917161} width 3 style solid
 graphics top color 0
-graphics top line {4.318956 -0.000000 -2.684631} {1.288952 4.097807 -7.601792} width 3 style dashed
-graphics top line {-3.030004 4.097807 -4.917161} {1.288952 4.097807 -7.601792} width 3 style dashed
+graphics top line {4.318956 0.000000 2.232531} {1.288952 4.097807 -2.684631} width 3 style dashed
+graphics top line {-3.030004 4.097807 -4.917161} {1.288952 4.097807 -2.684631} width 3 style dashed
 graphics top line {-3.030004 4.097807 -4.917161} {-3.030004 4.097807 -0.000000} width 3 style dashed
 graphics top line {-0.000000 0.000000 4.917161} {-3.030004 4.097807 -0.000000} width 3 style dashed
-graphics top line {4.318956 -0.000000 -2.684631} {4.318956 0.000000 2.232531} width 3 style dashed
-graphics top line {-0.000000 0.000000 4.917161} {4.318956 0.000000 2.232531} width 3 style dashed
-graphics top line {1.288952 4.097807 -7.601792} {1.288952 4.097807 -2.684631} width 3 style dashed
-graphics top line {-3.030004 4.097807 -0.000000} {1.288952 4.097807 -2.684631} width 3 style dashed
-graphics top line {4.318956 0.000000 2.232531} {1.288952 4.097807 -2.684631} width 3 style dashed
+graphics top line {4.318956 0.000000 2.232531} {4.318956 0.000000 7.149692} width 3 style dashed
+graphics top line {-0.000000 0.000000 4.917161} {4.318956 0.000000 7.149692} width 3 style dashed
+graphics top line {1.288952 4.097807 -2.684631} {1.288952 4.097807 2.232531} width 3 style dashed
+graphics top line {-3.030004 4.097807 -0.000000} {1.288952 4.097807 2.232531} width 3 style dashed
+graphics top line {4.318956 0.000000 7.149692} {1.288952 4.097807 2.232531} width 3 style dashed
 
 

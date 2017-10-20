@@ -8,20 +8,20 @@ mol rep DynamicBonds 3.600000 0.1 100
 mol addrep top 
 
 graphics top color 1
-graphics top line {0.000000 0.000000 0.000000} {2.501257 -0.000000 0.000000} width 3 style solid 
+graphics top line {0.000000 0.000000 0.000000} {2.436833 -0.000000 0.436840} width 3 style solid 
 graphics top color 2
-graphics top line {0.000000 0.000000 0.000000} {-0.494000 2.368890 0.000000} width 3 style solid
+graphics top line {0.000000 0.000000 0.000000} {-1.284272 2.146143 0.000000} width 3 style solid
 graphics top color 3
-graphics top line {0.000000 0.000000 0.000000} {-0.000000 0.000000 4.856068} width 3 style solid
+graphics top line {0.000000 0.000000 0.000000} {0.000000 -0.000000 5.337037} width 3 style solid
 graphics top color 0
-graphics top line {2.501257 -0.000000 0.000000} {2.007257 2.368890 0.000000} width 3 style dashed
-graphics top line {-0.494000 2.368890 0.000000} {2.007257 2.368890 0.000000} width 3 style dashed
-graphics top line {-0.494000 2.368890 0.000000} {-0.494000 2.368890 4.856068} width 3 style dashed
-graphics top line {-0.000000 0.000000 4.856068} {-0.494000 2.368890 4.856068} width 3 style dashed
-graphics top line {2.501257 -0.000000 0.000000} {2.501257 -0.000000 4.856068} width 3 style dashed
-graphics top line {-0.000000 0.000000 4.856068} {2.501257 -0.000000 4.856068} width 3 style dashed
-graphics top line {2.007257 2.368890 0.000000} {2.007257 2.368890 4.856068} width 3 style dashed
-graphics top line {-0.494000 2.368890 4.856068} {2.007257 2.368890 4.856068} width 3 style dashed
-graphics top line {2.501257 -0.000000 4.856068} {2.007257 2.368890 4.856068} width 3 style dashed
+graphics top line {2.436833 -0.000000 0.436840} {1.152560 2.146143 0.436840} width 3 style dashed
+graphics top line {-1.284272 2.146143 0.000000} {1.152560 2.146143 0.436840} width 3 style dashed
+graphics top line {-1.284272 2.146143 0.000000} {-1.284272 2.146143 5.337037} width 3 style dashed
+graphics top line {0.000000 -0.000000 5.337037} {-1.284272 2.146143 5.337037} width 3 style dashed
+graphics top line {2.436833 -0.000000 0.436840} {2.436833 -0.000000 5.773877} width 3 style dashed
+graphics top line {0.000000 -0.000000 5.337037} {2.436833 -0.000000 5.773877} width 3 style dashed
+graphics top line {1.152560 2.146143 0.436840} {1.152560 2.146143 5.773877} width 3 style dashed
+graphics top line {-1.284272 2.146143 5.337037} {1.152560 2.146143 5.773877} width 3 style dashed
+graphics top line {2.436833 -0.000000 5.773877} {1.152560 2.146143 5.773877} width 3 style dashed
 
 

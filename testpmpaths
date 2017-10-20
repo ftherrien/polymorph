@@ -4,9 +4,9 @@ while read transition || [[ -n "$transition" ]]; do
 
       echo -n "Computing transition: ${transition}..."
 
-      python pmpaths.py -A TestDir/examples/${transition}/POSCAR_A -B TestDir/examples/${transition}/POSCAR_B -z TestDir/examples/${transition}/A2B_test -v 1 -n 101 -e 0.3 -b 3.6 -d -t 3 -f > TestDir/examples/${transition}/logA2B_test
+      python pmpaths.py -A TestDir/examples/${transition}/POSCAR_A -B TestDir/examples/${transition}/POSCAR_B -z TestDir/examples/${transition}/A2B_test -v 1 -n 101 -e 0.3 -b 3.6 -d -t 3 > TestDir/examples/${transition}/logA2B_test
 
-      python pmpaths.py -A TestDir/examples/${transition}/POSCAR_B -B TestDir/examples/${transition}/POSCAR_A -z TestDir/examples/${transition}/B2A_test -v 1 -n 101 -e 0.3 -b 3.6 -d -t 3 -f > TestDir/examples/${transition}/logB2A_test
+      python pmpaths.py -A TestDir/examples/${transition}/POSCAR_B -B TestDir/examples/${transition}/POSCAR_A -z TestDir/examples/${transition}/B2A_test -v 1 -n 101 -e 0.3 -b 3.6 -d -t 3 > TestDir/examples/${transition}/logB2A_test
 
       echo "DONE"
 

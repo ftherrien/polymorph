@@ -10,18 +10,18 @@ mol addrep top
 graphics top color 1
 graphics top line {0.000000 0.000000 0.000000} {2.742670 -0.647724 4.605359} width 3 style solid 
 graphics top color 2
-graphics top line {0.000000 0.000000 0.000000} {-0.455314 2.731801 -4.605359} width 3 style solid
+graphics top line {0.000000 0.000000 0.000000} {1.376726 2.084077 -0.000000} width 3 style solid
 graphics top color 3
 graphics top line {0.000000 0.000000 0.000000} {0.000000 0.000000 4.605359} width 3 style solid
 graphics top color 0
-graphics top line {2.742670 -0.647724 4.605359} {2.287356 2.084077 0.000000} width 3 style dashed
-graphics top line {-0.455314 2.731801 -4.605359} {2.287356 2.084077 0.000000} width 3 style dashed
-graphics top line {-0.455314 2.731801 -4.605359} {-0.455314 2.731801 0.000000} width 3 style dashed
-graphics top line {0.000000 0.000000 4.605359} {-0.455314 2.731801 0.000000} width 3 style dashed
+graphics top line {2.742670 -0.647724 4.605359} {4.119396 1.436353 4.605359} width 3 style dashed
+graphics top line {1.376726 2.084077 -0.000000} {4.119396 1.436353 4.605359} width 3 style dashed
+graphics top line {1.376726 2.084077 -0.000000} {1.376726 2.084077 4.605359} width 3 style dashed
+graphics top line {0.000000 0.000000 4.605359} {1.376726 2.084077 4.605359} width 3 style dashed
 graphics top line {2.742670 -0.647724 4.605359} {2.742670 -0.647724 9.210717} width 3 style dashed
 graphics top line {0.000000 0.000000 4.605359} {2.742670 -0.647724 9.210717} width 3 style dashed
-graphics top line {2.287356 2.084077 0.000000} {2.287356 2.084077 4.605359} width 3 style dashed
-graphics top line {-0.455314 2.731801 0.000000} {2.287356 2.084077 4.605359} width 3 style dashed
-graphics top line {2.742670 -0.647724 9.210717} {2.287356 2.084077 4.605359} width 3 style dashed
+graphics top line {4.119396 1.436353 4.605359} {4.119396 1.436353 9.210717} width 3 style dashed
+graphics top line {1.376726 2.084077 4.605359} {4.119396 1.436353 9.210717} width 3 style dashed
+graphics top line {2.742670 -0.647724 9.210717} {4.119396 1.436353 9.210717} width 3 style dashed
 
 
